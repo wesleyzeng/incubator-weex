@@ -34,6 +34,8 @@ public:
 
     explicit WeexRuntimeV2(TimerQueue *timeQueue, WeexCore::ScriptBridge *script_bridge, bool isMultiProgress);
 
+    ~WeexRuntimeV2() override {}
+
     bool hasInstanceId(std::string &id) override;
 
 
@@ -79,7 +81,7 @@ public:
 
     int updateGlobalConfig(const std::string &config) override;
 
-    int UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc);
+    int UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc) override;
 
     WeexObjectHolderV2 *getLightAppObjectHolderV2(const std::string &instanceId);
 

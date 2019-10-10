@@ -27,7 +27,8 @@
 class WeexRuntime {
  public:
 
-  explicit WeexRuntime(WeexCore::ScriptBridge* scriptBridge) { this->script_bridge_ = scriptBridge;}
+  explicit WeexRuntime(WeexCore::ScriptBridge* scriptBridge) { script_bridge_ = scriptBridge;}
+  virtual ~WeexRuntime() { script_bridge_ = nullptr; }
 
   WeexCore::ScriptBridge* script_bridge_;
 
