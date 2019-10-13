@@ -24,11 +24,13 @@
 #include <set>
 #include <string>
 #include <vector>
+
 #include "base/common.h"
 #include "base/closure.h"
 #include "include/WeexApiHeader.h"
 
 namespace WeexCore {
+
 class MeasureFunctionAdapter;
 class WXCoreMargin;
 class WXCorePadding;
@@ -41,9 +43,12 @@ class PlatformBridge {
    public:
     explicit CoreSide() : measure_function_adapter_exist_(false) {}
     virtual ~CoreSide() {}
+
     virtual void SetDefaultHeightAndWidthIntoRootDom(
-        const std::string& instance_id, float default_width,
-        float default_height, bool is_width_wrap_content,
+        const std::string& instance_id,
+        float default_width,
+        float default_height,
+        bool is_width_wrap_content,
         bool is_height_wrap_content) = 0;
     virtual void OnInstanceClose(const std::string& instance_id) = 0;
     virtual void SetStyleWidth(const std::string& instance_id,
@@ -75,10 +80,8 @@ class PlatformBridge {
     virtual void SetPageDirty(const std::string& instance_id) = 0;
     virtual void ForceLayout(const std::string& instance_id) = 0;
     virtual bool NotifyLayout(const std::string& instance_id) = 0;
-    virtual std::vector<int64_t> GetFirstScreenRenderTime(
-        const std::string& instance_id) = 0;
-    virtual std::vector<int64_t> GetRenderFinishTime(
-        const std::string& instance_id) = 0;
+    virtual std::vector<int64_t> GetFirstScreenRenderTime(const std::string& instance_id) = 0;
+    virtual std::vector<int64_t> GetRenderFinishTime(const std::string& instance_id) = 0;
     virtual bool RelayoutUsingRawCssStyles(const std::string& instance_id) = 0; // relayout whole page using raw css styles
     virtual void SetRenderContainerWrapContent(const std::string& instance_id,
                                                bool wrap) = 0;
@@ -105,13 +108,12 @@ class PlatformBridge {
                                 std::vector<VALUE_WITH_TYPE*>& params) = 0;
     virtual int InitFramework(const char* script,
                               std::vector<INIT_FRAMEWORK_PARAMS*>& params) = 0;
-    virtual int InitAppFramework(
-        const char* instanceId, const char* appFramework,
-        std::vector<INIT_FRAMEWORK_PARAMS*>& params) = 0;
+    virtual int InitAppFramework(const char* instanceId, const char* appFramework,
+                                 std::vector<INIT_FRAMEWORK_PARAMS*>& params) = 0;
     virtual int CreateAppContext(const char* instanceId,
                                  const char* jsBundle) = 0;
     virtual std::unique_ptr<WeexJSResult> ExecJSOnAppWithResult(const char* instanceId,
-                                              const char* jsBundle) = 0;
+                                                                const char* jsBundle) = 0;
     virtual int CallJSOnAppContext(const char* instanceId, const char* func,
                                    std::vector<VALUE_WITH_TYPE*>& params) = 0;
     virtual int DestroyAppContext(const char* instanceId) = 0;
@@ -120,28 +122,32 @@ class PlatformBridge {
     virtual int ExecJS(const char* instanceId, const char* nameSpace,
                        const char* func,
                        std::vector<VALUE_WITH_TYPE*>& params) = 0;
-    virtual std::unique_ptr<WeexJSResult> ExecJSWithResult(
-        const char* instanceId, const char* nameSpace, const char* func,
-        std::vector<VALUE_WITH_TYPE*>& params) = 0;
+    virtual std::unique_ptr<WeexJSResult> ExecJSWithResult(const char* instanceId,
+                                                           const char* nameSpace,
+                                                           const char* func,
+                                                           std::vector<VALUE_WITH_TYPE*>& params) = 0;
     virtual void ExecJSWithCallback(const char* instanceId,
                                     const char* nameSpace, const char* func,
                                     std::vector<VALUE_WITH_TYPE*>& params,
                                     long callback_id) = 0;
     virtual int CreateInstance(const char* instanceId, const char* func,
                                const char* script, int script_length, const char* opts,
-                               const char* initData, const char* extendsApi, std::vector<INIT_FRAMEWORK_PARAMS*>& params,
+                               const char* initData, const char* extendsApi,
+                               std::vector<INIT_FRAMEWORK_PARAMS*>& params,
                                const char* render_strategy) = 0;
     virtual std::unique_ptr<WeexJSResult> ExecJSOnInstance(const char* instanceId,
-                                         const char* script,int type) = 0;
+                                                           const char* script,int type) = 0;
     virtual int DestroyInstance(const char* instanceId) = 0;
 
     virtual int UpdateGlobalConfig(const char* config) = 0;
 
-    virtual int UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc) = 0;
+    virtual int UpdateInitFrameworkParams(const std::string& key,
+                                          const std::string& value,
+                                          const std::string& desc) = 0;
 
     virtual void SetLogType(const int logType, const bool isPerf) = 0;
 
-    virtual double GetLayoutTime(const char* instanceId) const {return 0;}
+    virtual double GetLayoutTime(const char* instanceId) const { return 0; }
 
     inline PlatformBridge* bridge() { return bridge_; }
 
@@ -149,9 +155,12 @@ class PlatformBridge {
     bool measure_function_adapter_exist_;
 
    private:
-    PlatformBridge* bridge_;
     friend class PlatformBridge;
+    
     inline void set_bridge(PlatformBridge* bridge) { bridge_ = bridge; }
+    
+    PlatformBridge* bridge_;
+   
     DISALLOW_COPY_AND_ASSIGN(CoreSide);
   };
 
@@ -159,6 +168,7 @@ class PlatformBridge {
    public:
     PlatformSide() {}
     virtual ~PlatformSide() {}
+
     virtual WXCoreSize InvokeMeasureFunction(const char* page_id,
                                              long render_ptr, float width,
                                              int width_measure_mode,
@@ -186,11 +196,13 @@ class PlatformBridge {
                                      const char* method, const char* arguments,
                                      int arguments_length, const char* options,
                                      int options_length) = 0;
+
 #if OS_IOS
     virtual std::unique_ptr<ValueWithType> RegisterPluginModule(const char *name, const char *class_name, const char *version) = 0;
     virtual std::unique_ptr<ValueWithType> RegisterPluginComponent(const char *name, const char *class_name, const char *version) = 0;
     virtual void PostTaskOnComponentThread(const weex::base::Closure closure) = 0;
-#endif
+#endif // OS_IOS
+
     virtual void SetTimeout(const char* callback_id, const char* time) = 0;
     virtual void NativeLog(const char* str_array) = 0;
     virtual int UpdateFinish(const char* page_id, const char* task, int taskLen,
@@ -220,10 +232,10 @@ class PlatformBridge {
                            const WXCoreBorderWidth& borders,
                            bool willLayout = true) = 0;
 
-      virtual int AddChildToRichtext(const char* pageId, const char *nodeType, const char* ref,
-                                       const char* parentRef, const char* richtextRef,
-                                       std::map<std::string, std::string> *styles,
-                                       std::map<std::string, std::string> *attributes) = 0;
+    virtual int AddChildToRichtext(const char* pageId, const char *nodeType, const char* ref,
+                                   const char* parentRef, const char* richtextRef,
+                                   std::map<std::string, std::string> *styles,
+                                   std::map<std::string, std::string> *attributes) = 0;
 
     virtual int Layout(const char* page_id, const char* ref, float top,
                        float bottom, float left, float right, float height,
@@ -241,12 +253,15 @@ class PlatformBridge {
         std::vector<std::pair<std::string, std::string>>* attrs) = 0;
 
     virtual int UpdateRichtextChildAttr(
-                                          const char* pageId, const char* ref,
-                                          std::vector<std::pair<std::string, std::string>>* attrs, const char* parent_ref, const char* richtext_ref) = 0;
+        const char* pageId, const char* ref,
+        std::vector<std::pair<std::string,
+        std::string>>* attrs,
+        const char* parent_ref,
+        const char* richtext_ref) = 0;
 
     virtual int UpdateRichtextStyle(const char* pageId, const char* ref,
-                                      std::vector<std::pair<std::string, std::string>> *style,
-                                      const char* parent_ref, const char* richtext_ref) = 0;
+                                    std::vector<std::pair<std::string, std::string>> *style,
+                                    const char* parent_ref, const char* richtext_ref) = 0;
 
     virtual int CreateFinish(const char* pageId) = 0;
 
@@ -254,7 +269,11 @@ class PlatformBridge {
 
     virtual int RemoveElement(const char* pageId, const char* ref) = 0;
 
-    virtual int RemoveChildFromRichtext(const char* pageId, const char* ref, const char* parent_ref, const char* richtext_ref) = 0;
+    virtual int RemoveChildFromRichtext(
+        const char* pageId,
+        const char* ref,
+        const char* parent_ref,
+        const char* richtext_ref) = 0;
 
     virtual int MoveElement(const char* pageId, const char* ref,
                             const char* parentRef, int index) = 0;
@@ -269,17 +288,21 @@ class PlatformBridge {
                                  int dataLength, const char* callback,
                                  const char* vm_id) = 0;
     virtual std::unique_ptr<WeexJSResult> DispatchMessageSync(
-        const char* client_id, const char* data, int dataLength,
+        const char* client_id,
+        const char* data,
+        int dataLength,
         const char* vm_id) = 0;
-    virtual void OnReceivedResult(long callback_id,
-                                  std::unique_ptr<WeexJSResult>& result) = 0;
+    virtual void OnReceivedResult(long callback_id, std::unique_ptr<WeexJSResult>& result) = 0;
 
     inline PlatformBridge* bridge() { return bridge_; }
 
    private:
-    PlatformBridge* bridge_;
     friend class PlatformBridge;
+
     inline void set_bridge(PlatformBridge* bridge) { bridge_ = bridge; }
+
+    PlatformBridge* bridge_;
+
     DISALLOW_COPY_AND_ASSIGN(PlatformSide);
   };
 
@@ -309,5 +332,7 @@ class PlatformBridge {
   bool is_passable_;
   DISALLOW_COPY_AND_ASSIGN(PlatformBridge);
 };
+
 }  // namespace WeexCore
+
 #endif  // Bridge_h

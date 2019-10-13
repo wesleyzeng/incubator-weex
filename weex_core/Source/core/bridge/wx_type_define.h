@@ -21,43 +21,38 @@
 #ifndef WEEXV8_WXTYPEDEFINE_H
 #define WEEXV8_WXTYPEDEFINE_H
 
-
 #include <cstdint>
 
 namespace WeexCore {
 
-    enum wx_type_define {
-        VOID = 1,
-        INTEGER,
-        DOUBLE,
-        STRING,
-        JSON,
-        WSON
-    };
+enum wx_type_define {
+  VOID = 1,
+  INTEGER,
+  DOUBLE,
+  STRING,
+  JSON,
+  WSON
+};
 
-    union WXValeDefine {
-        int64_t intValue;
-        double doubleValue;
-        char* string;
-    };
+union WXValeDefine {
+  int64_t intValue;
+  double doubleValue;
+  char* string;
+};
 
+struct WXValue {
+  wx_type_define type;
+  WXValeDefine value;
+};
 
-    struct WXValue {
-        wx_type_define type;
-        WXValeDefine value;
-    };
+struct WXFuncSignature {
+  char* methodName;
+  wx_type_define returnType;
+  wx_type_define* argsType;
+  uint8_t argsLength;
+  void* fucnAddr;
+};
 
-    struct WXFuncSignature {
-        char*            methodName;
-        wx_type_define    returnType;
-        wx_type_define   *argsType;
-        uint8_t         argsLength;
-        void*           fucnAddr;
-    };
-}
-
-
-
-
+} // namespace WeexCore
 
 #endif //WEEXV8_WXTYPEDEFINE_H

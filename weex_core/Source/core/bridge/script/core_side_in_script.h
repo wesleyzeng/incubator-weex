@@ -24,6 +24,7 @@
 #include "core/bridge/script_bridge.h"
 
 namespace WeexCore {
+
 class CoreSideInScript : public ScriptBridge::CoreSide {
  public:
   explicit CoreSideInScript();
@@ -92,6 +93,7 @@ class CoreSideInScript : public ScriptBridge::CoreSide {
  private:
   DISALLOW_COPY_AND_ASSIGN(CoreSideInScript);
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_BRIDGE_SCRIPT_CORE_SIDE_IN_SIMPLE_H

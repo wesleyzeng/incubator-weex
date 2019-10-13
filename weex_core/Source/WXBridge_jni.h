@@ -38,7 +38,6 @@ const char kWXBridgeClassPath[] = "org/apache/weex/bridge/WXBridge";
 // Leaking this jclass as we cannot use LazyInstance from some threads.
 jclass g_WXBridge_clazz = NULL;
 #define WXBridge_clazz(env) g_WXBridge_clazz
-
 }  // namespace
 
 static jint InitFrameworkEnv(JNIEnv* env, jobject jcaller,
@@ -129,14 +128,11 @@ static void SetDefaultHeightAndWidthIntoRootDom(JNIEnv* env, jobject jcaller,
     jboolean isWidthWrapContent,
     jboolean isHeightWrapContent);
 
-static void OnInstanceClose(JNIEnv* env, jobject jcaller,
-    jstring instanceId);
+static void OnInstanceClose(JNIEnv* env, jobject jcaller,jstring instanceId);
 
-static void ForceLayout(JNIEnv* env, jobject jcaller,
-    jstring instanceId);
+static void ForceLayout(JNIEnv* env, jobject jcaller, jstring instanceId);
 
-static jboolean NotifyLayout(JNIEnv* env, jobject jcaller,
-    jstring instanceId);
+static jboolean NotifyLayout(JNIEnv* env, jobject jcaller, jstring instanceId);
 
 static void SetStyleWidth(JNIEnv* env, jobject jcaller,
     jstring instanceId,
@@ -201,23 +197,19 @@ static void Java_WXBridge_onReceivedResult(JNIEnv* env, jobject obj, jlong
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "onReceivedResult",
-
-"("
-"J"
-"[B"
-")"
-"V",
+      "("
+      "J"
+      "[B"
+      ")"
+      "V",
       &g_WXBridge_onReceivedResult);
 
-     env->CallVoidMethod(obj,
-          method_id, callbackId, result);
+     env->CallVoidMethod(obj,method_id, callbackId, result);
   base::android::CheckException(env);
-
 }
 
 static intptr_t g_WXBridge_callNative = 0;
@@ -228,23 +220,19 @@ static jint Java_WXBridge_callNative(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callNative",
-
-"("
-"Ljava/lang/String;"
-"[B"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "[B"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callNative);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, tasks, callback);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, tasks, callback);
   base::android::CheckException(env);
   return ret;
 }
@@ -257,24 +245,20 @@ static void Java_WXBridge_reportJSException(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "reportJSException",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "V",
       &g_WXBridge_reportJSException);
 
-     env->CallVoidMethod(obj,
-          method_id, instanceId, func, exception);
+     env->CallVoidMethod(obj,method_id, instanceId, func, exception);
   base::android::CheckException(env);
-
 }
 
 static intptr_t g_WXBridge_callNativeModule = 0;
@@ -287,25 +271,22 @@ static base::android::ScopedLocalJavaRef<jobject>
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), NULL);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callNativeModule",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[B"
-"[B"
-")"
-"Ljava/lang/Object;",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "[B"
+      "[B"
+      ")"
+      "Ljava/lang/Object;",
       &g_WXBridge_callNativeModule);
 
-  jobject ret =
-      env->CallObjectMethod(obj,
-          method_id, instanceId, module, method, arguments, options);
+  jobject ret = env->CallObjectMethod(obj,
+      method_id, instanceId, module, method, arguments, options);
   base::android::CheckException(env);
   return base::android::ScopedLocalJavaRef<jobject>(env, ret);
 }
@@ -320,26 +301,21 @@ static void Java_WXBridge_callNativeComponent(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callNativeComponent",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[B"
-"[B"
-")"
-"V",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "[B"
+      "[B"
+      ")"
+      "V",
       &g_WXBridge_callNativeComponent);
-
-     env->CallVoidMethod(obj,
-          method_id, instanceId, ref, method, arguments, optionsData);
+  env->CallVoidMethod(obj, method_id, instanceId, ref, method, arguments, optionsData);
   base::android::CheckException(env);
-
 }
 
 static intptr_t g_WXBridge_setTimeoutNative = 0;
@@ -349,23 +325,18 @@ static void Java_WXBridge_setTimeoutNative(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "setTimeoutNative",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "V",
       &g_WXBridge_setTimeoutNative);
-
-     env->CallVoidMethod(obj,
-          method_id, callbackId, time);
+     env->CallVoidMethod(obj, method_id, callbackId, time);
   base::android::CheckException(env);
-
 }
 
 static intptr_t g_WXBridge_setJSFrmVersion = 0;
@@ -374,22 +345,19 @@ static void Java_WXBridge_setJSFrmVersion(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "setJSFrmVersion",
-
-"("
-"Ljava/lang/String;"
-")"
-"V",
+      "("
+      "Ljava/lang/String;"
+      ")"
+      "V",
       &g_WXBridge_setJSFrmVersion);
 
      env->CallVoidMethod(obj,
           method_id, version);
   base::android::CheckException(env);
-
 }
 
 static intptr_t g_WXBridge_callUpdateFinish = 0;
@@ -400,23 +368,20 @@ static jint Java_WXBridge_callUpdateFinish(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callUpdateFinish",
-
-"("
-"Ljava/lang/String;"
-"[B"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "[B"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callUpdateFinish);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, tasks, callback);
+  jint ret = env->CallIntMethod(obj,
+      method_id, instanceId, tasks, callback);
   base::android::CheckException(env);
   return ret;
 }
@@ -429,23 +394,20 @@ static jint Java_WXBridge_callRefreshFinish(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callRefreshFinish",
-
-"("
-"Ljava/lang/String;"
-"[B"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "[B"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callRefreshFinish);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, tasks, callback);
+  jint ret = env->CallIntMethod(obj,
+      method_id, instanceId, tasks, callback);
   base::android::CheckException(env);
   return ret;
 }
@@ -457,23 +419,19 @@ static void Java_WXBridge_reportServerCrash(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "reportServerCrash",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "V",
       &g_WXBridge_reportServerCrash);
 
-     env->CallVoidMethod(obj,
-          method_id, instanceId, crashFile);
+  env->CallVoidMethod(obj, method_id, instanceId, crashFile);
   base::android::CheckException(env);
-
 }
 
 static intptr_t g_WXBridge_callCreateBody = 0;
@@ -490,30 +448,27 @@ static jint Java_WXBridge_callCreateBody(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callCreateBody",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashSet;"
-"[F"
-"[F"
-"[F"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashSet;"
+      "[F"
+      "[F"
+      "[F"
+      ")"
+      "I",
       &g_WXBridge_callCreateBody);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, componentType, ref, styles, attributes, events,
-              margins, paddings, borders);
+  jint ret = env->CallIntMethod(obj,
+      method_id, instanceId, componentType, ref, styles, attributes, events,
+      margins, paddings, borders);
   base::android::CheckException(env);
   return ret;
 }
@@ -535,34 +490,31 @@ static jint Java_WXBridge_callAddElement(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callAddElement",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-"Ljava/lang/String;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashSet;"
-"[F"
-"[F"
-"[F"
-"Z"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "I"
+      "Ljava/lang/String;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashSet;"
+      "[F"
+      "[F"
+      "[F"
+      "Z"
+      ")"
+      "I",
       &g_WXBridge_callAddElement);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, componentType, ref, int(index), parentRef,
-              styles, attributes, events, margins, paddings, borders,
-              willLayout);
+  jint ret = env->CallIntMethod(obj,
+      method_id, instanceId, componentType, ref, int(index), parentRef,
+      styles, attributes, events, margins, paddings, borders,
+      willLayout);
   base::android::CheckException(env);
   return ret;
 }
@@ -574,22 +526,18 @@ static jint Java_WXBridge_callRemoveElement(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callRemoveElement",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callRemoveElement);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, ref);
   base::android::CheckException(env);
   return ret;
 }
@@ -603,24 +551,20 @@ static jint Java_WXBridge_callMoveElement(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callMoveElement",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "I"
+      ")"
+      "I",
       &g_WXBridge_callMoveElement);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, parentref, int(index));
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, ref, parentref, int(index));
   base::android::CheckException(env);
   return ret;
 }
@@ -633,23 +577,19 @@ static jint Java_WXBridge_callAddEvent(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callAddEvent",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callAddEvent);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, event);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, ref, event);
   base::android::CheckException(env);
   return ret;
 }
@@ -662,23 +602,19 @@ static jint Java_WXBridge_callRemoveEvent(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callRemoveEvent",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callRemoveEvent);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, event);
+  jint ret == env->CallIntMethod(obj, method_id, instanceId, ref, event);
   base::android::CheckException(env);
   return ret;
 }
@@ -694,26 +630,23 @@ static jint Java_WXBridge_callUpdateStyle(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callUpdateStyle",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashMap;"
-"Ljava/util/HashMap;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashMap;"
+      "Ljava/util/HashMap;"
+      ")"
+      "I",
       &g_WXBridge_callUpdateStyle);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, styles, paddings, margins, borders);
+  jint ret = env->CallIntMethod(obj,
+      method_id, instanceId, ref, styles, paddings, margins, borders);
   base::android::CheckException(env);
   return ret;
 }
@@ -726,23 +659,19 @@ static jint Java_WXBridge_callUpdateAttrs(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callUpdateAttrs",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/util/HashMap;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/util/HashMap;"
+      ")"
+      "I",
       &g_WXBridge_callUpdateAttrs);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, attrs);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, ref, attrs);
   base::android::CheckException(env);
   return ret;
 }
@@ -762,31 +691,28 @@ static jint Java_WXBridge_callLayout(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callLayout",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-"I"
-"I"
-"I"
-"I"
-"I"
-"Z"
-"I"
-")"
-"I",
+     "("
+     "Ljava/lang/String;"
+     "Ljava/lang/String;"
+     "I"
+     "I"
+     "I"
+     "I"
+     "I"
+     "I"
+     "Z"
+     "I"
+     ")"
+     "I",
       &g_WXBridge_callLayout);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, int(top), int(bottom), int(left),
-              int(right), int(height), int(width), isRTL, int(index));
+  jint ret = env->CallIntMethod(obj,
+      method_id, instanceId, ref, int(top), int(bottom), int(left),
+      int(right), int(height), int(width), isRTL, int(index));
   base::android::CheckException(env);
   return ret;
 }
@@ -797,21 +723,17 @@ static jint Java_WXBridge_callCreateFinish(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callCreateFinish",
-
-"("
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callCreateFinish);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId);
   base::android::CheckException(env);
   return ret;
 }
@@ -822,21 +744,17 @@ static jint Java_WXBridge_callRenderSuccess(JNIEnv* env, jobject obj, jstring
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callRenderSuccess",
-
-"("
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callRenderSuccess);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId);
   base::android::CheckException(env);
   return ret;
 }
@@ -848,22 +766,18 @@ static jint Java_WXBridge_callAppendTreeCreateFinish(JNIEnv* env, jobject obj,
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callAppendTreeCreateFinish",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "I",
       &g_WXBridge_callAppendTreeCreateFinish);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, ref);
   base::android::CheckException(env);
   return ret;
 }
@@ -876,23 +790,19 @@ static jint Java_WXBridge_callHasTransitionPros(JNIEnv* env, jobject obj,
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), 0);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "callHasTransitionPros",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/util/HashMap;"
-")"
-"I",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      "Ljava/util/HashMap;"
+      ")"
+      "I",
       &g_WXBridge_callHasTransitionPros);
 
-  jint ret =
-      env->CallIntMethod(obj,
-          method_id, instanceId, ref, styles);
+  jint ret = env->CallIntMethod(obj, method_id, instanceId, ref, styles);
   base::android::CheckException(env);
   return ret;
 }
@@ -905,22 +815,18 @@ static base::android::ScopedLocalJavaRef<jobject>
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env), NULL);
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "getMeasurementFunc",
-
-"("
-"Ljava/lang/String;"
-"J"
-")"
-"Lorg/apache/weex/layout/ContentBoxMeasurement;",
+      "("
+      "Ljava/lang/String;"
+      "J"
+      ")"
+      "Lorg/apache/weex/layout/ContentBoxMeasurement;",
       &g_WXBridge_getMeasurementFunc);
 
-  jobject ret =
-      env->CallObjectMethod(obj,
-          method_id, instanceId, renderObjectPtr);
+  jobject ret = env->CallObjectMethod(obj, method_id, instanceId, renderObjectPtr);
   base::android::CheckException(env);
   return base::android::ScopedLocalJavaRef<jobject>(env, ret);
 }
@@ -932,244 +838,239 @@ static void Java_WXBridge_reportNativeInitStatus(JNIEnv* env, jobject obj,
   /* Must call RegisterNativesImpl()  */
   //CHECK_CLAZZ(env, obj,
   //    WXBridge_clazz(env));
-  jmethodID method_id =
-      base::android::GetMethod(
+  jmethodID method_id = base::android::GetMethod(
       env, WXBridge_clazz(env),
       base::android::INSTANCE_METHOD,
       "reportNativeInitStatus",
-
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V",
+      "("
+      "Ljava/lang/String;"
+      "Ljava/lang/String;"
+      ")"
+      "V",
       &g_WXBridge_reportNativeInitStatus);
 
-     env->CallVoidMethod(obj,
-          method_id, statusCode, errorMsg);
+     env->CallVoidMethod(obj,method_id, statusCode, errorMsg);
   base::android::CheckException(env);
-
 }
 
 // Step 3: RegisterNatives.
 
 static const JNINativeMethod kMethodsWXBridge[] = {
-    { "nativeInitFrameworkEnv",
-"("
-"Ljava/lang/String;"
-"Lorg/apache/weex/bridge/WXParams;"
-"Ljava/lang/String;"
-"Z"
-")"
-"I", reinterpret_cast<void*>(InitFrameworkEnv) },
-    { "nativeInitFramework",
-"("
-"Ljava/lang/String;"
-"Lorg/apache/weex/bridge/WXParams;"
-")"
-"I", reinterpret_cast<void*>(InitFramework) },
-    { "nativeRefreshInstance",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[Lorg/apache/weex/bridge/WXJSObject;"
-")"
-"V", reinterpret_cast<void*>(RefreshInstance) },
-    { "nativeExecJS",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[Lorg/apache/weex/bridge/WXJSObject;"
-")"
-"I", reinterpret_cast<void*>(ExecJS) },
-    { "nativeExecJSService",
-"("
-"Ljava/lang/String;"
-")"
-"I", reinterpret_cast<void*>(ExecJSService) },
-    { "nativeExecJSWithResult",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[Lorg/apache/weex/bridge/WXJSObject;"
-")"
-"[B", reinterpret_cast<void*>(ExecJSWithResult) },
-    { "nativeExecJSWithCallback",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[Lorg/apache/weex/bridge/WXJSObject;"
-"J"
-")"
-"V", reinterpret_cast<void*>(ExecJSWithCallback) },
-    { "nativeCreateInstanceContext",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[Lorg/apache/weex/bridge/WXJSObject;"
-")"
-"I", reinterpret_cast<void*>(CreateInstanceContext) },
-    { "nativeDestoryInstance",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"[Lorg/apache/weex/bridge/WXJSObject;"
-")"
-"I", reinterpret_cast<void*>(DestoryInstance) },
-    { "nativeExecJSOnInstance",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-")"
-"Ljava/lang/String;", reinterpret_cast<void*>(ExecJSOnInstance) },
-    { "nativeFireEventOnDataRenderNode",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(FireEventOnDataRenderNode) },
-    { "nativeRegisterModuleOnDataRenderNode",
-"("
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(RegisterModuleOnDataRenderNode) },
-    { "nativeTakeHeapSnapshot",
-"("
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(TakeHeapSnapshot) },
-    { "nativeBindMeasurementToRenderObject",
-"("
-"J"
-")"
-"V", reinterpret_cast<void*>(BindMeasurementToRenderObject) },
-    { "nativeSetRenderContainerWrapContent",
-"("
-"Z"
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(SetRenderContainerWrapContent) },
-    { "nativeGetFirstScreenRenderTime",
-"("
-"Ljava/lang/String;"
-")"
-"[J", reinterpret_cast<void*>(GetFirstScreenRenderTime) },
-    { "nativeGetRenderFinishTime",
-"("
-"Ljava/lang/String;"
-")"
-"[J", reinterpret_cast<void*>(GetRenderFinishTime) },
-    { "nativeSetDefaultHeightAndWidthIntoRootDom",
-"("
-"Ljava/lang/String;"
-"F"
-"F"
-"Z"
-"Z"
-")"
-"V", reinterpret_cast<void*>(SetDefaultHeightAndWidthIntoRootDom) },
-    { "nativeOnInstanceClose",
-"("
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(OnInstanceClose) },
-    { "nativeForceLayout",
-"("
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(ForceLayout) },
-    { "nativeNotifyLayout",
-"("
-"Ljava/lang/String;"
-")"
-"Z", reinterpret_cast<void*>(NotifyLayout) },
-    { "nativeSetStyleWidth",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"F"
-")"
-"V", reinterpret_cast<void*>(SetStyleWidth) },
-    { "nativeSetStyleHeight",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"F"
-")"
-"V", reinterpret_cast<void*>(SetStyleHeight) },
-    { "nativeSetMargin",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-"F"
-")"
-"V", reinterpret_cast<void*>(SetMargin) },
-    { "nativeSetPadding",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-"F"
-")"
-"V", reinterpret_cast<void*>(SetPadding) },
-    { "nativeSetPosition",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"I"
-"F"
-")"
-"V", reinterpret_cast<void*>(SetPosition) },
-    { "nativeMarkDirty",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-"Z"
-")"
-"V", reinterpret_cast<void*>(MarkDirty) },
-    { "nativeRegisterCoreEnv",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(RegisterCoreEnv) },
-    { "nativeResetWXBridge",
-"("
-"Ljava/lang/Object;"
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(ResetWXBridge) },
-    { "nativeSetInstanceRenderType",
-"("
-"Ljava/lang/String;"
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(SetInstanceRenderType) },
-    { "nativeRemoveInstanceRenderType",
-"("
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(RemoveInstanceRenderType) },
-    { "nativeUpdateGlobalConfig",
-"("
-"Ljava/lang/String;"
-")"
-"V", reinterpret_cast<void*>(UpdateGlobalConfig) },
+{ "nativeInitFrameworkEnv",
+  "("
+  "Ljava/lang/String;"
+  "Lorg/apache/weex/bridge/WXParams;"
+  "Ljava/lang/String;"
+  "Z"
+  ")"
+  "I", reinterpret_cast<void*>(InitFrameworkEnv) },
+{ "nativeInitFramework",
+  "("
+  "Ljava/lang/String;"
+  "Lorg/apache/weex/bridge/WXParams;"
+  ")"
+  "I", reinterpret_cast<void*>(InitFramework) },
+{ "nativeRefreshInstance",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "[Lorg/apache/weex/bridge/WXJSObject;"
+  ")"
+  "V", reinterpret_cast<void*>(RefreshInstance) },
+{ "nativeExecJS",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "[Lorg/apache/weex/bridge/WXJSObject;"
+  ")"
+  "I", reinterpret_cast<void*>(ExecJS) },
+{ "nativeExecJSService",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "I", reinterpret_cast<void*>(ExecJSService) },
+{ "nativeExecJSWithResult",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "[Lorg/apache/weex/bridge/WXJSObject;"
+  ")"
+  "[B", reinterpret_cast<void*>(ExecJSWithResult) },
+{ "nativeExecJSWithCallback",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "[Lorg/apache/weex/bridge/WXJSObject;"
+  "J"
+  ")"
+  "V", reinterpret_cast<void*>(ExecJSWithCallback) },
+{ "nativeCreateInstanceContext",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "[Lorg/apache/weex/bridge/WXJSObject;"
+  ")"
+  "I", reinterpret_cast<void*>(CreateInstanceContext) },
+{ "nativeDestoryInstance",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "[Lorg/apache/weex/bridge/WXJSObject;"
+  ")"
+  "I", reinterpret_cast<void*>(DestoryInstance) },
+{ "nativeExecJSOnInstance",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "I"
+  ")"
+  "Ljava/lang/String;", reinterpret_cast<void*>(ExecJSOnInstance) },
+{ "nativeFireEventOnDataRenderNode",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(FireEventOnDataRenderNode) },
+{ "nativeRegisterModuleOnDataRenderNode",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(RegisterModuleOnDataRenderNode) },
+{ "nativeTakeHeapSnapshot",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(TakeHeapSnapshot) },
+{ "nativeBindMeasurementToRenderObject",
+  "("
+  "J"
+  ")"
+  "V", reinterpret_cast<void*>(BindMeasurementToRenderObject) },
+{ "nativeSetRenderContainerWrapContent",
+  "("
+  "Z"
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(SetRenderContainerWrapContent) },
+{ "nativeGetFirstScreenRenderTime",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "[J", reinterpret_cast<void*>(GetFirstScreenRenderTime) },
+{ "nativeGetRenderFinishTime",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "[J", reinterpret_cast<void*>(GetRenderFinishTime) },
+{ "nativeSetDefaultHeightAndWidthIntoRootDom",
+  "("
+  "Ljava/lang/String;"
+  "F"
+  "F"
+  "Z"
+  "Z"
+  ")"
+  "V", reinterpret_cast<void*>(SetDefaultHeightAndWidthIntoRootDom) },
+{ "nativeOnInstanceClose",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(OnInstanceClose) },
+{ "nativeForceLayout",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(ForceLayout) },
+{ "nativeNotifyLayout",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "Z", reinterpret_cast<void*>(NotifyLayout) },
+{ "nativeSetStyleWidth",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "F"
+  ")"
+  "V", reinterpret_cast<void*>(SetStyleWidth) },
+{ "nativeSetStyleHeight",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "F"
+  ")"
+  "V", reinterpret_cast<void*>(SetStyleHeight) },
+{ "nativeSetMargin",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "I"
+  "F"
+  ")"
+  "V", reinterpret_cast<void*>(SetMargin) },
+{ "nativeSetPadding",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "I"
+  "F"
+  ")"
+  "V", reinterpret_cast<void*>(SetPadding) },
+{ "nativeSetPosition",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "I"
+  "F"
+  ")"
+  "V", reinterpret_cast<void*>(SetPosition) },
+{ "nativeMarkDirty",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  "Z"
+  ")"
+  "V", reinterpret_cast<void*>(MarkDirty) },
+{ "nativeRegisterCoreEnv",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(RegisterCoreEnv) },
+{ "nativeResetWXBridge",
+  "("
+  "Ljava/lang/Object;"
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(ResetWXBridge) },
+{ "nativeSetInstanceRenderType",
+  "("
+  "Ljava/lang/String;"
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(SetInstanceRenderType) },
+{ "nativeRemoveInstanceRenderType",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(RemoveInstanceRenderType) },
+{ "nativeUpdateGlobalConfig",
+  "("
+  "Ljava/lang/String;"
+  ")"
+  "V", reinterpret_cast<void*>(UpdateGlobalConfig) },
 };
 
 static bool RegisterNativesImpl(JNIEnv* env) {
-
   g_WXBridge_clazz = reinterpret_cast<jclass>(env->NewGlobalRef(
       base::android::GetClass(env, kWXBridgeClassPath).Get()));
 
@@ -1177,8 +1078,8 @@ static bool RegisterNativesImpl(JNIEnv* env) {
       sizeof(kMethodsWXBridge)/sizeof(kMethodsWXBridge[0]);
 
   if (env->RegisterNatives(WXBridge_clazz(env),
-                           kMethodsWXBridge,
-                           kMethodsWXBridgeSize) < 0) {
+      kMethodsWXBridge,
+      kMethodsWXBridgeSize) < 0) {
     //jni_generator::HandleRegistrationError(
     //    env, WXBridge_clazz(env), __FILE__);
     return false;

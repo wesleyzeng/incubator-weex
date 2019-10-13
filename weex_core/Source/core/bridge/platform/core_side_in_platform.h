@@ -24,10 +24,12 @@
 #include "core/bridge/platform_bridge.h"
 
 namespace WeexCore {
+
 class CoreSideInPlatform : public PlatformBridge::CoreSide {
  public:
   explicit CoreSideInPlatform();
   virtual ~CoreSideInPlatform();
+
   void SetDefaultHeightAndWidthIntoRootDom(
       const std::string &instance_id, float default_width, float default_height,
       bool is_width_wrap_content, bool is_height_wrap_content) override;
@@ -106,18 +108,21 @@ class CoreSideInPlatform : public PlatformBridge::CoreSide {
   int CreateInstance(const char *instanceId, const char *func,
                      const char *script, int script_length, const char *opts, const char *initData,
                      const char *extendsApi, std::vector<INIT_FRAMEWORK_PARAMS*>& params, const char* render_strategy) override;
-  std::unique_ptr<WeexJSResult> ExecJSOnInstance(const char *instanceId,
-                               const char *script,int type) override;
+  std::unique_ptr<WeexJSResult> ExecJSOnInstance(
+      const char *instanceId,
+      const char *script,int type) override;
   int DestroyInstance(const char *instanceId) override;
   int UpdateGlobalConfig(const char *config) override;
 
-  int UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc) override;
+  int UpdateInitFrameworkParams(
+      const std::string& key, const std::string& value, const std::string& desc) override;
   void SetLogType(const int logType, const bool isPerf) override;
   double GetLayoutTime(const char* instanceId) const override;
 
 private:
   DISALLOW_COPY_AND_ASSIGN(CoreSideInPlatform);
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_BRIDGE_PLATFORM_CORE_SIDE_IN_SIMPLE_H

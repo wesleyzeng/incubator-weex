@@ -22,45 +22,45 @@
 #include "stdlib.h"
 
 struct WeexString {
-    uint32_t length;
-    uint16_t content[1];
+  uint32_t length;
+  uint16_t content[1];
 };
 
 struct WeexByteArray {
-    uint32_t length;
-    char content[1];
+  uint32_t length;
+  char content[1];
 };
 
 enum class ParamsType {
-    INT32 = 1,
-    INT64,
-    FLOAT,
-    DOUBLE,
-    JSONSTRING,
-    STRING,
-    BYTEARRAY, /* terminated with zero. */
-    VOID,
-    JSUNDEFINED,
-    BYTEARRAYSTRING,
-    BYTEARRAYJSONSTRING,
-    END,
+  INT32 = 1,
+  INT64,
+  FLOAT,
+  DOUBLE,
+  JSONSTRING,
+  STRING,
+  BYTEARRAY, /* terminated with zero. */
+  VOID,
+  JSUNDEFINED,
+  BYTEARRAYSTRING,
+  BYTEARRAYJSONSTRING,
+  END,
 };
 
 typedef union ExecJsParamValue {
-    int32_t int32Value;
-    int64_t int64Value;
-    float floatValue;
-    double doubleValue;
-    WeexString *string;
-    WeexByteArray *byteArray;
+  int32_t int32Value;
+  int64_t int64Value;
+  float floatValue;
+  double doubleValue;
+  WeexString *string;
+  WeexByteArray *byteArray;
 } EXEC_JS_PARAM_VALUE;
 
 typedef struct ValueWithType {
-    ParamsType type;
-    EXEC_JS_PARAM_VALUE value;
+  ParamsType type;
+  EXEC_JS_PARAM_VALUE value;
 
-    ValueWithType(): type(ParamsType::JSUNDEFINED) {}
+  ValueWithType(): type(ParamsType::JSUNDEFINED) {}
     
-    // ValueWithType((int32_t)-1) normally represents failure for call native weex jsframework
-    ValueWithType(int32_t intValue): type(ParamsType::INT32), value({.int32Value = intValue}) {}
+  // ValueWithType((int32_t)-1) normally represents failure for call native weex jsframework
+  ValueWithType(int32_t intValue): type(ParamsType::INT32), value({.int32Value = intValue}) {}
 } VALUE_WITH_TYPE;
