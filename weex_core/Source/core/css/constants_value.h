@@ -23,6 +23,7 @@
 #include <string>
 
 namespace WeexCore {
+
   // direction
   constexpr char RTL[] = "rtl";
   constexpr char LTR[] = "ltr";
@@ -64,5 +65,7 @@ namespace WeexCore {
 
   constexpr float kDefaultViewPortWidth = 750.0f;
   constexpr bool kDefaultRoundOffDeviation = true;
-}
+
+} // namespace WeexCore
+
 #endif //WEEXV8_CONSTANTSVALUE_H

@@ -22,37 +22,34 @@
 
 #ifndef WEEX_PROJECT_REPLAYMANAGER_H
 #define WEEX_PROJECT_REPLAYMANAGER_H
-#include "JsonPage.h"
+
 #include <map>
 #include <string>
 
-namespace WeexCore{
+#include "JsonPage.h"
 
-    class JsonRenderManager {
+namespace WeexCore {
 
-        public:
-            static JsonRenderManager *GetInstance() {
-                if (!g_instance) {
-                    g_instance = new JsonRenderManager();
-                }
-                return g_instance;
-            }
+class JsonRenderManager {
+ public:
+  static JsonRenderManager *GetInstance() {
+    if (!g_instance) {
+      g_instance = new JsonRenderManager();
+    }
+    return g_instance;
+  }
 
-        public:
-           void CreatePage(const std::string& script, const std::string& instanceId, const std::string& render_strategy);
-           bool RefreshPage(const std::string &page_id, const std::string &init_data);
-           bool ClosePage(const std::string &page_id);
+  void CreatePage(const std::string& script, const std::string& instanceId, const std::string& render_strategy);
+  bool RefreshPage(const std::string &page_id, const std::string &init_data);
+  bool ClosePage(const std::string &page_id);
 
-        private:
-            JsonRenderManager();
+ private:
+  JsonRenderManager();
 
-        private:
-            static  JsonRenderManager *g_instance;
-            std::map<std::string, JsonPage*> mPages;
+  static  JsonRenderManager *g_instance;
+  std::map<std::string, JsonPage*> mPages;
+};
 
-    };
-}
-
-
+} // namce WeexCore
 
 #endif //WEEX_PROJECT_REPLAYMANAGER_H

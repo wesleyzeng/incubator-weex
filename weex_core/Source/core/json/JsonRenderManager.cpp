@@ -22,47 +22,44 @@
 
 #include "JsonRenderManager.h"
 
-namespace WeexCore{
+namespace WeexCore {
 
-    JsonRenderManager* JsonRenderManager::g_instance = nullptr;
+JsonRenderManager* JsonRenderManager::g_instance = nullptr;
 
-    JsonRenderManager::JsonRenderManager() {
+JsonRenderManager::JsonRenderManager() {}
 
-    }
-
-
-    void JsonRenderManager::CreatePage(const std::string &script, const std::string &instanceId,
+void JsonRenderManager::CreatePage(const std::string &script, const std::string &instanceId,
                                    const std::string &render_strategy) {
-        JsonPage* replayPage = new JsonPage(instanceId);
-        replayPage->parseJson(script);
-        mPages[instanceId] = replayPage;
-    }
-
-
-    bool JsonRenderManager::RefreshPage(const std::string &page_id, const std::string &init_data) {
-        if(mPages.size() == 0){
-            return false;
-        }
-        auto it = mPages.find(page_id);
-        if(it == mPages.end()){
-            return false;
-        }
-        return true;
-    }
-
-    bool JsonRenderManager::ClosePage(const std::string &page_id) {
-        if(mPages.size() == 0){
-            return false;
-        }
-        auto it = mPages.find(page_id);
-        if(it == mPages.end()){
-            return false;
-        }
-        delete  it->second;
-        mPages.erase(page_id);
-        return true;
-    }
-
-
-
+  JsonPage* replayPage = new JsonPage(instanceId);
+  replayPage->parseJson(script);
+  mPages[instanceId] = replayPage;
 }
+
+bool JsonRenderManager::RefreshPage(const std::string &page_id, const std::string &init_data) {
+  if (mPages.size() == 0) {
+    return false;
+  }
+  auto it = mPages.find(page_id);
+  if (it == mPages.end()) {
+    return false;
+  }
+
+  return true;
+}
+
+bool JsonRenderManager::ClosePage(const std::string &page_id) {
+  if (mPages.size() == 0) {
+    return false;
+  }
+
+  auto it = mPages.find(page_id);
+  if (it == mPages.end()) {
+    return false;
+  }
+
+  delete  it->second;
+  mPages.erase(page_id);
+  return true;
+}
+
+} // namespace WeexCore

@@ -18,96 +18,96 @@
  */
 #ifndef WEEX_PROJECT_WXCOREENVIRONMENT_H
 #define WEEX_PROJECT_WXCOREENVIRONMENT_H
+
 #include "core/api/wx_api.h"
+
 #include <string>
 #include <map>
 
 namespace WeexCore {
 
-  class WX_EXPORT WXCoreEnvironment {
+class WX_EXPORT WXCoreEnvironment {
+ private:
+  WXCoreEnvironment() {}
+  ~WXCoreEnvironment() {}
 
-  private:
+  static WXCoreEnvironment *m_pInstance;
 
-    WXCoreEnvironment() {}
-
-    ~WXCoreEnvironment() {}
-
-    static WXCoreEnvironment *m_pInstance;
-
-    //just to release singleton object
-    class Garbo {
-    public:
-      ~Garbo() {
-        if (WXCoreEnvironment::m_pInstance) {
-          delete WXCoreEnvironment::m_pInstance;
-        }
+  //just to release singleton object
+  class Garbo {
+   public:
+    ~Garbo() {
+      if (WXCoreEnvironment::m_pInstance) {
+        delete WXCoreEnvironment::m_pInstance;
       }
-    };
-
-    static Garbo garbo;
-
-    std::string mPlatformName;
-
-    float mDeviceWidth;
-
-    float mDeviceHeight;
-
-    std::map<std::string, std::string> mOptions;
-
-    bool mInteractionLogSwitch;
-
-    bool mUseRuntimeApi;
-
-  public:
-
-    bool SetPlatform(std::string platformName);
-
-    inline std::string platform() {
-        return mPlatformName;
-    }
-
-    bool IsAndroid();
-
-    bool IsIOS();
-
-    bool SetDeviceWidth(const std::string &width);
-
-    bool SetDeviceHeight(const std::string &height);
-
-    inline void set_device_height(float height) {
-        mDeviceHeight = height;
-    }
-
-    inline void set_device_width(float width) {
-        mDeviceWidth = width;
-    }
-
-    inline bool isInteractionLogOpen(){
-        return mInteractionLogSwitch;
-    }
-
-    const float DeviceWidth();
-
-    const float DeviceHeight();
-
-    const std::string GetOption(const std::string &key);
-
-    const std::map<std::string, std::string> &options();
-
-    bool isUseRunTimeApi();
-
-    void setUseRunTimeApi(bool useRuntimeApi);
-
-    void AddOption(std::string key, std::string value);
-    void PutOption(std::string key, std::string value);
-
-    static WXCoreEnvironment *getInstance() {
-      if (!m_pInstance) {
-        m_pInstance = new WXCoreEnvironment();
-      }
-      return m_pInstance;
     }
   };
-}
+
+  static Garbo garbo;
+
+  std::string mPlatformName;
+
+  float mDeviceWidth;
+
+  float mDeviceHeight;
+
+  std::map<std::string, std::string> mOptions;
+
+  bool mInteractionLogSwitch;
+
+  bool mUseRuntimeApi;
+
+ public:
+
+  bool SetPlatform(std::string platformName);
+
+  inline std::string platform() {
+    return mPlatformName;
+  }
+
+  bool IsAndroid();
+
+  bool IsIOS();
+
+  bool SetDeviceWidth(const std::string &width);
+
+  bool SetDeviceHeight(const std::string &height);
+
+  inline void set_device_height(float height) {
+    mDeviceHeight = height;
+  }
+
+  inline void set_device_width(float width) {
+    mDeviceWidth = width;
+  }
+
+  inline bool isInteractionLogOpen() {
+    return mInteractionLogSwitch;
+  }
+
+  const float DeviceWidth();
+
+  const float DeviceHeight();
+
+  const std::string GetOption(const std::string &key);
+
+  const std::map<std::string, std::string> &options();
+
+  bool isUseRunTimeApi();
+
+  void setUseRunTimeApi(bool useRuntimeApi);
+
+  void AddOption(std::string key, std::string value);
+  void PutOption(std::string key, std::string value);
+
+  static WXCoreEnvironment *getInstance() {
+    if (!m_pInstance) {
+      m_pInstance = new WXCoreEnvironment();
+    }
+    return m_pInstance;
+  }
+};
+
+} // namespace WeexCore
 
 #endif //WEEX_PROJECT_WXCOREENVIRONMENT_H

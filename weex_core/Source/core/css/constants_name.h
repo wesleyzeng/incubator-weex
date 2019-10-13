@@ -23,6 +23,7 @@
 #include <string>
 
 namespace WeexCore {
+
   constexpr char DIRECTION[] = "direction";
 
   constexpr char FLEX[] = "flex";
@@ -82,6 +83,7 @@ namespace WeexCore {
   constexpr char COLOR[] = "color";
   constexpr char BACKGROUND_COLOR[] = "backgroundColor";
   constexpr char APPEND[] = "append";
-}
+
+} // namespace WeexCore
 
 #endif //WEEXV8_CONSTANTSNAME_H

@@ -16,95 +16,97 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #include "core_environment.h"
+
 #include <math.h>
 #include <stdlib.h>
 
 #include "base/core_constants.h"
 #include "base/log_defines.h"
-#include "base/log_defines.h"
 #include "core/common/view_utils.h"
 
 namespace WeexCore {
 
-  WXCoreEnvironment *WXCoreEnvironment::m_pInstance = nullptr;
+WXCoreEnvironment *WXCoreEnvironment::m_pInstance = nullptr;
 
-  bool WXCoreEnvironment::SetPlatform(std::string platformName) {
-    if (platformName.empty())
-      return false;
-    this->mPlatformName = platformName;
-    if (platformName == OS_Android || platformName == OS_iOS) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool WXCoreEnvironment::IsAndroid() {
-    return mPlatformName == OS_Android;
-  }
-
-  bool WXCoreEnvironment::IsIOS() {
-    return mPlatformName == OS_iOS;
-  }
-
-  bool WXCoreEnvironment::SetDeviceWidth(const std::string &width) {
-    if (width.empty() || isnan(getFloat(width.c_str())))
-      return false;
-    mDeviceWidth = getFloat(width.c_str());
+bool WXCoreEnvironment::SetPlatform(std::string platformName) {
+  if (platformName.empty())
+    return false;
+  this->mPlatformName = platformName;
+  if (platformName == OS_Android || platformName == OS_iOS) {
     return true;
-  }
-
-  bool WXCoreEnvironment::SetDeviceHeight(const std::string &height) {
-    if (height.empty() || isnan(getFloat(height.c_str())))
-      return false;
-    mDeviceHeight = getFloat(height.c_str());
-    return true;
-  }
-
-  const float WXCoreEnvironment::DeviceWidth() {
-    return mDeviceWidth;
-  }
-
-  const float WXCoreEnvironment::DeviceHeight() {
-    return mDeviceHeight;
-  }
-
-  const std::string WXCoreEnvironment::GetOption(const std::string &key) {
-    std::map<std::string, std::string>::iterator iter = mOptions.find(key);
-    if (iter != mOptions.end()) {
-      return iter->second;
-    } else {
-      return "";
-    }
-  }
-
-  const std::map<std::string, std::string>& WXCoreEnvironment::options() {
-      return mOptions;
-  }
-
-  void WXCoreEnvironment::AddOption(std::string key, std::string value) {
-    mOptions.insert(std::pair<std::string, std::string>(key, value));
-    if (key == "switchInteractionLog") {
-      mInteractionLogSwitch = "true" == value;
-    }
-  }
-
-  void WXCoreEnvironment::PutOption(std::string key, std::string value){
-    auto it = mOptions.find(key);
-    if(it == mOptions.end()){
-      AddOption(key, value);
-      return;
-    }else{
-      it->second = value;
-    }
-  }
-
-  void WXCoreEnvironment::setUseRunTimeApi(bool useRuntimeApi) {
-    this->mUseRuntimeApi = useRuntimeApi;
-  }
-
-  bool WXCoreEnvironment::isUseRunTimeApi(){
-    return mUseRuntimeApi;
+  } else {
+    return false;
   }
 }
+
+bool WXCoreEnvironment::IsAndroid() {
+  return mPlatformName == OS_Android;
+}
+
+bool WXCoreEnvironment::IsIOS() {
+  return mPlatformName == OS_iOS;
+}
+
+bool WXCoreEnvironment::SetDeviceWidth(const std::string &width) {
+  if (width.empty() || isnan(getFloat(width.c_str())))
+    return false;
+  mDeviceWidth = getFloat(width.c_str());
+  return true;
+}
+
+bool WXCoreEnvironment::SetDeviceHeight(const std::string &height) {
+  if (height.empty() || isnan(getFloat(height.c_str())))
+    return false;
+  mDeviceHeight = getFloat(height.c_str());
+  return true;
+}
+
+const float WXCoreEnvironment::DeviceWidth() {
+  return mDeviceWidth;
+}
+
+const float WXCoreEnvironment::DeviceHeight() {
+  return mDeviceHeight;
+}
+
+const std::string WXCoreEnvironment::GetOption(const std::string &key) {
+  std::map<std::string, std::string>::iterator iter = mOptions.find(key);
+  if (iter != mOptions.end()) {
+    return iter->second;
+  } else {
+    return "";
+  }
+}
+
+const std::map<std::string, std::string>& WXCoreEnvironment::options() {
+  return mOptions;
+}
+
+void WXCoreEnvironment::AddOption(std::string key, std::string value) {
+  mOptions.insert(std::pair<std::string, std::string>(key, value));
+  if (key == "switchInteractionLog") {
+    mInteractionLogSwitch = "true" == value;
+  }
+}
+
+void WXCoreEnvironment::PutOption(std::string key, std::string value){
+  auto it = mOptions.find(key);
+  if (it == mOptions.end()){
+    AddOption(key, value);
+    return;
+  } else {
+    it->second = value;
+  }
+}
+
+void WXCoreEnvironment::setUseRunTimeApi(bool useRuntimeApi) {
+  this->mUseRuntimeApi = useRuntimeApi;
+}
+
+bool WXCoreEnvironment::isUseRunTimeApi(){
+  return mUseRuntimeApi;
+}
+
+} // namespace WeexCore

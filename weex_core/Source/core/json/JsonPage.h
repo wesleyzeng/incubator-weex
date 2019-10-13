@@ -22,33 +22,34 @@
 
 #ifndef WEEX_PROJECT_REPLAYPAGE_H
 #define WEEX_PROJECT_REPLAYPAGE_H
-#include "third_party/json11/json11.hpp"
+
 #include <map>
 #include <string>
+
+#include "third_party/json11/json11.hpp"
+
 #include "core/render/page/render_page_custom.h"
 
 namespace WeexCore {
 
-    /**
-     * Parse Json and send command to render manager.
-     * for qucik replay online state
-     * */
-    class JsonPage {
+/**
+ * Parse Json and send command to render manager.
+ * for qucik replay online state
+ * */
+class JsonPage {
+ public:
+  JsonPage(const std::string& pageId);
 
-        public:
-            JsonPage(const std::string& pageId);
+  void parseJson(const std::string &data);
 
-        public:
-            void parseJson(const std::string &data);
+ private:
+  void sendChildren(const json11::Json node, const std::string &parent_ref, int index, bool body = false);
 
-         private:
-            void sendChildren(const json11::Json node, const std::string &parent_ref, int index, bool body=false);
+ protected:
+  std::string mPageId;
+  RenderPageCustom* mRenderPageCustom;
+};
 
-        protected:
-            std::string mPageId;
-            RenderPageCustom* mRenderPageCustom;
-
-    };
-}
+} // namespace WeexCore
 
 #endif //WEEX_PROJECT_REPLAYPAGE_H

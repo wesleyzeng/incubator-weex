@@ -20,30 +20,33 @@
 
 #include "core/bridge/platform/core_side_in_platform.h"
 
-#include "core/common/view_utils.h"
+#ifdef OS_ANDROID
+#include <android/utils/params_utils.h>
+#include <wson/wson.h>
+#endif
+
 #include "base/string_util.h"
 #include "base/log_defines.h"
+#include "core/bridge/eagle_bridge.h"
+#include "core/common/view_utils.h"
 #include "core/config/core_environment.h"
+#include "core/json/JsonRenderManager.h"
 #include "core/manager/weex_core_manager.h"
+#include "core/moniter/render_performance.h"
 #include "core/render/manager/render_manager.h"
 #include "core/render/node/factory/render_creator.h"
 #include "core/render/node/factory/render_type.h"
 #include "core/render/node/render_list.h"
 #include "core/render/node/render_object.h"
 #include "core/render/page/render_page.h"
-#include "core/json/JsonRenderManager.h"
-#include "core/bridge/eagle_bridge.h"
 #include "third_party/json11/json11.hpp"
-#include "core/moniter/render_performance.h"
-#ifdef OS_ANDROID
-#include <android/utils/params_utils.h>
-#include <wson/wson.h>
-#endif
 
 namespace WeexCore {
 
 CoreSideInPlatform::CoreSideInPlatform() {}
+
 CoreSideInPlatform::~CoreSideInPlatform() {}
+
 void CoreSideInPlatform::SetDefaultHeightAndWidthIntoRootDom(
     const std::string &instance_id, float default_width, float default_height,
     bool is_width_wrap_content, bool is_height_wrap_content) {
@@ -166,6 +169,7 @@ void CoreSideInPlatform::MarkDirty(const std::string &instance_id,
 
   RenderObject *render = static_cast<RenderPage*>(page)->GetRenderObject(render_ref);
   if (render == nullptr) return;
+
   render->markDirty();
 }
 
@@ -174,22 +178,22 @@ void CoreSideInPlatform::SetViewPortWidth(const std::string &instance_id,
   RenderManager::GetInstance()->set_viewport_width(instance_id, width);
 }
     
-void CoreSideInPlatform::SetDeviceDisplayOfPage(const std::string &instance_id, float width, float height /* unused now */)  {
+void CoreSideInPlatform::SetDeviceDisplayOfPage(
+    const std::string &instance_id, float width, float height /* unused now */)  {
   RenderManager::GetInstance()->setDeviceWidth(instance_id, width);
 }
 
 void CoreSideInPlatform::SetPageRenderType(const std::string &pageId,
                                            const std::string &renderType) {
-    RenderManager::GetInstance()->setPageArgument(pageId, "renderType", renderType);
+  RenderManager::GetInstance()->setPageArgument(pageId, "renderType", renderType);
 }
 
 void CoreSideInPlatform::RemovePageRenderType(const std::string &pageId) {
   // void
 }
 
-
 void CoreSideInPlatform::SetPageArgument(const std::string &pageId, const std::string& key, const std::string& value){
-     RenderManager::GetInstance()->setPageArgument(pageId, key, value);
+  RenderManager::GetInstance()->setPageArgument(pageId, key, value);
 }
 
 void CoreSideInPlatform::SetDeviceDisplay(const std::string &instance_id, float width, float height, float scale) {
@@ -207,6 +211,7 @@ void CoreSideInPlatform::SetPageDirty(const std::string &instance_id) {
   RenderPageBase *page = RenderManager::GetInstance()->GetPage(std::string(instance_id));
   if (page == nullptr) return;
   if (!page->is_platform_page()) return;
+
   static_cast<RenderPage*>(page)->set_is_dirty(true);
 }
 
@@ -214,6 +219,7 @@ void CoreSideInPlatform::ForceLayout(const std::string &instance_id) {
   RenderPageBase *page = RenderManager::GetInstance()->GetPage(instance_id);
   if (page != nullptr) {
     if (!page->is_platform_page()) return;
+
     static_cast<RenderPage*>(page)->LayoutImmediately();
     static_cast<RenderPage*>(page)->has_fore_layout_action_.store(false);
   }
@@ -346,10 +352,10 @@ int CoreSideInPlatform::RefreshInstance(
     const char *instanceId, const char *nameSpace, const char *func,
     std::vector<VALUE_WITH_TYPE *> &params) {
 #ifdef OS_ANDROID
-  if(params.size() < 2)
+  if (params.size() < 2)
     return false;
 
-  if(params[1]->value.string->length <= 0)
+  if (params[1]->value.string->length <= 0)
     return false;
 
   std::string init_data = weex::base::to_utf8(params[1]->value.string->content,
@@ -431,8 +437,8 @@ int CoreSideInPlatform::CreateAppContext(const char *instanceId,
       ->CreateAppContext(instanceId, jsBundle);
 }
 
-std::unique_ptr<WeexJSResult> CoreSideInPlatform::ExecJSOnAppWithResult(const char *instanceId,
-                                                      const char *jsBundle) {
+std::unique_ptr<WeexJSResult> CoreSideInPlatform::ExecJSOnAppWithResult(
+    const char *instanceId, const char *jsBundle) {
   return WeexCoreManager::Instance()
       ->script_bridge()
       ->script_side()
@@ -500,7 +506,6 @@ int CoreSideInPlatform::CreateInstance(const char *instanceId, const char *func,
                                        const char *initData,
                                        const char *extendsApi, std::vector<INIT_FRAMEWORK_PARAMS*>& params,
                                        const char *render_strategy) {
-
   // First check about DATA_RENDER mode
   if (render_strategy != nullptr) {
     std::function<void(const char *, const char *)> exec_js =
@@ -524,10 +529,9 @@ int CoreSideInPlatform::CreateInstance(const char *instanceId, const char *func,
         };
     if (strcmp(render_strategy, "DATA_RENDER") == 0) {
         auto handler = EagleBridge::GetInstance()->data_render_handler();
-        if(handler){
+        if (handler) {
           handler->CreatePage(script, instanceId, render_strategy, initData, exec_js);
-        }
-        else{
+        } else {
           WeexCore::WeexCoreManager::Instance()->getPlatformBridge()->platform_side()->ReportException(
             instanceId, "CreatePageWithContent", 
             "There is no data_render_handler when createInstance with DATA_RENDER mode");
@@ -582,19 +586,12 @@ int CoreSideInPlatform::CreateInstance(const char *instanceId, const char *func,
     }
   }
 
-
-  return WeexCoreManager::Instance()
-      ->script_bridge()
-      ->script_side()
-      ->CreateInstance(instanceId, func, script, opts, initData, extendsApi, params);
+  return WeexCoreManager::Instance()->script_bridge()->script_side()->CreateInstance(instanceId, func, script, opts, initData, extendsApi, params);
 }
 
 std::unique_ptr<WeexJSResult> CoreSideInPlatform::ExecJSOnInstance(const char *instanceId,
                                                  const char *script, int type) {
-  return WeexCoreManager::Instance()
-      ->script_bridge()
-      ->script_side()
-      ->ExecJSOnInstance(instanceId, script,type);
+  return WeexCoreManager::Instance()->script_bridge()->script_side()->ExecJSOnInstance(instanceId, script,type);
 }
 
 int CoreSideInPlatform::DestroyInstance(const char *instanceId) {
@@ -613,34 +610,24 @@ int CoreSideInPlatform::DestroyInstance(const char *instanceId) {
 }
 
 int CoreSideInPlatform::UpdateGlobalConfig(const char *config) {
-  return WeexCoreManager::Instance()
-      ->script_bridge()
-      ->script_side()
-      ->UpdateGlobalConfig(config);
+  return WeexCoreManager::Instance()->script_bridge()->script_side()->UpdateGlobalConfig(config);
 }
-
 
 int CoreSideInPlatform::UpdateInitFrameworkParams(const std::string &key, const std::string &value,
                                                   const std::string &desc) {
-  return WeexCoreManager::Instance()
-          ->script_bridge()
-          ->script_side()
-          ->UpdateInitFrameworkParams(key, value, desc);
+  return WeexCoreManager::Instance()->script_bridge()->script_side()->UpdateInitFrameworkParams(key, value, desc);
 }
 
 void CoreSideInPlatform::SetLogType(const int logType, const bool isPerf) {
-  WeexCoreManager::Instance()
-      ->script_bridge()
-      ->script_side()
-      ->SetLogType(logType,isPerf);
+  WeexCoreManager::Instance()->script_bridge()->script_side()->SetLogType(logType,isPerf);
 }
 
 double CoreSideInPlatform::GetLayoutTime(const char* instanceId) const {
-    RenderPageBase *page = RenderManager::GetInstance()->GetPage(instanceId);
-    if (page == nullptr) return 0;
-    if (!page->is_platform_page()) return 0;
-    return page->getPerformance()->cssLayoutTime;
-}
+  RenderPageBase *page = RenderManager::GetInstance()->GetPage(instanceId);
+  if (page == nullptr) return 0;
+  if (!page->is_platform_page()) return 0;
 
+  return page->getPerformance()->cssLayoutTime;
+}
 
 }  // namespace WeexCore

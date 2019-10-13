@@ -19,10 +19,12 @@
 #ifndef WEEX_PROJECT_STYLEGETTER_H
 #define WEEX_PROJECT_STYLEGETTER_H
 
-#include "core/layout/flex_enum.h"
 #include <string>
 
+#include "core/layout/flex_enum.h"
+
 namespace WeexCore {
+
   const WXCoreDirection GetWXCoreDirection(const std::string &value);
 
   const WXCoreFlexDirection GetWXCoreFlexDirection(const std::string &value);
@@ -36,7 +38,7 @@ namespace WeexCore {
   const WXCoreAlignSelf GetWXCoreAlignSelf(const std::string &value);
 
   const WXCorePositionType GetWXCorePositionType(const std::string &value);
-}
 
+} // namespace WeexCore
 
 #endif //WEEX_PROJECT_STYLEGETTER_H
