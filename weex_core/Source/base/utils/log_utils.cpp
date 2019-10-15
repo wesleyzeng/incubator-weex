@@ -20,6 +20,7 @@
 #include "base/utils/log_utils.h"
 
 namespace Weex {
+
 void LogUtil::ConsoleLogPrint(int level, const char *tag, const char *log) {
   // Log = 1,
   // Warning = 2,
@@ -47,4 +48,4 @@ void LogUtil::ConsoleLogPrint(int level, const char *tag, const char *log) {
   }
 }
 
-}
+} // namespace Weex

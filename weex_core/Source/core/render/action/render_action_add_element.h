@@ -53,6 +53,7 @@ class RenderActionAddElement : public RenderAction {
   int index_;
   bool will_layout_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_ADD_ELEMENT_H_

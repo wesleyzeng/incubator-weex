@@ -24,12 +24,13 @@
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
+
 class RenderText : public RenderObject {
  private:
   void UpdateAttr(std::string key, std::string value);
-
   StyleType UpdateStyle(std::string key, std::string value);
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_NODE_RENDER_TEXT_H_

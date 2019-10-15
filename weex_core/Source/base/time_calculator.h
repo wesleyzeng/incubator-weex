@@ -25,13 +25,15 @@
 
 #include <string>
 #include <mutex>
+
+#include "base/log_defines.h"
 #include "time_point.h"
 #include "time_unit.h"
 #include "time_utils.h"
-#include "base/log_defines.h"
 
 namespace weex {
 namespace base {
+
 enum TaskPlatform {
   WEEXCORE,
   JSS_ENGINE
@@ -76,9 +78,7 @@ class TimeCalculator {
   }
 
   void taskStart();
-
   void taskEnd();
-
   void set_task_name(std::string name) {
     this->m_task_name_ = name;
   }
@@ -111,8 +111,8 @@ class TimeCalculator {
   std::string m_task_platform_;
   std::string m_final_info_string_;
   std::string args;
-
 };
+
 }  // namespace base
 }  // namespace weex
 

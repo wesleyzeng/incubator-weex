@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_ATTR_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_ATTR_H_
 
@@ -40,6 +41,7 @@ class RenderActionUpdateAttr : public RenderAction {
   std::string ref_;
   std::vector<std::pair<std::string, std::string>> *attrs_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_ATTR_H_

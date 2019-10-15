@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #include "core/render/node/factory/render_creator.h"
+
 #include "core/render/node/factory/render_appbar_factory.h"
 #include "core/render/node/factory/render_factory_interface.h"
 #include "core/render/node/factory/render_list_factory.h"
@@ -31,6 +33,7 @@ namespace WeexCore {
 
 RenderCreator *RenderCreator::g_pInstance = nullptr;
 
+// TODO: Optimize this.
 IRenderFactory *RenderCreator::CreateFactory(const std::string &type) {
   if (type == kRenderText) {
     return new RenderTextFactory();
@@ -48,8 +51,7 @@ IRenderFactory *RenderCreator::CreateFactory(const std::string &type) {
     auto findAffine = affineTypes_.find(type);
     if (findAffine != affineTypes_.end()) {
       return CreateFactory(findAffine->second);
-    }
-    else {
+    } else {
       return new RenderCommonFactory();
     }
   }
@@ -62,7 +64,7 @@ IRenderObject *RenderCreator::CreateRender(const std::string &type,
     return nullptr;
   }
 
-  IRenderObject *render = factory->CreateRender();
+  IRenderObject* render = factory->CreateRender();
   render->set_ref(ref);
   render->set_type(type);
   delete factory;
@@ -86,4 +88,5 @@ bool RenderCreator::IsAffineType(const std::string &type, const std::string& asT
   }
   return IsAffineType(findAffine->second, asType);
 }
+
 }  // namespace WeexCore

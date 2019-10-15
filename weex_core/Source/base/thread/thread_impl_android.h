@@ -17,14 +17,16 @@
  * under the License.
  */
 
-#ifdef __ANDROID__ 
 #ifndef WEEX_PROJECT_THREAD_IMPL_ANDROID_H
 #define WEEX_PROJECT_THREAD_IMPL_ANDROID_H
+
+#ifdef __ANDROID__ 
 
 #include "base/thread/thread_impl_posix.h"
 
 namespace weex {
 namespace base {
+
 class ThreadImplAndroid : public ThreadImplPosix {
  public:
   ThreadImplAndroid(const ThreadParams& params);
@@ -34,8 +36,10 @@ class ThreadImplAndroid : public ThreadImplPosix {
  private:
   DISALLOW_COPY_AND_ASSIGN(ThreadImplAndroid);
 };
+
 }  // namespace base
 }  // namespace weex
 
+#endif // __ANDROID__
+
 #endif  // WEEX_PROJECT_THREAD_IMPL_ANDROID_H
-#endif

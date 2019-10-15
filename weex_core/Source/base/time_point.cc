@@ -23,6 +23,7 @@
 
 namespace weex {
 namespace base {
+
 TimePoint TimePoint::Now() {
   struct timespec ts;
   int res = clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -30,5 +31,6 @@ TimePoint TimePoint::Now() {
   return TimePoint(TimeUnit::FromSeconds(ts.tv_sec).ToNanoseconds() +
                    ts.tv_nsec);
 }
+
 }  // namespace base
 }  // namespace weex

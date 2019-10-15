@@ -24,6 +24,7 @@
 #include "core/render/action/render_action_interface.h"
 
 namespace WeexCore {
+
 class RenderActionTriggerVSync : public RenderAction {
  public:
   explicit RenderActionTriggerVSync(const std::string &page_id);
@@ -33,6 +34,7 @@ class RenderActionTriggerVSync : public RenderAction {
  public:
   std::string page_id_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_TRIGGER_VSYNC_H

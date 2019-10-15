@@ -17,6 +17,8 @@
  * under the License.
  */
 
+#include "core/render/node/render_list.h"
+
 #include <math.h>
 #include <cmath>
 #include <utility>
@@ -25,13 +27,13 @@
 #include "core/css/constants_name.h"
 #include "core/render/manager/render_manager.h"
 #include "core/render/node/factory/render_type.h"
-#include "core/render/node/render_list.h"
 #include "core/render/node/render_object.h"
 #include "core/render/page/render_page.h"
 #include "core/render/node/factory/render_creator.h"
 
 namespace WeexCore {
 
+// TODO: Optimize this.
 RenderList::~RenderList() {
   if (this->cell_slots_copys_.size() > 0) {
     for (auto it = this->cell_slots_copys_.begin();
@@ -64,12 +66,11 @@ void RenderList::AddCellSlotCopyTrack(RenderObject *cell_slot) {
 }
 
 std::map<std::string, std::string> *RenderList::GetDefaultStyle() {
-  std::map<std::string, std::string> *style =
-      new std::map<std::string, std::string>();
+  std::map<std::string, std::string> *style
+      = new std::map<std::string, std::string>();
 
   bool is_vertical = true;
-  RenderObject *parent = static_cast<RenderObject *>(getParent());
-
+  RenderObject* parent = static_cast<RenderObject *>(getParent());
   if (parent != nullptr && !parent->type().empty()) {
     if (parent->type() == kHList) {
       is_vertical = false;
@@ -79,7 +80,6 @@ std::map<std::string, std::string> *RenderList::GetDefaultStyle() {
   }
 
   std::string prop = is_vertical ? HEIGHT : WIDTH;
-
   if (prop == HEIGHT && isnan(getStyleHeight()) && !this->is_set_flex_) {
     this->is_set_flex_ = true;
     style->insert(std::pair<std::string, std::string>(FLEX, "1"));
@@ -96,7 +96,8 @@ void RenderList::set_flex(const float flex) {
   WXCoreLayoutNode::set_flex(flex);
 }
 
-std::map<std::string, std::string> *RenderList::GetDefaultAttr() {
+// TODO: Optimize this.
+std::map<std::string, std::string>* RenderList::GetDefaultAttr() {
   if (!this->is_pre_calculate_cell_width_) {
     PreCalculateCellWidth();
   }
@@ -189,8 +190,8 @@ void RenderList::PreCalculateCellWidth() {
   }
 
   RenderPage *page = GetRenderPage();
-
-  if (page != nullptr) page->SendUpdateAttrAction(this, attrs);
+  if (page != nullptr)
+    page->SendUpdateAttrAction(this, attrs);
 
   if (attrs != nullptr) {
     attrs->clear();
@@ -262,8 +263,7 @@ int RenderList::AddRenderObject(int index, RenderObject *child) {
   return index;
 }
 
-void RenderList::AddRenderObjectWidth(RenderObject *child,
-                                      const bool updating) {
+void RenderList::AddRenderObjectWidth(RenderObject *child, const bool updating) {
   if ((RenderCreator::GetInstance()->IsAffineType(type(), kRenderWaterfall)) || type() == kRenderRecycleList) {
     if (child->type() == kRenderHeader || child->type() == kRenderFooter) {
       child->ApplyStyle(WIDTH, to_string(this->available_width_), updating);
@@ -276,12 +276,10 @@ void RenderList::AddRenderObjectWidth(RenderObject *child,
   }
 }
 
-
 void RenderList::AddAttr(std::string key, std::string value) {
   MapInsertOrAssign(&mOriginalAttrs, key, value);
   RenderObject::AddAttr(key, value);
 }
-
 
 void RenderList::UpdateAttr(std::string key, std::string value) {
   MapInsertOrAssign(&mOriginalAttrs, key, value);
@@ -315,43 +313,38 @@ static const std::string GetMapAttr(std::map<std::string,std::string>* attrs,  c
 
 float RenderList::TakeColumnCount() {
   std::string column_count = GetMapAttr(&mOriginalAttrs, COLUMN_COUNT);
-
   if (column_count.empty() || column_count == AUTO) {
     return AUTO_VALUE;
   }
 
   float column_count_value = getFloat(column_count.c_str());
-  return (column_count_value > 0 && !isnan(column_count_value)) ? column_count_value
-                                                            : AUTO_VALUE;
+  return (column_count_value > 0 && !isnan(column_count_value))
+      ? column_count_value : AUTO_VALUE;
 }
 
 float RenderList::TakeColumnGap() {
   std::string column_gap = GetMapAttr(&mOriginalAttrs, COLUMN_GAP);
-
   if (column_gap.empty() || column_gap == NORMAL) {
     return COLUMN_GAP_NORMAL;
   }
 
   float column_gap_value = getFloat(column_gap.c_str());
-  return (column_gap_value > 0 && !isnan(column_gap_value)) ? column_gap_value
-                                                        : AUTO_VALUE;
+  return (column_gap_value > 0 && !isnan(column_gap_value))
+      ? column_gap_value : AUTO_VALUE;
 }
 
 float RenderList::TakeColumnWidth() {
   std::string column_width = GetMapAttr(&mOriginalAttrs, COLUMN_WIDTH);
-
   if (column_width.empty() || column_width == AUTO) {
     return AUTO_VALUE;
   }
 
   float column_width_value = getFloat(column_width.c_str());
-  return (column_width_value > 0 && !isnan(column_width_value)) ? column_width_value
-                                                            : 0;
+  return (column_width_value > 0 && !isnan(column_width_value)) ? column_width_value : 0;
 }
 
 float RenderList::TakeLeftGap() {
-  std::string left_gap =GetMapAttr(&mOriginalAttrs, LEFT_GAP);
-
+  std::string left_gap = GetMapAttr(&mOriginalAttrs, LEFT_GAP);
   if (left_gap.empty() || left_gap == AUTO) {
     return 0;
   }
@@ -361,8 +354,7 @@ float RenderList::TakeLeftGap() {
 }
 
 float RenderList::TakeRightGap() {
-  std::string right_gap =GetMapAttr(&mOriginalAttrs, RIGHT_GAP);
-
+  std::string right_gap = GetMapAttr(&mOriginalAttrs, RIGHT_GAP);
   if (right_gap.empty() || right_gap == AUTO) {
     return 0;
   }
@@ -378,4 +370,5 @@ int RenderList::TakeOrientation() {
   }
   return VERTICAL_VALUE;
 }
+
 }  // namespace WeexCore

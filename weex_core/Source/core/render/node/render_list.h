@@ -37,33 +37,23 @@ class RenderList : public RenderObject {
   void AddCellSlotCopyTrack(RenderObject *cell_slot);
 
   std::map<std::string, std::string> *GetDefaultStyle() override;
-
   std::map<std::string, std::string> *GetDefaultAttr() override;
 
   void PreCalculateCellWidth();
-
   std::string CalculateSpanOffset();
 
   float TakeStyleWidth();
 
   int AddRenderObject(int index, RenderObject *child) override;
-
   void AddRenderObjectWidth(RenderObject *child, const bool updating);
-
   void AddAttr(std::string key, std::string value) override;
-
   void UpdateAttr(std::string key, std::string value) override;
 
   float TakeColumnCount();
-
   float TakeColumnGap();
-
   float TakeColumnWidth();
-
   float TakeLeftGap();
-
   float TakeRightGap();
-
   int TakeOrientation();
 
   inline float CalculateFreeSpaceAlongMainAxis(
@@ -86,8 +76,8 @@ class RenderList : public RenderObject {
   float left_gap_ = 0;
   float right_gap_ = 0;
   std::map<std::string,std::string> mOriginalAttrs;
-
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_NODE_RENDER_LIST_H_

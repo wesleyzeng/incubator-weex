@@ -24,6 +24,7 @@
 
 namespace weex {
 namespace base {
+
 class MessagePumpDarwin : public MessagePump {
  public:
   MessagePumpDarwin();
@@ -36,6 +37,7 @@ class MessagePumpDarwin : public MessagePump {
  private:
   DISALLOW_COPY_AND_ASSIGN(MessagePumpDarwin);
 };
+
 }  // namespace base
 }  // namespace weex
 

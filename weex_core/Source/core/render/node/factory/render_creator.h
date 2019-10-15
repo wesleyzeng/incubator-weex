@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_NODE_FACTORY_RENDER_CREATOR_H_
 #define CORE_RENDER_NODE_FACTORY_RENDER_CREATOR_H_
 
@@ -30,7 +31,6 @@ class IRenderFactory;
 class RenderCreator {
  private:
   RenderCreator() {}
-
   ~RenderCreator() {}
 
   // just to release singleton object
@@ -46,7 +46,7 @@ class RenderCreator {
   static Garbo garbo;
 
  public:
-  static RenderCreator *GetInstance() {
+  static RenderCreator* GetInstance() {
     if (!g_pInstance) {
       g_pInstance = new RenderCreator();
     }
@@ -55,7 +55,7 @@ class RenderCreator {
 
   IRenderFactory *CreateFactory(const std::string &type);
   IRenderObject *CreateRender(const std::string &type, const std::string &ref);
-  
+
   void RegisterAffineType(const std::string &type, const std::string& asType);
   bool IsAffineType(const std::string &type, const std::string& asType);
 
@@ -64,6 +64,7 @@ class RenderCreator {
   
   std::map<std::string, std::string> affineTypes_; // affineTypes_[A] = B means A is rendered like B
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_NODE_FACTORY_RENDER_CREATOR_H_

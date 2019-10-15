@@ -24,8 +24,9 @@
 #define PROJECT_ACTION_ARGS_CHECK_H
 
 namespace WeexCore {
-    bool isCallNativeToFinish(const char* task);
-}
 
+bool isCallNativeToFinish(const char* task);
+
+} // namespace WeexCore
 
 #endif //PROJECT_ACTION_ARGS_CHECK_H

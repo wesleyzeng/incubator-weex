@@ -26,6 +26,7 @@
 
 namespace weex {
 namespace base {
+
 class ThreadImplDarwin : public ThreadImplPosix {
  public:
   ThreadImplDarwin(const ThreadParams& params);
@@ -35,8 +36,9 @@ class ThreadImplDarwin : public ThreadImplPosix {
  private:
   DISALLOW_COPY_AND_ASSIGN(ThreadImplDarwin);
 };
+
 }  // namespace base
 }  // namespace weex
 
-#endif
+#endif // OS_IOS
 #endif  // WEEX_PROJECT_THREAD_IMPL_IOS_H

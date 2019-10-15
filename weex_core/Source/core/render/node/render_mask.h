@@ -28,7 +28,9 @@ namespace WeexCore {
 
 class RenderMask : public RenderObject {
  public:
-  std::map<std::string, std::string> *GetDefaultStyle();
+  std::map<std::string, std::string>* GetDefaultStyle();
 };
+
 }  // namespace WeexCore
+
 #endif  // CORE_RENDER_NODE_RENDER_MASK_H_

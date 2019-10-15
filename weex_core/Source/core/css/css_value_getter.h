@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef WEEX_PROJECT_STYLEGETTER_H
 #define WEEX_PROJECT_STYLEGETTER_H
 
@@ -25,20 +26,20 @@
 
 namespace WeexCore {
 
-  const WXCoreDirection GetWXCoreDirection(const std::string &value);
+const WXCoreDirection GetWXCoreDirection(const std::string &value);
 
-  const WXCoreFlexDirection GetWXCoreFlexDirection(const std::string &value);
+const WXCoreFlexDirection GetWXCoreFlexDirection(const std::string &value);
 
-  const WXCoreJustifyContent GetWXCoreJustifyContent(const std::string &value);
+const WXCoreJustifyContent GetWXCoreJustifyContent(const std::string &value);
 
-  const WXCoreAlignItems GetWXCoreAlignItem(const std::string &value);
+const WXCoreAlignItems GetWXCoreAlignItem(const std::string &value);
 
-  const WXCoreFlexWrap GetWXCoreFlexWrap(const std::string &value);
+const WXCoreFlexWrap GetWXCoreFlexWrap(const std::string &value);
 
-  const WXCoreAlignSelf GetWXCoreAlignSelf(const std::string &value);
+const WXCoreAlignSelf GetWXCoreAlignSelf(const std::string &value);
 
-  const WXCorePositionType GetWXCorePositionType(const std::string &value);
+const WXCorePositionType GetWXCorePositionType(const std::string &value);
 
 } // namespace WeexCore
 
-#endif //WEEX_PROJECT_STYLEGETTER_H
+#endif // WEEX_PROJECT_STYLEGETTER_H

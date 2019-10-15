@@ -18,6 +18,7 @@
  */
 
 #include "core/render/action/render_action_update_attr.h"
+
 #include "core/manager/weex_core_manager.h"
 
 namespace WeexCore {
@@ -34,4 +35,5 @@ void RenderActionUpdateAttr::ExecuteAction() {
   WeexCoreManager::Instance()->getPlatformBridge()->platform_side()->UpdateAttr(
       this->page_id_.c_str(), this->ref_.c_str(), this->attrs_);
 }
+
 }  // namespace WeexCore

@@ -26,6 +26,7 @@
 
 namespace weex {
 namespace base {
+
 class ThreadImplPosix : public ThreadImpl {
  public:
   ThreadImplPosix(const ThreadParams& params);
@@ -39,6 +40,7 @@ class ThreadImplPosix : public ThreadImpl {
   pthread_t handle_;
   DISALLOW_COPY_AND_ASSIGN(ThreadImplPosix);
 };
+
 }  // namespace base
 }  // namespace weex
 

@@ -47,14 +47,11 @@ bool MessagePumpAndroid::RegisterJNIUtils(JNIEnv* env) {
 
 void MessagePumpAndroid::Run(Delegate* delegate) {
   JNIEnv* env = ::base::android::AttachCurrentThread();
-
-  if(!env) {
+  if (!env) {
     return;
   }
 
-  Reset(env, Java_SystemMessageHandler_create(
-                 env, reinterpret_cast<int64_t>(delegate))
-                 .Release());
+  Reset(env, Java_SystemMessageHandler_create(env, reinterpret_cast<int64_t>(delegate)).Release());
 }
 
 void MessagePumpAndroid::Stop() {
@@ -68,7 +65,6 @@ void MessagePumpAndroid::Stop() {
 
 void MessagePumpAndroid::ScheduleWork() {
   JNIEnv* env = ::base::android::AttachCurrentThread();
-
   if(!env || !jni_object()) {
     return;
   }
@@ -78,13 +74,13 @@ void MessagePumpAndroid::ScheduleWork() {
 
 void MessagePumpAndroid::ScheduleDelayedWork(TimeUnit delayed_time) {
   JNIEnv* env = ::base::android::AttachCurrentThread();
-
-  if(!env || !jni_object()) {
+  if (!env || !jni_object()) {
     return;
   }
 
   Java_SystemMessageHandler_scheduleDelayedWork(env, jni_object(),
                                                 delayed_time.ToMilliseconds());
 }
+
 }  // namespace base
 }  // namespace weex

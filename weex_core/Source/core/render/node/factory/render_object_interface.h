@@ -29,15 +29,12 @@ class IRenderObject : public WXCoreLayoutNode {
  public:
   virtual ~IRenderObject() {}
   inline void set_ref(const std::string& ref) { this->ref_ = ref; }
-
   inline const std::string &ref() const { return ref_; }
 
   inline void set_page_id(const std::string& page_id) { this->page_id_ = page_id; }
-
   inline const std::string &page_id() const { return page_id_; }
 
   inline void set_type(const std::string& type) { this->tyle_ = type; }
-
   inline const std::string &type() const { return tyle_; }
 
   inline void CopyFrom(IRenderObject *src) {
@@ -52,6 +49,7 @@ class IRenderObject : public WXCoreLayoutNode {
   std::string ref_ = "";
   std::string tyle_ = "";
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_NODE_FACTORY_RENDER_OBJECT_INTERFACE_H_

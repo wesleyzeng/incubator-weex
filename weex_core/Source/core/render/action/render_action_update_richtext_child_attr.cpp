@@ -18,14 +18,18 @@
  */
 
 #include "core/render/action/render_action_update_richtext_child_attr.h"
+
 #include "core/manager/weex_core_manager.h"
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
 
 RenderActionUpdateRichtextChildAttr::RenderActionUpdateRichtextChildAttr(
-    const std::string &page_id, const std::string &ref,
-    std::vector<std::pair<std::string, std::string>> *attrs, RenderObject *parent, RenderObject *richtext) {
+    const std::string &page_id,
+    const std::string &ref,
+    std::vector<std::pair<std::string, std::string>> *attrs,
+    RenderObject* parent,
+    RenderObject *richtext) {
   this->page_id_ = page_id;
   this->ref_ = ref;
   this->attrs_ = attrs;
@@ -34,7 +38,9 @@ RenderActionUpdateRichtextChildAttr::RenderActionUpdateRichtextChildAttr(
 }
 
 void RenderActionUpdateRichtextChildAttr::ExecuteAction() {
-    WeexCoreManager::Instance()->getPlatformBridge()->platform_side()->UpdateRichtextChildAttr(this->page_id_.c_str(), this->ref_.c_str(), this->attrs_, this->parent_ref_.c_str(), this->richtext_ref_.c_str());
+  WeexCoreManager::Instance()->getPlatformBridge()->platform_side()
+      ->UpdateRichtextChildAttr(this->page_id_.c_str(), this->ref_.c_str(), this->attrs_, this->parent_ref_.c_str(), this->richtext_ref_.c_str());
 }
+
 }  // namespace WeexCore
 

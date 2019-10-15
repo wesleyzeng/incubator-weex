@@ -16,12 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#if OS_ANDROID
 
 #ifndef CORE_NETWORK_DEFAULT_REQUEST_HANDLER_H
 #define CORE_NETWORK_DEFAULT_REQUEST_HANDLER_H
 
+#if OS_ANDROID
+
 #include <jni.h>
+
 #include "base/android/jni/jni_object_wrap.h"
 #include "core/network/request_handler.h"
 
@@ -35,8 +37,7 @@ class DefaultRequestHandler : public RequestHandler,
   static bool RegisterJNIUtils(JNIEnv* env);
   DefaultRequestHandler();
   ~DefaultRequestHandler() override;
-  void Send(const char* instance_id, const char* url,
-            Callback callback) override;
+  void Send(const char* instance_id, const char* url, Callback callback) override;
   void GetBundleType(const char *instance_id, const char *content, Callback callback) override;
 };
 
@@ -53,5 +54,7 @@ class CallbackWrapper {
 }  // namespace network
 }  // namespace core
 }  // namespace weex
+
+#endif // OS_ANDROID
+
 #endif  // CORE_NETWORK_DEFAULT_REQUEST_HANDLER_H
-#endif

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #include "core/render/manager/render_manager.h"
 
 #include <chrono>
@@ -39,18 +40,15 @@ namespace WeexCore {
 
 RenderManager *RenderManager::g_pInstance = nullptr;
 
-
-
 bool RenderManager::CreatePage(const std::string& page_id, const char *data) {
-    
 #if RENDER_LOG
   wson_parser parser(data);
   LOGD("[RenderManager] CreatePage >>>> pageId: %s, dom data: %s",
        pageId.c_str(), parser.toStringUTF8().c_str());
 #endif
-  
+
   LOGI("RenderManager::CreatePage, id: %s", page_id.c_str());
-    
+
   std::string targetName = RenderTargetManager::getRenderTargetName(page_id);
   if (!targetName.empty()) {
     if (RenderTargetManager::sharedInstance()->getAvailableTargetNames().count(targetName) == 0) {
@@ -60,34 +58,33 @@ bool RenderManager::CreatePage(const std::string& page_id, const char *data) {
   }
 
   if (!targetName.empty()) {
-      RenderPageCustom* pageCustom = CreateCustomPage(page_id, targetName);
-      WsonGenerate(data, "", 0, [=](const std::string& ref,
-                                    const std::string& type,
-                                    const std::string& parentRef,
-                                    std::map<std::string, std::string>* styles,
-                                    std::map<std::string, std::string>* attrs,
-                                    std::set<std::string>* events,
-                                    int index) {
-          if (parentRef.empty()) {
-              pageCustom->CreateBody(ref, type, styles, attrs, events);
-          }
-          else {
-              pageCustom->AddRenderObject(ref, type, parentRef, index, styles, attrs, events);
-          }
-      });
-      return true;
-  }
-  else {
-      RenderPage *page = new RenderPage(page_id);
-      pages_.insert(std::pair<std::string, RenderPage *>(page_id, page));
+    RenderPageCustom* pageCustom = CreateCustomPage(page_id, targetName);
+    WsonGenerate(data, "", 0, [=](const std::string& ref,
+                                  const std::string& type,
+                                  const std::string& parentRef,
+                                  std::map<std::string, std::string>* styles,
+                                  std::map<std::string, std::string>* attrs,
+                                  std::set<std::string>* events,
+                                  int index) {
+      if (parentRef.empty()) {
+          pageCustom->CreateBody(ref, type, styles, attrs, events);
+      }
+      else {
+          pageCustom->AddRenderObject(ref, type, parentRef, index, styles, attrs, events);
+      }
+    });
+    return true;
+  } else {
+    RenderPage* page = new RenderPage(page_id);
+    pages_.insert(std::pair<std::string, RenderPage *>(page_id, page));
 
-      initDeviceConfig(page, page_id);
+    initDeviceConfig(page, page_id);
 
-      int64_t start_time = getCurrentTime();
-      RenderObject *root = Wson2RenderObject(data, page_id, page->reserve_css_styles());
-      page->ParseJsonTime(getCurrentTime() - start_time);
+    int64_t start_time = getCurrentTime();
+    RenderObject *root = Wson2RenderObject(data, page_id, page->reserve_css_styles());
+    page->ParseJsonTime(getCurrentTime() - start_time);
 
-      return page->CreateRootRender(root);
+    return page->CreateRootRender(root);
   }
 }
 
@@ -110,75 +107,72 @@ bool RenderManager::CreatePage(const std::string& page_id, RenderObject *root) {
     
 bool RenderManager::CreatePage(const std::string& page_id, std::function<RenderObject* (RenderPage*)> constructRoot) {
 #if RENDER_LOG
-    LOGD("[RenderManager] CreatePage >>>> pageId: %s", pageId.c_str());
+  LOGD("[RenderManager] CreatePage >>>> pageId: %s", pageId.c_str());
 #endif
   
   LOGI("RenderManager::CreatePage, id: %s", page_id.c_str());
-    
+
   RenderPage *page = new RenderPage(page_id);
   this->pages_.insert(std::pair<std::string, RenderPage *>(page_id, page));
 
   initDeviceConfig(page, page_id);
-  
+
   int64_t start_time = getCurrentTime();
   RenderObject *root = constructRoot(page);
   page->ParseJsonTime(getCurrentTime() - start_time);
-  
+
   return page->CreateRootRender(root);
 }
 
-RenderPageCustom* RenderManager::CreateCustomPage(const std::string& page_id, const std::string& page_type) {
+RenderPageCustom* RenderManager::CreateCustomPage(
+    const std::string& page_id, const std::string& page_type) {
 #if RENDER_LOG
-    LOGD("[RenderManager] CreateCustomPage >>>> pageId: %s, pageType: %s", pageId.c_str(), page_type.c_str());
+  LOGD("[RenderManager] CreateCustomPage >>>> pageId: %s, pageType: %s", pageId.c_str(), page_type.c_str());
 #endif
-  
+
   LOGI("RenderManager::CreateCustomPage, id: %s, type: %s", page_id.c_str(), page_type.c_str());
     
-    RenderPageCustom::PageOptions options;
-    
-    {
-        std::lock_guard<std::mutex> guard(page_args_mutex_);
-        auto findPageArgs = page_args_.find(page_id);
-        if (findPageArgs != page_args_.end()) {
-            options.args = findPageArgs->second;
-        }
+  RenderPageCustom::PageOptions options;
+  {
+    std::lock_guard<std::mutex> guard(page_args_mutex_);
+    auto findPageArgs = page_args_.find(page_id);
+    if (findPageArgs != page_args_.end()) {
+      options.args = findPageArgs->second;
     }
-    
-    options.view_scale = 1;
-    auto value = WeexCore::WXCoreEnvironment::getInstance()->GetOption("pixel_scale");
-    if (value != "") {
-        options.view_scale = strtof(value.c_str(), NULL);
-    }
-    
-    auto findViewPort = options.args.find("viewportwidth");
-    if (findViewPort != options.args.end()) {
-        options.viewport_width = getFloat(findViewPort->second.c_str());
-    }
-    else {
-        options.viewport_width = kDefaultViewPortWidth;
-    }
-    
-    auto findDeviceWidth = options.args.find("devicewidth");
-    if (findDeviceWidth != options.args.end()) {
-        options.device_width = getFloat(findDeviceWidth->second.c_str());
-    }
-    else {
-        /* For iOS DeviceWidth stored by WeexCore is in UIKit view system coordinate(iPhone6 is 375).
-         So we must provide heron with the pixel device width here. */
-        options.device_width = WXCoreEnvironment::getInstance()->DeviceWidth() * options.view_scale;
-    }
-    
-    auto findDeviation = options.args.find("roundoffdeviation");
-    if (findDeviation != options.args.end()) {
-        options.is_round_off = getBool(findDeviation->second.c_str());
-    }
-    else {
-        options.is_round_off = kDefaultRoundOffDeviation;
-    }
-    
-    RenderPageCustom* page = new RenderPageCustom(page_id, page_type, options);
-    this->pages_.insert(std::pair<std::string, RenderPageCustom *>(page_id, page));
-    return page;
+  }
+
+  options.view_scale = 1;
+  auto value = WeexCore::WXCoreEnvironment::getInstance()->GetOption("pixel_scale");
+  if (value != "") {
+    options.view_scale = strtof(value.c_str(), NULL);
+  }
+
+  auto findViewPort = options.args.find("viewportwidth");
+  if (findViewPort != options.args.end()) {
+    options.viewport_width = getFloat(findViewPort->second.c_str());
+  } else {
+    options.viewport_width = kDefaultViewPortWidth;
+  }
+
+  auto findDeviceWidth = options.args.find("devicewidth");
+  if (findDeviceWidth != options.args.end()) {
+    options.device_width = getFloat(findDeviceWidth->second.c_str());
+  } else {
+    /* For iOS DeviceWidth stored by WeexCore is in UIKit view system coordinate(iPhone6 is 375).
+     So we must provide heron with the pixel device width here. */
+    options.device_width = WXCoreEnvironment::getInstance()->DeviceWidth() * options.view_scale;
+  }
+
+  auto findDeviation = options.args.find("roundoffdeviation");
+  if (findDeviation != options.args.end()) {
+    options.is_round_off = getBool(findDeviation->second.c_str());
+  } else {
+    options.is_round_off = kDefaultRoundOffDeviation;
+  }
+
+  RenderPageCustom* page = new RenderPageCustom(page_id, page_type, options);
+  this->pages_.insert(std::pair<std::string, RenderPageCustom *>(page_id, page));
+  return page;
 }
 
 bool RenderManager::AddRenderObject(const std::string &page_id,
@@ -198,30 +192,29 @@ bool RenderManager::AddRenderObject(const std::string &page_id,
   int64_t start_time = getCurrentTime();
 
   if (page->is_platform_page()) {
-      RenderObject *child = Wson2RenderObject(data, page_id, static_cast<RenderPage*>(page)->reserve_css_styles());
-      static_cast<RenderPage*>(page)->ParseJsonTime(getCurrentTime() - start_time);
+    RenderObject *child = Wson2RenderObject(data, page_id, static_cast<RenderPage*>(page)->reserve_css_styles());
+    static_cast<RenderPage*>(page)->ParseJsonTime(getCurrentTime() - start_time);
 
-      if (child == nullptr) return false;
+    if (child == nullptr) return false;
 
-      return static_cast<RenderPage*>(page)->AddRenderObject(parent_ref, index, child);
-  }
-  else {
-      WsonGenerate(data, parent_ref, index, [=] (const std::string& ref,
-                                                const std::string& type,
-                                                const std::string& parentRef,
-                                                std::map<std::string, std::string>* styles,
-                                                std::map<std::string, std::string>* attrs,
-                                                std::set<std::string>* events,
-                                                int index) {
-          page->AddRenderObject(ref, type, parentRef, index, styles, attrs, events);
-      });
-      
-      return true;
+    return static_cast<RenderPage*>(page)->AddRenderObject(parent_ref, index, child);
+  } else {
+    WsonGenerate(data, parent_ref, index, [=] (const std::string& ref,
+                                              const std::string& type,
+                                              const std::string& parentRef,
+                                              std::map<std::string, std::string>* styles,
+                                              std::map<std::string, std::string>* attrs,
+                                              std::set<std::string>* events,
+                                              int index) {
+        page->AddRenderObject(ref, type, parentRef, index, styles, attrs, events);
+    });
+
+    return true;
   }
 }
 
-bool RenderManager::AddRenderObject(const std::string &page_id, const std::string &parent_ref,
-                                    int index, RenderObject *root) {
+bool RenderManager::AddRenderObject(
+    const std::string &page_id, const std::string &parent_ref, int index, RenderObject *root) {
   RenderPageBase *page = GetPage(page_id);
   if (page == nullptr) return false;
 
@@ -234,39 +227,38 @@ bool RenderManager::AddRenderObject(const std::string &page_id, const std::strin
 #endif
 
   if (root == nullptr) return false;
-    
+
   if (page->is_platform_page()) {
-      return static_cast<RenderPage*>(page)->AddRenderObject(parent_ref, index, root);
-  }
-  else {
-      return false;
+    return static_cast<RenderPage*>(page)->AddRenderObject(parent_ref, index, root);
+  } else {
+    return false;
   }
 }
     
 bool RenderManager::AddRenderObject(const std::string &page_id,
                                     const std::string &parent_ref, int index,
                                     std::function<RenderObject* (RenderPage*)> constructRoot) {
-    RenderPageBase *page = GetPage(page_id);
-    if (page == nullptr) return false;
-    
+  RenderPageBase* page = GetPage(page_id);
+  if (page == nullptr) return false;
+
 #if RENDER_LOG
-    wson_parser parser(data);
-    LOGD(
-         "[RenderManager] AddRenderObject >>>> pageId: %s, parentRef: %s, index: "
-         "%d, dom data: %s",
-         pageId.c_str(), parentRef.c_str(), index, parser.toStringUTF8().c_str());
+  wson_parser parser(data);
+  LOGD(
+       "[RenderManager] AddRenderObject >>>> pageId: %s, parentRef: %s, index: "
+       "%d, dom data: %s",
+       pageId.c_str(), parentRef.c_str(), index, parser.toStringUTF8().c_str());
 #endif
-    
-    RenderObject *root = constructRoot(static_cast<RenderPage*>(page));
-    if (root == nullptr) return false;
-    
-    static_cast<RenderPage*>(page)->set_is_dirty(true);
-    return static_cast<RenderPage*>(page)->AddRenderObject(parent_ref, index, root);
+
+  RenderObject *root = constructRoot(static_cast<RenderPage*>(page));
+  if (root == nullptr) return false;
+
+  static_cast<RenderPage*>(page)->set_is_dirty(true);
+  return static_cast<RenderPage*>(page)->AddRenderObject(parent_ref, index, root);
 }
 
 bool RenderManager::RemoveRenderObject(const std::string &page_id,
                                        const std::string &ref) {
-  RenderPageBase *page = this->GetPage(page_id);
+  RenderPageBase* page = this->GetPage(page_id);
   if (page == nullptr) return false;
 
 #if RENDER_LOG
@@ -280,7 +272,7 @@ bool RenderManager::RemoveRenderObject(const std::string &page_id,
 bool RenderManager::MoveRenderObject(const std::string &page_id,
                                      const std::string &ref,
                                      const std::string &parent_ref, int index) {
-  RenderPageBase *page = this->GetPage(page_id);
+  RenderPageBase* page = this->GetPage(page_id);
   if (page == nullptr) return false;
 
 #if RENDER_LOG
@@ -357,7 +349,6 @@ bool RenderManager::UpdateStyle(const std::string &page_id, const std::string &r
 
   return page->UpdateStyle(ref, stylePair);
 }
-
 
 bool RenderManager::AddEvent(const std::string &page_id, const std::string &ref,
                              const std::string &event) {
@@ -440,7 +431,8 @@ void RenderManager::CallNativeComponent(const char *page_id, const char *ref,
   // redirect to page
   page->CallNativeComponent(ref, method, arguments, arguments_length, options, options_length);
 }
-    
+
+// TODO: Optimize this.
 void RenderManager::CallMetaModule(const char *page_id, const char *method, const char *arguments) {
   if (strcmp(method, "setViewport") == 0) {
     wson_parser parser(arguments);
@@ -455,17 +447,13 @@ void RenderManager::CallMetaModule(const char *page_id, const char *method, cons
             std::string value = parser.nextStringUTF8(parser.nextType());
             if (key == WIDTH) {
               setPageArgument(page_id, "viewportwidth", value);
-            }
-            else if (key == ROUND_OFF_DEVIATION) {
+            } else if (key == ROUND_OFF_DEVIATION) {
               setPageArgument(page_id, "roundoffdeviation", value);
-            }
-            else if (key == "deviceWidth") {
+            } else if (key == "deviceWidth") {
               setPageArgument(page_id, "devicewidth", value);
-            }
-            else if (key == "deviceHeight") { //!OCLint
+            } else if (key == "deviceHeight") { //!OCLint
               // unsupported now
-            }
-            else if (key == "reserveCssStyles") {
+            } else if (key == "reserveCssStyles") {
               setPageArgument(page_id, "reserveCssStyles", value);
             }
           }
@@ -511,13 +499,13 @@ bool RenderManager::ClosePage(const std::string &page_id) {
   this->pages_.erase(page_id);
   delete page;
   page = nullptr;
-    return true;
+  return true;
 }
   
-bool RenderManager::ReloadPageLayout(const std::string& page_id)
-{
+bool RenderManager::ReloadPageLayout(const std::string& page_id) {
   RenderPageBase *page = GetPage(page_id);
   if (page == nullptr) return false;
+
   return page->ReapplyStyles();
 }
 
@@ -531,9 +519,9 @@ float RenderManager::viewport_width(const std::string &page_id) {
 void RenderManager::set_viewport_width(const std::string &page_id, float viewport_width) {
   RenderPageBase *page = GetPage(page_id);
   if (page == nullptr) {
-      // page is not created yet, we should store the view port value
-      setPageArgument(page_id, "viewportwidth", std::to_string(viewport_width));
-      return;
+    // page is not created yet, we should store the view port value
+    setPageArgument(page_id, "viewportwidth", std::to_string(viewport_width));
+    return;
   }
 
   page->SetViewportWidth(viewport_width);
@@ -575,34 +563,34 @@ void RenderManager::set_round_off_deviation(const std::string &page_id, bool rou
 }
     
 void RenderManager::setPageArgument(const std::string& pageId, const std::string& key, const std::string& value) {
-    if (pageId.empty() || key.empty()) {
-        return;
-    }
-    std::lock_guard<std::mutex> guard(page_args_mutex_);
-    page_args_[pageId][key] = value;
+  if (pageId.empty() || key.empty()) {
+    return;
+  }
+  std::lock_guard<std::mutex> guard(page_args_mutex_);
+  page_args_[pageId][key] = value;
 }
     
 std::string RenderManager::getPageArgument(const std::string& pageId, const std::string& key) {
-    std::lock_guard<std::mutex> guard(page_args_mutex_);
-    auto findPage = page_args_.find(pageId);
-    if (findPage != page_args_.end()) {
-        auto findKey = findPage->second.find(key);
-        if (findKey != findPage->second.end()) {
-            return findKey->second;
-        }
+  std::lock_guard<std::mutex> guard(page_args_mutex_);
+  auto findPage = page_args_.find(pageId);
+  if (findPage != page_args_.end()) {
+    auto findKey = findPage->second.find(key);
+    if (findKey != findPage->second.end()) {
+      return findKey->second;
     }
-    return "";
+  }
+  return "";
 }
 
 std::map<std::string, std::string> RenderManager::removePageArguments(const std::string& pageId) {
-    std::lock_guard<std::mutex> guard(page_args_mutex_);
-    std::map<std::string, std::string> result;
-    auto findPage = page_args_.find(pageId);
-    if (findPage != page_args_.end()) {
-        std::swap(result, findPage->second);
-        page_args_.erase(findPage);
-    }
-    return result;
+  std::lock_guard<std::mutex> guard(page_args_mutex_);
+  std::map<std::string, std::string> result;
+  auto findPage = page_args_.find(pageId);
+  if (findPage != page_args_.end()) {
+    std::swap(result, findPage->second);
+    page_args_.erase(findPage);
+  }
+  return result;
 }
 
 void RenderManager::Batch(const std::string &page_id) {
@@ -620,12 +608,12 @@ void RenderManager::initDeviceConfig(RenderPage *page, const std::string &page_i
   if (!viewPortWidth.empty()) {
     page->set_viewport_width(getFloat(viewPortWidth.c_str()));
   }
-  
+
   auto deviceWidth = getPageArgument(page_id, "devicewidth");
   if (!deviceWidth.empty()) {
     page->set_device_width(getFloat(deviceWidth.c_str()));
   }
-  
+
   auto roundOff = getPageArgument(page_id, "roundoffdeviation");
   if (!roundOff.empty()) {
     page->set_round_off_deviation(getBool(roundOff));

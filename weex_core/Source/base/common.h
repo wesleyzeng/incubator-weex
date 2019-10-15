@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef BASE_COMMON_H_
 #define BASE_COMMON_H_
 

@@ -52,5 +52,6 @@ void MessagePumpPosix::ScheduleDelayedWork(TimeUnit delayed_time) {
   // only update the delayed time instead of blocking and waiting.
   delayed_time_ = std::move(delayed_time);
 }
+
 }  // namespace base
 }  // namespace weex

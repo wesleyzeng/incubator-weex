@@ -39,7 +39,9 @@ class JsonRenderManager {
     return g_instance;
   }
 
-  void CreatePage(const std::string& script, const std::string& instanceId, const std::string& render_strategy);
+  void CreatePage(const std::string& script,
+                  const std::string& instanceId,
+                  const std::string& render_strategy);
   bool RefreshPage(const std::string &page_id, const std::string &init_data);
   bool ClosePage(const std::string &page_id);
 
@@ -52,4 +54,4 @@ class JsonRenderManager {
 
 } // namce WeexCore
 
-#endif //WEEX_PROJECT_REPLAYMANAGER_H
+#endif // WEEX_PROJECT_REPLAYMANAGER_H

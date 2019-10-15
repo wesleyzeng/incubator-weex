@@ -36,7 +36,6 @@ class RenderObject;
 class RenderManager {
  private:
   RenderManager() : pages_() {}
-
   ~RenderManager() {}
 
   // just to release singleton object
@@ -56,12 +55,9 @@ class RenderManager {
 
   // create root node
   bool CreatePage(const std::string& page_id, const char *data);
-    
   // create platform page
   bool CreatePage(const std::string& page_id, RenderObject *root);
-    
   bool CreatePage(const std::string& page_id, std::function<RenderObject* (RenderPage*)> constructRoot);
-    
   // create custom page with self rendering
   RenderPageCustom* CreateCustomPage(const std::string& page_id, const std::string& page_type);
 
@@ -70,35 +66,26 @@ class RenderManager {
   bool AddRenderObject(const std::string &page_id,
                        const std::string &parent_ref, int index,
                        const char *data);
-
   bool AddRenderObject(const std::string &page_id,
                        const std::string &parent_ref, int index,
                        RenderObject *root);
-    
   bool AddRenderObject(const std::string &page_id,
                        const std::string &parent_ref, int index,
                        std::function<RenderObject* (RenderPage*)> constructRoot);
-
   bool RemoveRenderObject(const std::string &page_id, const std::string &ref);
-
   bool MoveRenderObject(const std::string &page_id, const std::string &ref,
                         const std::string &parent_ref, int index);
 
   bool UpdateAttr(const std::string &page_id, const std::string &ref,
                   const char *data);
-
   bool UpdateAttr(const std::string &page_id, const std::string &ref,
                   std::vector<std::pair<std::string, std::string>> *attrPair);
-
   bool UpdateStyle(const std::string &page_id, const std::string &ref,
                    const char *data);
-
   bool UpdateStyle(const std::string &page_id, const std::string &ref,
                    std::vector<std::pair<std::string, std::string>> *stylePair);
-
   bool AddEvent(const std::string &page_id, const std::string &ref,
                 const std::string &event);
-
   bool RemoveEvent(const std::string &page_id, const std::string &ref,
                    const std::string &event);
 
@@ -107,34 +94,28 @@ class RenderManager {
   std::unique_ptr<ValueWithType> CallNativeModule(const char *page_id, const char *module, const char *method,
                                                   const char *arguments, int arguments_length, const char *options,
                                                   int options_length);
-    
   void CallNativeComponent(const char *page_id, const char *ref,
                            const char *method,
                            const char *arguments,
                            int arguments_length,
                            const char *options,
                            int options_length);
-
   void CallMetaModule(const char *page_id, const char *method, const char *arguments);
 
   RenderPageBase *GetPage(const std::string &page_id);
-
   bool ClosePage(const std::string &page_id);
-    
+
   bool ReloadPageLayout(const std::string& page_id);
 
   float viewport_width(const std::string &page_id);
-
   void set_viewport_width(const std::string &page_id, float viewport_width);
 
   void setDeviceWidth(const std::string &page_id, float device_width);
-
   float DeviceWidth(const std::string &page_id);
 
   bool round_off_deviation(const std::string &page_id);
-
   void set_round_off_deviation(const std::string &page_id, bool round_off_deviation);
-    
+
   void setPageArgument(const std::string& pageId, const std::string& key, const std::string& value);
   std::string getPageArgument(const std::string& pageId, const std::string& key);
   std::map<std::string, std::string> removePageArguments(const std::string& pageId); // remove and return the page arguments
@@ -148,6 +129,7 @@ class RenderManager {
 
  private:
     void initDeviceConfig(RenderPage *page, const std::string &page_id);
+
  private:
   static RenderManager *g_pInstance;
 
@@ -155,6 +137,7 @@ class RenderManager {
   std::mutex page_args_mutex_;
   std::map<std::string, std::map<std::string, std::string>> page_args_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_MANAGER_RENDER_MANAGER_H_

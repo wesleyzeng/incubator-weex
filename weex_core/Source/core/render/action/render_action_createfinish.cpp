@@ -32,4 +32,5 @@ void RenderActionCreateFinish::ExecuteAction() {
       ->platform_side()
       ->CreateFinish(this->page_id_.c_str());
 }
+
 }  // namespace WeexCore

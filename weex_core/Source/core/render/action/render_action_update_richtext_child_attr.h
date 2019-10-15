@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_RICHTEXT_CHILD_ATTR_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_RICHTEXT_CHILD_ATTR_H_
 
@@ -25,6 +26,7 @@
 #include "core/render/action/render_action_interface.h"
 
 namespace WeexCore {
+
 class RenderObject;
 class RenderActionUpdateRichtextChildAttr : public RenderAction {
  public:
@@ -41,6 +43,7 @@ class RenderActionUpdateRichtextChildAttr : public RenderAction {
   std::vector<std::pair<std::string, std::string>> *attrs_;
   std::string richtext_ref_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_RICHTEXT_CHILD_ATTR_H_

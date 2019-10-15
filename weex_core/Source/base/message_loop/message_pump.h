@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef BASE_MESSAGE_LOOP_MESSAGE_PUMP_H
 #define BASE_MESSAGE_LOOP_MESSAGE_PUMP_H
 #include "base/time_unit.h"
@@ -23,6 +24,7 @@
 
 namespace weex {
 namespace base {
+
 class MessagePump {
  public:
   class Delegate {
@@ -41,6 +43,8 @@ class MessagePump {
  private:
   DISALLOW_COPY_AND_ASSIGN(MessagePump);
 };
+
 }  // namespace base
 }  // namespace weex
+
 #endif  // BASE_MESSAGE_LOOP_MESSAGE_PUMP_H

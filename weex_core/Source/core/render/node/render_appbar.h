@@ -25,20 +25,20 @@
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
+
 class RenderAppBar : public RenderObject {
  private:
   std::map<std::string, std::string> *GetDefaultStyle();
-
   bool StyleExist(const std::string &key);
 
  public:
   StyleType ApplyStyle(const std::string &key, const std::string &value,
                        const bool updating);
-
  private:
   float default_nav_width_;
   float default_overflow_width_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_NODE_RENDER_APPBAR_H_

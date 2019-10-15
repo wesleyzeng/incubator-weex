@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_CREATEFINISH_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_CREATEFINISH_H_
 
@@ -34,6 +35,7 @@ class RenderActionCreateFinish : public RenderAction {
  public:
   std::string page_id_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_CREATEFINISH_H_

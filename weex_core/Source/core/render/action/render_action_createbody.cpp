@@ -18,6 +18,7 @@
  */
 
 #include "core/render/action/render_action_createbody.h"
+
 #include "core/manager/weex_core_manager.h"
 #include "core/render/node/render_object.h"
 
@@ -42,4 +43,5 @@ void RenderActionCreateBody::ExecuteAction() {
       this->styles_, this->attributes_, this->events_, this->margins_,
       this->paddings_, this->borders_);
 }
+
 }  // namespace WeexCore

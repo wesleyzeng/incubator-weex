@@ -21,11 +21,18 @@
 
 namespace weex {
 namespace base {
+
 MessagePumpDarwin::MessagePumpDarwin() {}
+
 MessagePumpDarwin::~MessagePumpDarwin() {}
+
 void MessagePumpDarwin::Run(Delegate* delegate) {}
+
 void MessagePumpDarwin::Stop() {}
+
 void MessagePumpDarwin::ScheduleWork() {}
+
 void MessagePumpDarwin::ScheduleDelayedWork(TimeUnit delayed_time) {}
+
 }  // namespace base
 }  // namespace weex

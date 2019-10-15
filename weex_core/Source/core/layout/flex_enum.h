@@ -27,113 +27,114 @@
 namespace WeexCore {
 #endif
 
-  /**
-   * MainAxis direction
-   */
-  enum WXCoreDirection {
-      kDirectionInherit,
-      kDirectionLTR,
-      kDirectionRTL
-  };
-  /**
-   * MainAxis direction
-   */
-  enum WXCoreFlexDirection {
-    kFlexDirectionColumn,
-    kFlexDirectionColumnReverse,
-    kFlexDirectionRow,
-    kFlexDirectionRowReverse,
-  };
+/**
+ * MainAxis direction
+ */
+enum WXCoreDirection {
+  kDirectionInherit,
+  kDirectionLTR,
+  kDirectionRTL
+};
 
-  /**
-   * Controls the position of the element on the MainAxis
-   */
-  enum WXCoreJustifyContent {
-    kJustifyFlexStart,
-    kJustifyCenter,
-    kJustifyFlexEnd,
-    kJustifySpaceBetween,
-    kJustifySpaceAround,
-  };
+/**
+ * MainAxis direction
+ */
+enum WXCoreFlexDirection {
+  kFlexDirectionColumn,
+  kFlexDirectionColumnReverse,
+  kFlexDirectionRow,
+  kFlexDirectionRowReverse,
+};
 
-  /**
-   * Controls the position of the element on the CrossAxis and whether Stretch
-   */
-  enum WXCoreAlignItems {
-    kAlignItemsFlexStart,
-    kAlignItemsCenter,
-    kAlignItemsFlexEnd,
-    kAlignItemsStretch,
-  };
+/**
+ * Controls the position of the element on the MainAxis
+ */
+enum WXCoreJustifyContent {
+  kJustifyFlexStart,
+  kJustifyCenter,
+  kJustifyFlexEnd,
+  kJustifySpaceBetween,
+  kJustifySpaceAround,
+};
 
-  /**
-   * Controls the count of flexlines
-   */
-  enum WXCoreFlexWrap {
-    kNoWrap,
-    kWrap,
-    kWrapReverse,
-  };
+/**
+ * Controls the position of the element on the CrossAxis and whether Stretch
+ */
+enum WXCoreAlignItems {
+  kAlignItemsFlexStart,
+  kAlignItemsCenter,
+  kAlignItemsFlexEnd,
+  kAlignItemsStretch,
+};
 
-  /**
-   * The align-self will overrides the align-items specified by the Flex container.
-   * The two attributes have the same range of values.
-   */
-  enum WXCoreAlignSelf {
-    kAlignSelfAuto = -1,
-    kAlignSelfFlexStart = kAlignItemsFlexStart,
-    kAlignSelfCenter = kAlignItemsCenter,
-    kAlignSelfFlexEnd = kAlignItemsFlexEnd,
-    kAlignSelfStretch = kAlignItemsStretch,
-  };
+/**
+ * Controls the count of flexlines
+ */
+enum WXCoreFlexWrap {
+  kNoWrap,
+  kWrap,
+  kWrapReverse,
+};
 
-  enum WXCorePositionType {
-    kRelative,
-    kAbsolute,
-    kFixed,
-    kSticky = kRelative
-  };
+/**
+ * The align-self will overrides the align-items specified by the Flex container.
+ * The two attributes have the same range of values.
+ */
+enum WXCoreAlignSelf {
+  kAlignSelfAuto = -1,
+  kAlignSelfFlexStart = kAlignItemsFlexStart,
+  kAlignSelfCenter = kAlignItemsCenter,
+  kAlignSelfFlexEnd = kAlignItemsFlexEnd,
+  kAlignSelfStretch = kAlignItemsStretch,
+};
 
-  enum WXCorePositionEdge {
-    kPositionEdgeTop,
-    kPositionEdgeBottom,
-    kPositionEdgeLeft,
-    kPositionEdgeRight,
-  };
+enum WXCorePositionType {
+  kRelative,
+  kAbsolute,
+  kFixed,
+  kSticky = kRelative
+};
 
-  enum WXCoreMarginEdge {
-    kMarginALL,
-    kMarginTop,
-    kMarginBottom,
-    kMarginLeft,
-    kMarginRight,
-  };
+enum WXCorePositionEdge {
+  kPositionEdgeTop,
+  kPositionEdgeBottom,
+  kPositionEdgeLeft,
+  kPositionEdgeRight,
+};
 
-  enum WXCorePaddingEdge {
-    kPaddingALL,
-    kPaddingTop,
-    kPaddingBottom,
-    kPaddingLeft,
-    kPaddingRight,
-  };
+enum WXCoreMarginEdge {
+  kMarginALL,
+  kMarginTop,
+  kMarginBottom,
+  kMarginLeft,
+  kMarginRight,
+};
 
-  enum WXCoreBorderWidthEdge {
-    kBorderWidthALL,
-    kBorderWidthTop,
-    kBorderWidthBottom,
-    kBorderWidthLeft,
-    kBorderWidthRight,
-  };
+enum WXCorePaddingEdge {
+  kPaddingALL,
+  kPaddingTop,
+  kPaddingBottom,
+  kPaddingLeft,
+  kPaddingRight,
+};
 
-  enum WXCoreEdge{
-    kTop,
-    kRight,
-    kBottom,
-    kLeft,
-  };
+enum WXCoreBorderWidthEdge {
+  kBorderWidthALL,
+  kBorderWidthTop,
+  kBorderWidthBottom,
+  kBorderWidthLeft,
+  kBorderWidthRight,
+};
+
+enum WXCoreEdge{
+  kTop,
+  kRight,
+  kBottom,
+  kLeft,
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //WEEXCORE_FLEXLAYOUT_WXCOREFLEXENUM_H
+#endif // WEEXCORE_FLEXLAYOUT_WXCOREFLEXENUM_H

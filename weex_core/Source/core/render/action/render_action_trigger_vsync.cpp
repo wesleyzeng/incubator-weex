@@ -18,9 +18,11 @@
  */
 
 #include "core/render/action/render_action_trigger_vsync.h"
+
 #include "core/manager/weex_core_manager.h"
 
 namespace WeexCore {
+
 RenderActionTriggerVSync::RenderActionTriggerVSync(const std::string& page_id)
     : page_id_(page_id) {}
 
@@ -30,4 +32,5 @@ void RenderActionTriggerVSync::ExecuteAction() {
       ->platform_side()
       ->TriggerVSync(page_id_.c_str());
 }
+
 }  // namespace WeexCore

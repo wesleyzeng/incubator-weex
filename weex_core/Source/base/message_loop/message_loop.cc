@@ -18,6 +18,7 @@
  */
 
 #include "base/message_loop/message_loop.h"
+
 #include "base/thread/thread_local.h"
 #ifdef __ANDROID__
 #include "base/message_loop/message_pump_android.h"
@@ -119,5 +120,6 @@ void MessageLoop::PostPriorityDelayedTask(TaskPriority p,
     message_pump_->ScheduleWork();
   }
 }
+
 }  // namespace base
 }  // namespace weex

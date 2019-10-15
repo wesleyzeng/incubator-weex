@@ -46,4 +46,5 @@ void RenderActionLayout::GetLayoutInfo(const WXCoreLayoutNode *node) {
   this->width_ = node->getLayoutWidth();
   this->isRTL_ = node->getLayoutDirection() == WeexCore::kDirectionRTL;
 }
+
 }  // namespace WeexCore

@@ -18,6 +18,7 @@
  */
 
 #include "core/render/action/render_action_update_style.h"
+
 #include "core/manager/weex_core_manager.h"
 
 namespace WeexCore {
@@ -43,4 +44,5 @@ void RenderActionUpdateStyle::ExecuteAction() {
       ->UpdateStyle(this->page_id_.c_str(), this->ref_.c_str(), this->style_,
                     this->margin_, this->padding_, this->border_);
 }
+
 }  // namespace WeexCore

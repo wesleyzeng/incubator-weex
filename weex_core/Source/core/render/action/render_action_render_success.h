@@ -21,9 +21,11 @@
 #define CORE_RENDER_ACTION_RENDER_ACTION_RENDER_SUCCESS_H
 
 #include <string>
+
 #include "core/render/action/render_action_interface.h"
 
 namespace WeexCore {
+
 class RenderActionRenderSuccess : public RenderAction {
  public:
   explicit RenderActionRenderSuccess(const std::string &page_id);
@@ -33,6 +35,7 @@ class RenderActionRenderSuccess : public RenderAction {
  public:
   std::string page_id_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_RENDER_SUCCESS_H

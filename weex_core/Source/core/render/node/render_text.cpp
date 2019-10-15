@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include <string>
 
 #include "core/render/node/render_text.h"
+
+#include <string>
+
 #include "core/render/page/render_page.h"
 
 namespace WeexCore {
@@ -33,4 +35,5 @@ StyleType RenderText::UpdateStyle(std::string key, std::string value) {
   markDirty();
   return result_type;
 }
+
 }  // namespace WeexCore

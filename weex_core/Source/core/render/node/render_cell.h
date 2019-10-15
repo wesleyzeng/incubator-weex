@@ -22,7 +22,9 @@
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
+
 class RenderCell : public RenderObject {};
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_NODE_RENDER_CELL_H_

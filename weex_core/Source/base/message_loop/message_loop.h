@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef BASE_MESSAGE_LOOP_MESSAGE_LOOP_H
 #define BASE_MESSAGE_LOOP_MESSAGE_LOOP_H
 
@@ -23,6 +24,7 @@
 #include <deque>
 #include <mutex>
 #include <queue>
+
 #include "base/closure.h"
 #include "base/common.h"
 #include "base/message_loop/message_pump.h"
@@ -30,6 +32,7 @@
 
 namespace weex {
 namespace base {
+
 class MessageLoop : public MessagePump::Delegate {
  public:
   enum Type {
@@ -86,6 +89,7 @@ class MessageLoop : public MessagePump::Delegate {
   std::mutex delayed_tasks_mutex_;
   DISALLOW_COPY_AND_ASSIGN(MessageLoop);
 };
+
 }  // namespace base
 }  // namespace weex
 

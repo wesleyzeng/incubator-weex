@@ -19,13 +19,15 @@
 
 #ifndef CORE_NETWORK_REQUEST_HANDLER_H
 #define CORE_NETWORK_REQUEST_HANDLER_H
+
 #include <functional>
-#include <string>
 #include <memory>
+#include <string>
 
 namespace weex {
 namespace core {
 namespace network {
+
 typedef std::function<void(const std::string&, const std::string&)> Callback;
 
 class RequestHandler {

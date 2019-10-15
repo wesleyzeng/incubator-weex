@@ -18,6 +18,7 @@
  */
 
 #include "core/render/action/render_action_remove_event.h"
+
 #include "core/manager/weex_core_manager.h"
 
 namespace WeexCore {
@@ -37,4 +38,5 @@ void RenderActionRemoveEvent::ExecuteAction() {
       ->RemoveEvent(this->page_id_.c_str(), this->ref_.c_str(),
                     this->event_.c_str());
 }
+
 }  // namespace WeexCore

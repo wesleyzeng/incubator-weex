@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CRASHHANDLER_H
 #define CRASHHANDLER_H
 
@@ -26,49 +27,51 @@
 namespace crash_handler {
 
 class CrashHandlerInfo {
-public:
-    CrashHandlerInfo(std::string fileName);
-    ~CrashHandlerInfo();
+ public:
+  CrashHandlerInfo(std::string fileName);
+  ~CrashHandlerInfo();
 
-    void parpareFds();
-    bool initializeCrashHandler();
-    bool handleSignal(int signum, siginfo_t* siginfo, void* ucontext);
-    bool printIP(void* addr);
-    bool is_crashed();
-    struct SignalInfo {
-        int signum;
-        const char* signame;
-    };
-    void setEnableAlarmSignal(bool handle){handle_alarm_signal = handle;}
+  void parpareFds();
+  bool initializeCrashHandler();
+  bool handleSignal(int signum, siginfo_t* siginfo, void* ucontext);
+  bool printIP(void* addr);
+  bool is_crashed();
+  struct SignalInfo {
+      int signum;
+      const char* signame;
+  };
+  void setEnableAlarmSignal(bool handle){handle_alarm_signal = handle;}
 
 private:
-    void printContext();
-    void printMaps();
-    void printRegContent(void* addr, const char* name);
-    void printUnwind();
-    bool ensureDirectory(const char* base);
-    void printf(const char* fmt, ...);
-    void saveFileContent();
+  void printContext();
+  void printMaps();
+  void printRegContent(void* addr, const char* name);
+  void printUnwind();
+  bool ensureDirectory(const char* base);
+  void printf(const char* fmt, ...);
+  void saveFileContent();
 
-    /* static members */
-    static const size_t BUF_SIZE = 1024;
-    static const int maxUnwindCount = 32;
+  /* static members */
+  static const size_t BUF_SIZE = 1024;
+  static const int maxUnwindCount = 32;
 
-    /* members */
-    struct sigaction m_sigaction[16];
+  /* members */
+  struct sigaction m_sigaction[16];
 
-    // File descriptior to store crash dump message
-    int m_dumpFileFd;
+  // File descriptior to store crash dump message
+  int m_dumpFileFd;
 
-    // File descriptior for /prco/self/maps
-    int m_mapsFileFd;
-    int m_unwinded;
+  // File descriptior for /prco/self/maps
+  int m_mapsFileFd;
+  int m_unwinded;
 
-    std::string m_dumpFileName;
-    std::string m_fileContent;
-    mcontext_t m_mcontext;
-    volatile bool m_crash_occurs;
-    volatile bool handle_alarm_signal = true;
+  std::string m_dumpFileName;
+  std::string m_fileContent;
+  mcontext_t m_mcontext;
+  volatile bool m_crash_occurs;
+  volatile bool handle_alarm_signal = true;
 };
-}
+
+} // namespace crash_handler
+
 #endif /* CRASHHANDLER_H */

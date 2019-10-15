@@ -16,32 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#ifdef __cplusplus
 
 #ifndef WEEX_CORE_MEASURE_FUNCTION_ADAPTER_H
 #define WEEX_CORE_MEASURE_FUNCTION_ADAPTER_H
 
+#ifdef __cplusplus
 
 #include "layout.h"
 
 namespace WeexCore {
 
-  class MeasureFunctionAdapter {
-  public:
+class MeasureFunctionAdapter {
+public:
+  MeasureFunctionAdapter() {}
+  ~MeasureFunctionAdapter() {}
 
-    MeasureFunctionAdapter() {}
+  virtual WXCoreSize Measure(const char* page_id, long render_ptr, float width, MeasureMode widthMeasureMode,
+                             float height, MeasureMode heightMeasureMode) = 0;
+  virtual void LayoutBefore(const char* page_id, long render_ptr) = 0;
+  virtual void LayoutAfter(const char* page_id, long render_ptr, float width, float height) = 0;
+};
 
-    ~MeasureFunctionAdapter() {}
+} // namespace WeexCore
 
-    virtual WXCoreSize Measure(const char* page_id, long render_ptr, float width, MeasureMode widthMeasureMode,
-                               float height, MeasureMode heightMeasureMode) = 0;
-    virtual void LayoutBefore(const char* page_id, long render_ptr) = 0;
+#endif // __cplusplus
 
-    virtual void LayoutAfter(const char* page_id, long render_ptr, float width, float height) = 0;
-
-  };
-
-}
-
-#endif //WEEX_CORE_MEASURE_FUNCTION_ADAPTER_H
-#endif //__cplusplus
+#endif // WEEX_CORE_MEASURE_FUNCTION_ADAPTER_H

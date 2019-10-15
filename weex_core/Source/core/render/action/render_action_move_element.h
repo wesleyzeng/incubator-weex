@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_MOVE_ELEMENT_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_MOVE_ELEMENT_H_
 
@@ -39,6 +40,7 @@ class RenderActionMoveElement : public RenderAction {
   std::string parent_ref_;
   int index_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_MOVE_ELEMENT_H_

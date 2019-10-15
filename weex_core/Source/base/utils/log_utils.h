@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef _LOG_UTILS_H_
 #define _LOG_UTILS_H_
 

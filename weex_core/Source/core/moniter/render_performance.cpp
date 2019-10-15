@@ -16,44 +16,45 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+#include "render_performance.h"
+
 #include <cstdint>
 #include <string>
-#include "render_performance.h"
 
 namespace WeexCore {
 
-  std::vector<int64_t> RenderPerformance::PrintPerformanceLog(PerformanceStage performanceStage) {
-
-    std::vector<int64_t> ret(3);
-
-    if (performanceStage == onFirstScreen) {
-      firstScreenCallBridgeTime = callBridgeTime;
-      firstScreenCssLayoutTime = cssLayoutTime;
-      firstScreenParseJsonTime = parseJsonTime;
-      ret[0] = firstScreenCallBridgeTime;
-      ret[1] = firstScreenCssLayoutTime;
-      ret[2] = firstScreenParseJsonTime;
-    } else {
-      onRenderSuccessCallBridgeTime = callBridgeTime;
-      onRenderSuccessCssLayoutTime = cssLayoutTime;
-      onRenderSuccessParseJsonTime = parseJsonTime;
-      ret[0] = onRenderSuccessCallBridgeTime;
-      ret[1] = onRenderSuccessCssLayoutTime;
-      ret[2] = onRenderSuccessParseJsonTime;
-    }
-
-    return ret;
+std::vector<int64_t> RenderPerformance::PrintPerformanceLog(PerformanceStage performanceStage) {
+  std::vector<int64_t> ret(3);
+  if (performanceStage == onFirstScreen) {
+    firstScreenCallBridgeTime = callBridgeTime;
+    firstScreenCssLayoutTime = cssLayoutTime;
+    firstScreenParseJsonTime = parseJsonTime;
+    ret[0] = firstScreenCallBridgeTime;
+    ret[1] = firstScreenCssLayoutTime;
+    ret[2] = firstScreenParseJsonTime;
+  } else {
+    onRenderSuccessCallBridgeTime = callBridgeTime;
+    onRenderSuccessCssLayoutTime = cssLayoutTime;
+    onRenderSuccessParseJsonTime = parseJsonTime;
+    ret[0] = onRenderSuccessCallBridgeTime;
+    ret[1] = onRenderSuccessCssLayoutTime;
+    ret[2] = onRenderSuccessParseJsonTime;
   }
 
-    bool RenderPerformance::onInteractionTimeUpdate() {
-      if (cssLayoutTimeForInteraction == cssLayoutTime){
-          return false;
-      }
-      cssLayoutTimeForInteraction = cssLayoutTime;
-        return true;
-    }
-
-    void RenderPerformance::getPerformanceStringData(std::map<std::string, std::string> &map) {
-        map["wxLayoutTime"] = std::to_string(this->cssLayoutTimeForInteraction);
-    }
+  return ret;
 }
+
+bool RenderPerformance::onInteractionTimeUpdate() {
+  if (cssLayoutTimeForInteraction == cssLayoutTime)
+    return false;
+
+  cssLayoutTimeForInteraction = cssLayoutTime;
+  return true;
+}
+
+void RenderPerformance::getPerformanceStringData(std::map<std::string, std::string> &map) {
+  map["wxLayoutTime"] = std::to_string(this->cssLayoutTimeForInteraction);
+}
+
+} // namespace WeexCore

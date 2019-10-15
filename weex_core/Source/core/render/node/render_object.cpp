@@ -18,6 +18,7 @@
  */
 
 #include "core/render/node/render_object.h"
+
 #include <math.h>
 
 #include "core/common/view_utils.h"
@@ -64,13 +65,13 @@ RenderObject::~RenderObject() {
   }
 
   for (auto it : shadow_objects_) {
-      delete it;
+    delete it;
   }
 }
 
+// TODO: Optimize this.
 void RenderObject::ApplyDefaultStyle(bool reserve) {
   std::map<std::string, std::string> *style = GetDefaultStyle();
-
   if (style == nullptr) return;
 
   for (auto iter = style->cbegin(); iter != style->cend(); iter++)
@@ -82,17 +83,17 @@ void RenderObject::ApplyDefaultStyle(bool reserve) {
 }
 
 RenderObject* RenderObject::RichtextParent() {
-    if (parent_render_ && parent_render_->type() == "richtext") {
-        return parent_render_;
-    } else if (parent_render_) {
-        return parent_render_->RichtextParent();
-    }
-    return nullptr;
+  if (parent_render_ && parent_render_->type() == "richtext") {
+    return parent_render_;
+  } else if (parent_render_) {
+    return parent_render_->RichtextParent();
+  }
+  return nullptr;
 }
 
+// TODO: Optimize this.
 void RenderObject::ApplyDefaultAttr() {
-  std::map<std::string, std::string> *attrs = GetDefaultAttr();
-
+  std::map<std::string, std::string>* attrs = GetDefaultAttr();
   if (attrs == nullptr) return;
 
   for (auto iter = attrs->cbegin(); iter != attrs->cend(); iter++) {
@@ -105,26 +106,25 @@ void RenderObject::ApplyDefaultAttr() {
 }
 
 static WXCoreSize measureFunc_Impl(WXCoreLayoutNode *node, float width,
-                            MeasureMode widthMeasureMode, float height,
-                            MeasureMode heightMeasureMode) {
+                                   MeasureMode widthMeasureMode, float height,
+                                   MeasureMode heightMeasureMode) {
   WXCoreSize size;
   size.height = 0;
   size.width = 0;
+  if (!node->haveMeasureFunc())
+    return size;
 
-  if (!node->haveMeasureFunc()) return size;
-  return WeexCoreManager::Instance()
-      ->getPlatformBridge()
-      ->platform_side()
+  return WeexCoreManager::Instance()->getPlatformBridge()->platform_side()
       ->InvokeMeasureFunction(
           static_cast<RenderObject *>(node)->page_id().c_str(),
-          reinterpret_cast<intptr_t>(node), width, widthMeasureMode, height,
-          heightMeasureMode);
+          reinterpret_cast<intptr_t>(node), width, widthMeasureMode, height, heightMeasureMode);
 }
 
 void RenderObject::BindMeasureFunc() { setMeasureFunc(measureFunc_Impl); }
 
 void RenderObject::OnLayoutBefore() {
   if (!haveMeasureFunc()) return;
+
   WeexCoreManager::Instance()
       ->getPlatformBridge()
       ->platform_side()
@@ -133,6 +133,7 @@ void RenderObject::OnLayoutBefore() {
     
 void RenderObject::OnLayoutPlatform() {
   if (!getNeedsPlatformDependentLayout()) return;
+
   WeexCoreManager::Instance()
     ->getPlatformBridge()
     ->platform_side()
@@ -141,11 +142,11 @@ void RenderObject::OnLayoutPlatform() {
 
 void RenderObject::OnLayoutAfter(float width, float height) {
   if (!haveMeasureFunc()) return;
+
   WeexCoreManager::Instance()
       ->getPlatformBridge()
       ->platform_side()
-      ->InvokeLayoutAfter(page_id().c_str(), reinterpret_cast<intptr_t>(this),
-                          width, height);
+      ->InvokeLayoutAfter(page_id().c_str(), reinterpret_cast<intptr_t>(this), width, height);
 }
 
 StyleType RenderObject::ApplyStyle(const std::string &key,
@@ -340,11 +341,11 @@ const std::string RenderObject::GetAttr(const std::string &key) {
 }
 
 bool RenderObject::hasShadow(const RenderObject* shadow) const {
-    if(std::find(shadow_objects_.begin(), shadow_objects_.end(), shadow) != shadow_objects_.end()){
-        return true;
-    }else{
-        return false;
-    }
+  if (std::find(shadow_objects_.begin(), shadow_objects_.end(), shadow) != shadow_objects_.end()) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 int RenderObject::AddRenderObject(int index, RenderObject *child) {
@@ -353,11 +354,11 @@ int RenderObject::AddRenderObject(int index, RenderObject *child) {
   }
 
   if (type() == "richtext") {
-      if (!hasShadow(child)) {
-          shadow_objects_.push_back(child);
-          child->set_parent_render(this);
-      }
-      return index;
+    if (!hasShadow(child)) {
+      shadow_objects_.push_back(child);
+      child->set_parent_render(this);
+    }
+    return index;
   }
 
   Index count = getChildCount();
@@ -369,7 +370,6 @@ int RenderObject::AddRenderObject(int index, RenderObject *child) {
   }
 
   child->set_parent_render(this);
-
   return index;
 }
 
@@ -421,7 +421,7 @@ void RenderObject::LayoutBeforeImpl() {
   }
 
   for (auto it = ChildListIterBegin(); it != ChildListIterEnd(); it++) {
-    RenderObject *child = static_cast<RenderObject *>(*it);
+    RenderObject* child = static_cast<RenderObject *>(*it);
     if (child != nullptr) {
       child->LayoutBeforeImpl();
     }
@@ -434,7 +434,7 @@ void RenderObject::LayoutPlatformImpl() {
   }
 
   for (auto it = ChildListIterBegin(); it != ChildListIterEnd(); it++) {
-    RenderObject *child = static_cast<RenderObject *>(*it);
+    RenderObject* child = static_cast<RenderObject *>(*it);
     if (child != nullptr) {
       child->LayoutPlatformImpl();
     }
@@ -447,7 +447,7 @@ void RenderObject::LayoutAfterImpl() {
   }
 
   for (auto it = ChildListIterBegin(); it != ChildListIterEnd(); it++) {
-    RenderObject *child = static_cast<RenderObject *>(*it);
+    RenderObject* child = static_cast<RenderObject *>(*it);
     if (child != nullptr) {
       child->LayoutAfterImpl();
     }
@@ -474,11 +474,11 @@ void RenderObject::MapInsertOrAssign(
 
 bool RenderObject::ViewInit() {
   return (!isnan(getStyleWidth()) && getStyleWidth() > 0) ||
-         (is_root_render() && GetRenderPage() != nullptr &&
-          GetRenderPage()->is_render_container_width_wrap_content());
+    (is_root_render() && GetRenderPage() != nullptr &&
+    GetRenderPage()->is_render_container_width_wrap_content());
 }
 
-RenderPage *RenderObject::GetRenderPage() {
+RenderPage* RenderObject::GetRenderPage() {
   return static_cast<RenderPage*>(RenderManager::GetInstance()->GetPage(page_id()));
 }
 
@@ -498,7 +498,7 @@ StyleType RenderObject::UpdateStyle(std::string key, std::string value) {
   return ApplyStyle(key, value, true);
 }
   
-void RenderObject::MergeStyles(std::vector<std::pair<std::string, std::string>> *src) {
+void RenderObject::MergeStyles(std::vector<std::pair<std::string, std::string>>* src) {
   if (src) {
     for (auto& p : *src) {
       MapInsertOrAssign(styles_, p.first, p.second);
@@ -506,23 +506,23 @@ void RenderObject::MergeStyles(std::vector<std::pair<std::string, std::string>> 
   }
 }
 
-RenderObject *RenderObject::GetChild(const Index &index) {
-  return static_cast<RenderObject *>(getChildAt(index));
+RenderObject* RenderObject::GetChild(const Index &index) {
+  return static_cast<RenderObject*>(getChildAt(index));
 }
 
 void RenderObject::RemoveRenderObject(RenderObject *child) {
-    if (type() == "richtext") {
-        int index = 0;
-        for (auto it : shadow_objects_) {
-            if (it == child) {
-                shadow_objects_.erase(shadow_objects_.begin() + index);
-                return;
-            }
-            index++;
-        }
-    } else {
-          removeChild(child);
+  if (type() == "richtext") {
+    int index = 0;
+    for (auto it : shadow_objects_) {
+      if (it == child) {
+        shadow_objects_.erase(shadow_objects_.begin() + index);
+        return;
+      }
+      index++;
     }
+  } else {
+    removeChild(child);
+  }
 }
 
 void RenderObject::AddAttr(std::string key, std::string value) {
@@ -546,4 +546,5 @@ void RenderObject::AddEvent(std::string event) {
 void RenderObject::RemoveEvent(const std::string &event) {
   this->events_->erase(event);
 }
+
 }  // namespace WeexCore

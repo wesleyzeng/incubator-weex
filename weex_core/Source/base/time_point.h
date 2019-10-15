@@ -25,6 +25,7 @@
 
 namespace weex {
 namespace base {
+
 class TimePoint {
  public:
   static TimePoint Now();
@@ -54,6 +55,7 @@ class TimePoint {
   explicit constexpr TimePoint(int64_t ns) : nanos_(ns) {}
   int64_t nanos_;
 };
+
 }  // namespace base
 }  // namespace weex
 

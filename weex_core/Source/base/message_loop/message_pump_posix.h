@@ -27,6 +27,7 @@
 
 namespace weex {
 namespace base {
+
 class MessagePumpPosix : public MessagePump {
  public:
   MessagePumpPosix();
@@ -43,6 +44,7 @@ class MessagePumpPosix : public MessagePump {
   TimeUnit delayed_time_;
   DISALLOW_COPY_AND_ASSIGN(MessagePumpPosix);
 };
+
 }  // namespace base
 }  // namespace weex
 

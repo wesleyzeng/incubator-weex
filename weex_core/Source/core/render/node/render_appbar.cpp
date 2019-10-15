@@ -16,12 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+#include "core/render/node/render_appbar.h"
+
 #include <utility>
 
 #include "core/common/view_utils.h"
 #include "core/config/core_environment.h"
 #include "core/css/constants_name.h"
-#include "core/render/node/render_appbar.h"
 
 namespace WeexCore {
 
@@ -30,17 +32,14 @@ std::map<std::string, std::string> *RenderAppBar::GetDefaultStyle() {
       WXCoreEnvironment::getInstance()->GetOption("defaultNavWidth").c_str());
 
   this->default_overflow_width_ =
-      getFloat(WXCoreEnvironment::getInstance()
-                   ->GetOption("defaultOverflowWidth")
-                   .c_str());
+      getFloat(WXCoreEnvironment::getInstance()->GetOption("defaultOverflowWidth").c_str());
 
   std::string appbar_color =
       WXCoreEnvironment::getInstance()->GetOption("appbar_color");
   std::string appbar_background_color =
       WXCoreEnvironment::getInstance()->GetOption("appbar_background_color");
 
-  std::map<std::string, std::string> *style =
-      new std::map<std::string, std::string>();
+  std::map<std::string, std::string> *style = new std::map<std::string, std::string>();
 #if OS_IOS
   style->insert(std::pair<std::string, std::string>(PADDING_LEFT, "44"));
   style->insert(std::pair<std::string, std::string>(PADDING_RIGHT, "44"));
@@ -53,8 +52,7 @@ std::map<std::string, std::string> *RenderAppBar::GetDefaultStyle() {
     style->insert(std::pair<std::string, std::string>(COLOR, appbar_color));
   if (!appbar_background_color.empty() && appbar_background_color != "" &&
       !StyleExist(BACKGROUND_COLOR))
-    style->insert(std::pair<std::string, std::string>(BACKGROUND_COLOR,
-                                                      appbar_background_color));
+    style->insert(std::pair<std::string, std::string>(BACKGROUND_COLOR, appbar_background_color));
   return style;
 }
 
@@ -88,4 +86,5 @@ StyleType RenderAppBar::ApplyStyle(const std::string &key,
     return RenderObject::ApplyStyle(key, value, updating);
   }
 }
+
 }  // namespace WeexCore

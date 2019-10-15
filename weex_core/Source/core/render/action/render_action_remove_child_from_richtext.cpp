@@ -18,12 +18,14 @@
  */
 
 #include "core/render/action/render_action_remove_child_from_richtext.h"
+
 #include "core/manager/weex_core_manager.h"
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
 
-RenderActionRemoveChildFromRichtext::RenderActionRemoveChildFromRichtext(const std::string &page_id, const std::string &ref, const RenderObject* parent, RenderObject* richtext) {
+RenderActionRemoveChildFromRichtext::RenderActionRemoveChildFromRichtext(
+    const std::string &page_id, const std::string &ref, const RenderObject* parent, RenderObject* richtext) {
   this->page_id_ = page_id;
   this->ref_ = ref;
   this->parent_ref_ = parent ? parent->ref() : "";
@@ -36,4 +38,5 @@ void RenderActionRemoveChildFromRichtext::ExecuteAction() {
       ->platform_side()
       ->RemoveChildFromRichtext(this->page_id_.c_str(), this->ref_.c_str(), this->parent_ref_.c_str(), this->richtext_ref_.c_str());
 }
+
 }  // namespace WeexCore

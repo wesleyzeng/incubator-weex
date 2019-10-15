@@ -18,23 +18,28 @@
  */
 
 #include "core/render/action/render_action_add_child_to_richtext.h"
+
 #include "core/manager/weex_core_manager.h"
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
-    RenderActionAddChildToRichtext::RenderActionAddChildToRichtext(const std::string &page_id, const RenderObject *render, const RenderObject *parent, const RenderObject *richtext) {
-        this->attributes_ = render->attributes();
-        this->styles_ = render->styles();
-        this->page_id_ = page_id;
-        this->node_type_ = render->type();
-        this->ref_ = render->ref();
-        this->parent_ref_ = parent ? parent->ref() : "";
-        this->richtext_ref_ = richtext->ref();
-    }
 
-    void RenderActionAddChildToRichtext::ExecuteAction() {
-        WeexCoreManager::Instance()->getPlatformBridge()->platform_side()->AddChildToRichtext(
-                                                                                      this->page_id_.c_str(), this->node_type_.c_str(), this->ref_.c_str(),
-                                                                                      this->parent_ref_.c_str(), this->richtext_ref_.c_str(), this->styles_, this->attributes_);
-    }
+// TODO:Optimize this.
+RenderActionAddChildToRichtext::RenderActionAddChildToRichtext(
+    const std::string &page_id, const RenderObject *render, const RenderObject *parent, const RenderObject *richtext) {
+  this->attributes_ = render->attributes();
+  this->styles_ = render->styles();
+  this->page_id_ = page_id;
+  this->node_type_ = render->type();
+  this->ref_ = render->ref();
+  this->parent_ref_ = parent ? parent->ref() : "";
+  this->richtext_ref_ = richtext->ref();
+}
+
+void RenderActionAddChildToRichtext::ExecuteAction() {
+  WeexCoreManager::Instance()->getPlatformBridge()->platform_side()
+      ->AddChildToRichtext(this->page_id_.c_str(), this->node_type_.c_str(), this->ref_.c_str(),
+                           this->parent_ref_.c_str(), this->richtext_ref_.c_str(), this->styles_, this->attributes_);
+}
+
 }  // namespace WeexCore

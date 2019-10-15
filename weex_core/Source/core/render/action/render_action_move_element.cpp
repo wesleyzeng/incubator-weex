@@ -39,4 +39,5 @@ void RenderActionMoveElement::ExecuteAction() {
       ->MoveElement(this->page_id_.c_str(), this->ref_.c_str(),
                     this->parent_ref_.c_str(), this->index_);
 }
+
 }  // namespace WeexCore

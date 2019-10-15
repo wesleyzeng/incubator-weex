@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_ADD_EVENT_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_ADD_EVENT_H_
 
@@ -38,6 +39,7 @@ class RenderActionAddEvent : public RenderAction {
   std::string ref_;
   std::string event_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_ADD_EVENT_H_

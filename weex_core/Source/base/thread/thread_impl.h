@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef BASE_THREAD_PLATFORM_THREAD_H
 #define BASE_THREAD_PLATFORM_THREAD_H
 
@@ -24,6 +25,7 @@
 
 namespace weex {
 namespace base {
+
 struct ThreadParams {
   int priority;
   std::string name;
@@ -35,6 +37,7 @@ struct ThreadParams {
 
   ThreadParams(MessageLoop::Type p_type) : ThreadParams("", 0, p_type) {}
 };
+
 class ThreadImpl {
  public:
   ThreadImpl(const ThreadParams& params)
@@ -54,6 +57,7 @@ class ThreadImpl {
  private:
   DISALLOW_COPY_AND_ASSIGN(ThreadImpl);
 };
+
 }  // namespace base
 }  // namespace weex
 

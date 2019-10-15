@@ -17,19 +17,20 @@
  * under the License.
  */
 
-#ifdef __cplusplus
-
 #ifndef WEEXCORE_WEEX_CORE_MANAGER_H
 #define WEEXCORE_WEEX_CORE_MANAGER_H
 
+#ifdef __cplusplus
+
 #include "base/thread/thread.h"
+#include "base/message_loop/message_loop.h"
 #include "core/bridge/platform_bridge.h"
 #include "core/bridge/script_bridge.h"
-#include "base/message_loop/message_loop.h"
 
 class IPCFutexPageQueue;
 
 namespace WeexCore {
+
 class WeexCoreManager {
  public:
   enum ProjectMode { MULTI_SO, MULTI_PROCESS, COMMON };
@@ -40,13 +41,11 @@ class WeexCoreManager {
   };
 
   inline PlatformBridge *getPlatformBridge() { return platform_bridge_; }
-
   inline void set_platform_bridge(PlatformBridge *bridge) {
     platform_bridge_ = bridge;
   }
 
   inline ScriptBridge *script_bridge() { return script_bridge_; }
-
   inline void set_script_bridge(ScriptBridge *script_bridge) {
     script_bridge_ = script_bridge;
   }
@@ -60,7 +59,6 @@ class WeexCoreManager {
   }
 
   inline ProjectMode project_mode() { return project_mode_; }
-
   inline void set_project_mode(ProjectMode mode) { project_mode_ = mode; }
 
   // Should be called on ScriptThread
@@ -89,10 +87,12 @@ class WeexCoreManager {
         project_mode_(COMMON),
         script_thread_(nullptr),
         client_queue_(nullptr),
-        server_queue_(nullptr){};
-  ~WeexCoreManager(){};
+        server_queue_(nullptr) {}
+  ~WeexCoreManager() {}
 };
-}  // namespace WeexCore
+
+} // namespace WeexCore
+
+#endif // #ifdef __cplusplus
 
 #endif  // WEEXCORE_WEEX_CORE_MANAGER_H
-#endif //#ifdef __cplusplus

@@ -16,53 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef WEEX_PROJECT_WXPERFORMANCE_H
 #define WEEX_PROJECT_WXPERFORMANCE_H
 
-#include <vector>
 #include <map>
+#include <vector>
 
 namespace WeexCore {
 
-  typedef enum PerformanceStage {
-    onFirstScreen, onRenderSuccess,
-  } PerformanceStage;
+typedef enum PerformanceStage {
+  onFirstScreen,
+  onRenderSuccess,
+} PerformanceStage;
 
-  class RenderPerformance {
+class RenderPerformance {
+ public:
+  int64_t callBridgeTime;
+  int64_t cssLayoutTime;
+  int64_t parseJsonTime;
+  int64_t firstScreenCallBridgeTime;
+  int64_t firstScreenCssLayoutTime;
+  int64_t firstScreenParseJsonTime;
+  int64_t onRenderSuccessCallBridgeTime;
+  int64_t onRenderSuccessCssLayoutTime;
+  int64_t onRenderSuccessParseJsonTime;
+  int64_t cssLayoutTimeForInteraction;
+  RenderPerformance() : callBridgeTime(0), cssLayoutTime(0), parseJsonTime(0),
+                        firstScreenCallBridgeTime(0), firstScreenCssLayoutTime(0),
+                        firstScreenParseJsonTime(0), onRenderSuccessCallBridgeTime(0),
+                        onRenderSuccessCssLayoutTime(0), onRenderSuccessParseJsonTime(0),
+                        cssLayoutTimeForInteraction(0) {}
+  bool onInteractionTimeUpdate();
+  void getPerformanceStringData(std::map<std::string,std::string> &map);
+  std::vector<int64_t> PrintPerformanceLog(PerformanceStage performanceStage);
+};
 
-  public:
+} // namespace WeexCore
 
-    int64_t callBridgeTime;
-
-    int64_t cssLayoutTime;
-
-    int64_t parseJsonTime;
-
-    int64_t firstScreenCallBridgeTime;
-
-    int64_t firstScreenCssLayoutTime;
-
-    int64_t firstScreenParseJsonTime;
-
-    int64_t onRenderSuccessCallBridgeTime;
-
-    int64_t onRenderSuccessCssLayoutTime;
-
-    int64_t onRenderSuccessParseJsonTime;
-
-    int64_t cssLayoutTimeForInteraction;
-
-    RenderPerformance() : callBridgeTime(0), cssLayoutTime(0), parseJsonTime(0),
-                          firstScreenCallBridgeTime(0), firstScreenCssLayoutTime(0),
-                          firstScreenParseJsonTime(0), onRenderSuccessCallBridgeTime(0),
-                          onRenderSuccessCssLayoutTime(0), onRenderSuccessParseJsonTime(0),
-                          cssLayoutTimeForInteraction(0) {}
-    bool onInteractionTimeUpdate();
-
-    void getPerformanceStringData(std::map<std::string,std::string> &map);
-
-    std::vector<int64_t> PrintPerformanceLog(PerformanceStage performanceStage);
-  };
-}
-
-#endif //WEEX_PROJECT_WXPERFORMANCE_H
+#endif // WEEX_PROJECT_WXPERFORMANCE_H

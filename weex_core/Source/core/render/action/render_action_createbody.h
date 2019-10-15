@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_CREATEBODY_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_CREATEBODY_H_
 
@@ -38,6 +39,7 @@ class RenderActionCreateBody : public RenderAction {
   void ExecuteAction();
 
  public:
+  // TODO: Optimize this
   std::map<std::string, std::string> *styles_;
   std::map<std::string, std::string> *attributes_;
   std::set<std::string> *events_;
@@ -48,6 +50,7 @@ class RenderActionCreateBody : public RenderAction {
   std::string component_type_;
   std::string ref_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_CREATEBODY_H_

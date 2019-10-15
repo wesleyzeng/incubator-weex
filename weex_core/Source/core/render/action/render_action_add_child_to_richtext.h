@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_ADD_CHILD_TO_RICHTEXT_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_ADD_CHILD_TO_RICHTEXT_H_
 
@@ -48,6 +49,7 @@ class RenderActionAddChildToRichtext : public RenderAction {
   std::string ref_;
   std::string richtext_ref_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_ADD_CHILD_TO_RICHTEXT_H_

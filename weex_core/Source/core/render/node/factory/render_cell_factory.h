@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_NODE_FACTORY_RENDER_CELL_FACTORY_H_
 #define CORE_RENDER_NODE_FACTORY_RENDER_CELL_FACTORY_H_
 
@@ -30,4 +31,5 @@ class RenderCellFactory : public IRenderFactory {
 };
 
 }  // namespace WeexCore
+
 #endif  // CORE_RENDER_NODE_FACTORY_RENDER_CELL_FACTORY_H_

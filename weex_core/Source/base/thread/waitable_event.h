@@ -25,6 +25,7 @@
 
 namespace weex {
 namespace base {
+
 class WaitableEvent {
  public:
   WaitableEvent() : mutex_(), condition_(), signaled_(false) {}
@@ -48,6 +49,8 @@ class WaitableEvent {
   bool signaled_;
   DISALLOW_COPY_AND_ASSIGN(WaitableEvent);
 };
+
 }  // namespace base
 }  // namespace weex
+
 #endif  // BASE_THREAD_WAITABLE_EVENT_H

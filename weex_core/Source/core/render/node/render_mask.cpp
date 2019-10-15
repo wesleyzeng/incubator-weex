@@ -16,6 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+#include "core/render/node/render_mask.h"
+
 #include <cstdlib>
 #include <utility>
 
@@ -23,7 +26,6 @@
 #include "core/render/manager/render_manager.h"
 #include "core/config/core_environment.h"
 #include "core/css/constants_name.h"
-#include "core/render/node/render_mask.h"
 
 namespace WeexCore {
 
@@ -65,4 +67,5 @@ std::map<std::string, std::string> *RenderMask::GetDefaultStyle() {
   style->insert(std::pair<std::string, std::string>(TOP, "0"));
   return style;
 }
+
 }  // namespace WeexCore

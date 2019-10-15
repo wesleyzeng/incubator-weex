@@ -18,41 +18,42 @@
  */
 
 #include "render_target.h"
+
 #include "core/render/manager/render_manager.h"
 
 namespace WeexCore {
-    
-    RenderTargetManager* RenderTargetManager::sharedInstance() {
-        // c++11 guarantees thread-safe on static initialization
-        static RenderTargetManager* instance = new RenderTargetManager();
-        return instance;
-    };
 
-    std::string RenderTargetManager::getRenderTargetName(const std::string& page) {
-        return RenderManager::GetInstance()->getPageArgument(page, "renderType");
-    }
-    
-    void RenderTargetManager::registerRenderTarget(RenderTarget* target) {
-        if (target) {
-            targets_.push_back(target);
-        }
-    }
-    
-    RenderTarget* RenderTargetManager::getRenderTarget(const std::string& type) {
-        for (auto t : targets_) {
-            if (t->type() == type) {
-                return t;
-            }
-        }
-        return nullptr;
-    }
-    
-    std::set<std::string> RenderTargetManager::getAvailableTargetNames() {
-        std::set<std::string> result;
-        for (auto t : targets_) {
-            result.insert(t->type());
-        }
-        return result;
-    }
-    
+RenderTargetManager* RenderTargetManager::sharedInstance() {
+  // c++11 guarantees thread-safe on static initialization
+  static RenderTargetManager* instance = new RenderTargetManager();
+  return instance;
+};
+
+std::string RenderTargetManager::getRenderTargetName(const std::string& page) {
+  return RenderManager::GetInstance()->getPageArgument(page, "renderType");
 }
+
+void RenderTargetManager::registerRenderTarget(RenderTarget* target) {
+  if (target) {
+    targets_.push_back(target);
+  }
+}
+
+RenderTarget* RenderTargetManager::getRenderTarget(const std::string& type) {
+  for (auto t : targets_) {
+    if (t->type() == type) {
+      return t;
+    }
+  }
+  return nullptr;
+}
+
+std::set<std::string> RenderTargetManager::getAvailableTargetNames() {
+  std::set<std::string> result;
+  for (auto t : targets_) {
+    result.insert(t->type());
+  }
+  return result;
+}
+
+} // namespace WeexCore

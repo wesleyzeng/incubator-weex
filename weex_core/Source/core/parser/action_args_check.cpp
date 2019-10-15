@@ -21,39 +21,43 @@
 //
 
 #include "action_args_check.h"
-#include "third_party/json11/json11.hpp"
+
 #include "base/utils/log_utils.h"
+#include "third_party/json11/json11.hpp"
 
 namespace WeexCore {
-    bool isCallNativeToFinish(const char *task) {
-        if (nullptr == task) {
-            return false;
-        }
-        //try match json str:[{"args": [], "method": "createFinish", "module": "dom"}]
-        std::string task_str(task);
-        if (task_str.length() != 57) {
-            return false;
-        }
 
-        std::string errr;
-        json11::Json task_json = json11::Json::parse(task_str, errr);
-        if (!task_json.is_array() || task_json.array_items().size() <= 0) {
-            return false;
-        }
-        auto array = task_json.array_items();
-        auto item = array[0];
-        if (!array[0].is_object()) {
-            return false;
-        }
-        auto module_value = item["module"];
-        auto method_value = item["method"];
-        auto args_value = item["args"];
+bool isCallNativeToFinish(const char *task) {
+  if (nullptr == task)
+      return false;
 
-        bool isCreateFinishAction = false;
-        if (module_value.is_string() && method_value.is_string() && args_value.is_array()) {
-            isCreateFinishAction = module_value.dump() == "\"dom\"" && method_value.dump() == "\"createFinish\"" &&
-                                   args_value.array_items().size() <= 0;
-        }
-        return isCreateFinishAction;
-    }
+  //try match json str:[{"args": [], "method": "createFinish", "module": "dom"}]
+  std::string task_str(task);
+  if (task_str.length() != 57) {
+    return false;
+  }
+
+  std::string errr;
+  json11::Json task_json = json11::Json::parse(task_str, errr);
+  if (!task_json.is_array() || task_json.array_items().size() <= 0) {
+    return false;
+  }
+  auto array = task_json.array_items();
+  auto item = array[0];
+  if (!array[0].is_object()) {
+    return false;
+  }
+
+  auto module_value = item["module"];
+  auto method_value = item["method"];
+  auto args_value = item["args"];
+
+  bool isCreateFinishAction = false;
+  if (module_value.is_string() && method_value.is_string() && args_value.is_array()) {
+    isCreateFinishAction = module_value.dump() == "\"dom\"" && method_value.dump() == "\"createFinish\"" &&
+                           args_value.array_items().size() <= 0;
+  }
+  return isCreateFinishAction;
 }
+
+} // namespace WeexCore

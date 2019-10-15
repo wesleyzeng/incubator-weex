@@ -16,11 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #include "backtrace.h"
+
 #include <assert.h>
 #include <stdint.h>
 #include <string.h>
 #include <signal.h>
+
 typedef uintptr_t unw_word_t;
 typedef int unw_tdep_proc_info_t;
 #define Debug(level, ...)
@@ -256,8 +259,7 @@ typedef enum {
   UNW_TDEP_EH = UNW_ARM_R0 /* FIXME.  */
 } arm_regnum_t;
 
-typedef struct dwarf_loc
-{
+typedef struct dwarf_loc {
   unw_word_t val;
   unw_word_t type; /* see DWARF_LOC_TYPE_* macros.  */
 } dwarf_loc_t;
@@ -275,20 +277,17 @@ typedef enum arm_exbuf_cmd {
   ARM_EXIDX_CMD_REFUSED,
 } arm_exbuf_cmd_t;
 
-enum arm_exbuf_cmd_flags
-{
+enum arm_exbuf_cmd_flags {
   ARM_EXIDX_VFP_SHIFT_16 = 1 << 16,
   ARM_EXIDX_VFP_DOUBLE = 1 << 17,
 };
 
-struct arm_exbuf_data
-{
+struct arm_exbuf_data {
   arm_exbuf_cmd_t cmd;
   uint32_t data;
 };
 
-typedef struct unw_proc_info
-{
+typedef struct unw_proc_info {
   unw_word_t start_ip; /* first IP covered by this procedure */
   unw_word_t end_ip;   /* first IP NOT covered by this procedure */
   unw_word_t lsda;     /* address of lang.-spec. data area (if any) */
@@ -302,8 +301,7 @@ typedef struct unw_proc_info
   unw_tdep_proc_info_t extra; /* target-dependent auxiliary proc-info */
 } unw_proc_info_t;
 
-struct dwarf_cursor
-{
+struct dwarf_cursor {
   unw_proc_info_t pi;
   dwarf_loc_t loc[DWARF_NUM_PRESERVED_REGS];
   unw_word_t ip;  /* ip this rs is for */
@@ -312,16 +310,13 @@ struct dwarf_cursor
   unsigned int pi_valid : 1; /* is proc_info valid? */
 };
 
-struct cursor
-{
+struct cursor {
   struct dwarf_cursor dwarf;
 };
 
 #define prel31_to_addr(a, b, c, d) _prel31_to_addr (c, d)
 
-static inline int
-_prel31_to_addr (unw_word_t prel31, unw_word_t *val)
-{
+static inline int _prel31_to_addr (unw_word_t prel31, unw_word_t *val) {
   unw_word_t offset;
   offset = *(unw_word_t *)prel31;
   offset = ((long)offset << 1) >> 1;
@@ -330,23 +325,16 @@ _prel31_to_addr (unw_word_t prel31, unw_word_t *val)
   return 0;
 }
 
-static inline int
-access_mem (unw_word_t addr, unw_word_t *val, int write)
-{
-  if (!write)
-    {
-      *val = *(unw_word_t *)addr;
-    }
-  else
-    {
-      *(unw_word_t *)addr = *val;
-    }
+static inline int access_mem (unw_word_t addr, unw_word_t *val, int write) {
+  if (!write) {
+    *val = *(unw_word_t *)addr;
+  } else {
+    *(unw_word_t *)addr = *val;
+  }
   return 0;
 }
 
-static int
-dwarf_get (struct dwarf_cursor *c, dwarf_loc_t loc, unw_word_t *val)
-{
+static int dwarf_get (struct dwarf_cursor *c, dwarf_loc_t loc, unw_word_t *val) {
   *val = *(unw_word_t *)loc.val;
   return 0;
 }
@@ -354,14 +342,11 @@ dwarf_get (struct dwarf_cursor *c, dwarf_loc_t loc, unw_word_t *val)
 /**
  * Applies the given command onto the new state to the given dwarf_cursor.
  */
-HIDDEN int
-arm_exidx_apply_cmd (struct arm_exbuf_data *edata, struct dwarf_cursor *c)
-{
+HIDDEN int arm_exidx_apply_cmd (struct arm_exbuf_data *edata, struct dwarf_cursor *c) {
   int ret = 0;
   unsigned i;
 
-  switch (edata->cmd)
-    {
+  switch (edata->cmd) {
     case ARM_EXIDX_CMD_FINISH:
       /* Set LR to PC if not set already.  */
       if (DWARF_IS_NULL_LOC (c->loc[UNW_ARM_R15]))
@@ -421,9 +406,7 @@ arm_exidx_apply_cmd (struct arm_exbuf_data *edata, struct dwarf_cursor *c)
   return ret;
 }
 
-HIDDEN int
-arm_exidx_decode (const uint8_t *buf, uint8_t len, struct dwarf_cursor *c)
-{
+HIDDEN int arm_exidx_decode (const uint8_t *buf, uint8_t len, struct dwarf_cursor *c) {
 #define READ_OP() *buf++
   const uint8_t *end = buf + len;
   int ret;
@@ -432,123 +415,91 @@ arm_exidx_decode (const uint8_t *buf, uint8_t len, struct dwarf_cursor *c)
   assert (buf != NULL);
   assert (len > 0);
 
-  while (buf < end)
-    {
-      uint8_t op = READ_OP ();
-      if ((op & 0xc0) == 0x00)
-        {
-          edata.cmd = ARM_EXIDX_CMD_DATA_POP;
-          edata.data = (((int)op & 0x3f) << 2) + 4;
-        }
-      else if ((op & 0xc0) == 0x40)
-        {
-          edata.cmd = ARM_EXIDX_CMD_DATA_PUSH;
-          edata.data = (((int)op & 0x3f) << 2) + 4;
-        }
-      else if ((op & 0xf0) == 0x80)
-        {
-          uint8_t op2 = READ_OP ();
-          if (op == 0x80 && op2 == 0x00)
-            edata.cmd = ARM_EXIDX_CMD_REFUSED;
-          else
-            {
-              edata.cmd = ARM_EXIDX_CMD_REG_POP;
-              edata.data = ((op & 0xf) << 8) | op2;
-              edata.data = edata.data << 4;
-            }
-        }
-      else if ((op & 0xf0) == 0x90)
-        {
-          if (op == 0x9d || op == 0x9f)
-            edata.cmd = ARM_EXIDX_CMD_RESERVED;
-          else
-            {
-              edata.cmd = ARM_EXIDX_CMD_REG_TO_SP;
-              edata.data = op & 0x0f;
-            }
-        }
-      else if ((op & 0xf0) == 0xa0)
-        {
-          unsigned end = (op & 0x07);
-          edata.data = (1 << (end + 1)) - 1;
-          edata.data = edata.data << 4;
-          if (op & 0x08)
-            edata.data |= 1 << 14;
-          edata.cmd = ARM_EXIDX_CMD_REG_POP;
-        }
-      else if (op == ARM_EXTBL_OP_FINISH)
-        {
-          edata.cmd = ARM_EXIDX_CMD_FINISH;
-          buf = end;
-        }
-      else if (op == 0xb1)
-        {
-          uint8_t op2 = READ_OP ();
-          if (op2 == 0 || (op2 & 0xf0))
-            edata.cmd = ARM_EXIDX_CMD_RESERVED;
-          else
-            {
-              edata.cmd = ARM_EXIDX_CMD_REG_POP;
-              edata.data = op2 & 0x0f;
-            }
-        }
-      else if (op == 0xb2)
-        {
-          uint32_t offset = 0;
-          uint8_t byte, shift = 0;
-          do
-            {
-              byte = READ_OP ();
-              offset |= (byte & 0x7f) << shift;
-              shift += 7;
-            }
-          while (byte & 0x80);
-          edata.data = offset * 4 + 0x204;
-          edata.cmd = ARM_EXIDX_CMD_DATA_POP;
-        }
-      else if (op == 0xb3 || op == 0xc8 || op == 0xc9)
-        {
-          edata.cmd = ARM_EXIDX_CMD_VFP_POP;
-          edata.data = READ_OP ();
-          if (op == 0xc8)
-            edata.data |= ARM_EXIDX_VFP_SHIFT_16;
-          if (op != 0xb3)
-            edata.data |= ARM_EXIDX_VFP_DOUBLE;
-        }
-      else if ((op & 0xf8) == 0xb8 || (op & 0xf8) == 0xd0)
-        {
-          edata.cmd = ARM_EXIDX_CMD_VFP_POP;
-          edata.data = 0x80 | (op & 0x07);
-          if ((op & 0xf8) == 0xd0)
-            edata.data |= ARM_EXIDX_VFP_DOUBLE;
-        }
-      else if (op >= 0xc0 && op <= 0xc5)
-        {
-          edata.cmd = ARM_EXIDX_CMD_WREG_POP;
-          edata.data = 0xa0 | (op & 0x07);
-        }
-      else if (op == 0xc6)
-        {
-          edata.cmd = ARM_EXIDX_CMD_WREG_POP;
-          edata.data = READ_OP ();
-        }
-      else if (op == 0xc7)
-        {
-          uint8_t op2 = READ_OP ();
-          if (op2 == 0 || (op2 & 0xf0))
-            edata.cmd = ARM_EXIDX_CMD_RESERVED;
-          else
-            {
-              edata.cmd = ARM_EXIDX_CMD_WCGR_POP;
-              edata.data = op2 & 0x0f;
-            }
-        }
-      else
+  while (buf < end) {
+    uint8_t op = READ_OP ();
+    if ((op & 0xc0) == 0x00) {
+      edata.cmd = ARM_EXIDX_CMD_DATA_POP;
+      edata.data = (((int)op & 0x3f) << 2) + 4;
+    } else if ((op & 0xc0) == 0x40) {
+      edata.cmd = ARM_EXIDX_CMD_DATA_PUSH;
+      edata.data = (((int)op & 0x3f) << 2) + 4;
+    } else if ((op & 0xf0) == 0x80) {
+      uint8_t op2 = READ_OP ();
+      if (op == 0x80 && op2 == 0x00) {
+        edata.cmd = ARM_EXIDX_CMD_REFUSED;
+      } else {
+        edata.cmd = ARM_EXIDX_CMD_REG_POP;
+        edata.data = ((op & 0xf) << 8) | op2;
+        edata.data = edata.data << 4;
+      }
+    } else if ((op & 0xf0) == 0x90) {
+      if (op == 0x9d || op == 0x9f) {
         edata.cmd = ARM_EXIDX_CMD_RESERVED;
-      ret = arm_exidx_apply_cmd (&edata, c);
-      if (ret < 0)
-        return ret;
+      } else {
+        edata.cmd = ARM_EXIDX_CMD_REG_TO_SP;
+        edata.data = op & 0x0f;
+      }
+    } else if ((op & 0xf0) == 0xa0) {
+      unsigned end = (op & 0x07);
+      edata.data = (1 << (end + 1)) - 1;
+      edata.data = edata.data << 4;
+      if (op & 0x08)
+        edata.data |= 1 << 14;
+      edata.cmd = ARM_EXIDX_CMD_REG_POP;
+    } else if (op == ARM_EXTBL_OP_FINISH) {
+      edata.cmd = ARM_EXIDX_CMD_FINISH;
+      buf = end;
+    } else if (op == 0xb1) {
+      uint8_t op2 = READ_OP ();
+      if (op2 == 0 || (op2 & 0xf0)) {
+        edata.cmd = ARM_EXIDX_CMD_RESERVED;
+      } else {
+        edata.cmd = ARM_EXIDX_CMD_REG_POP;
+        edata.data = op2 & 0x0f;
+      }
+    } else if (op == 0xb2) {
+      uint32_t offset = 0;
+      uint8_t byte, shift = 0;
+      do {
+          byte = READ_OP ();
+          offset |= (byte & 0x7f) << shift;
+          shift += 7;
+      } while (byte & 0x80);
+      edata.data = offset * 4 + 0x204;
+      edata.cmd = ARM_EXIDX_CMD_DATA_POP;
+    } else if (op == 0xb3 || op == 0xc8 || op == 0xc9) {
+      edata.cmd = ARM_EXIDX_CMD_VFP_POP;
+      edata.data = READ_OP ();
+      if (op == 0xc8)
+        edata.data |= ARM_EXIDX_VFP_SHIFT_16;
+      if (op != 0xb3)
+        edata.data |= ARM_EXIDX_VFP_DOUBLE;
+    } else if ((op & 0xf8) == 0xb8 || (op & 0xf8) == 0xd0) {
+      edata.cmd = ARM_EXIDX_CMD_VFP_POP;
+      edata.data = 0x80 | (op & 0x07);
+      if ((op & 0xf8) == 0xd0)
+        edata.data |= ARM_EXIDX_VFP_DOUBLE;
+    } else if (op >= 0xc0 && op <= 0xc5) {
+      edata.cmd = ARM_EXIDX_CMD_WREG_POP;
+      edata.data = 0xa0 | (op & 0x07);
+    } else if (op == 0xc6) {
+      edata.cmd = ARM_EXIDX_CMD_WREG_POP;
+      edata.data = READ_OP ();
+    } else if (op == 0xc7) {
+      uint8_t op2 = READ_OP ();
+      if (op2 == 0 || (op2 & 0xf0)) {
+        edata.cmd = ARM_EXIDX_CMD_RESERVED;
+      } else {
+        edata.cmd = ARM_EXIDX_CMD_WCGR_POP;
+        edata.data = op2 & 0x0f;
+      }
+    } else {
+      edata.cmd = ARM_EXIDX_CMD_RESERVED;
     }
+    ret = arm_exidx_apply_cmd (&edata, c);
+    if (ret < 0)
+      return ret;
+  }
   return 0;
 }
 
@@ -558,9 +509,7 @@ arm_exidx_decode (const uint8_t *buf, uint8_t len, struct dwarf_cursor *c)
  * -UNW_ESTOPUNWIND if the special bit pattern ARM_EXIDX_CANT_UNWIND (0x1) was
  * found.
  */
-HIDDEN int
-arm_exidx_extract (struct dwarf_cursor *c, uint8_t *buf)
-{
+HIDDEN int arm_exidx_extract (struct dwarf_cursor *c, uint8_t *buf) {
   int nbuf = 0;
   unw_word_t entry = (unw_word_t)c->pi.unwind_info;
   unw_word_t addr;
@@ -578,72 +527,61 @@ arm_exidx_extract (struct dwarf_cursor *c, uint8_t *buf)
   if (access_mem (entry + 4, &data, 0) < 0)
     return -UNW_EINVAL;
 
-  if (data == ARM_EXIDX_CANT_UNWIND)
-    {
-      Debug (2, "0x1 [can't unwind]\n");
-      nbuf = -UNW_ESTOPUNWIND;
-    }
-  else if (data & ARM_EXIDX_COMPACT)
-    {
-      Debug (2, "%p compact model %d [%8.8x]\n", (void *)addr,
-             (data >> 24) & 0x7f, data);
+  if (data == ARM_EXIDX_CANT_UNWIND) {
+    Debug (2, "0x1 [can't unwind]\n");
+    nbuf = -UNW_ESTOPUNWIND;
+  } else if (data & ARM_EXIDX_COMPACT) {
+    Debug (2, "%p compact model %d [%8.8x]\n", (void *)addr,
+           (data >> 24) & 0x7f, data);
+    buf[nbuf++] = data >> 16;
+    buf[nbuf++] = data >> 8;
+    buf[nbuf++] = data;
+  } else {
+    unw_word_t extbl_data;
+    unsigned int n_table_words = 0;
+
+    if (prel31_to_addr (c->as, c->as_arg, entry + 4, &extbl_data) < 0)
+      return -UNW_EINVAL;
+
+    if (access_mem (extbl_data, &data, 0) < 0)
+      return -UNW_EINVAL;
+
+    if (data & ARM_EXIDX_COMPACT) {
+      int pers = (data >> 24) & 0x0f;
+      Debug (2, "%p compact model %d [%8.8x]\n", (void *)addr, pers, data);
+      if (pers == 1 || pers == 2) {
+        n_table_words = (data >> 16) & 0xff;
+        extbl_data += 4;
+      } else {
+        buf[nbuf++] = data >> 16;
+      }
+      buf[nbuf++] = data >> 8;
+      buf[nbuf++] = data;
+    } else {
+      unw_word_t pers;
+      if (prel31_to_addr (c->as, c->as_arg, extbl_data, &pers) < 0)
+        return -UNW_EINVAL;
+      Debug (2, "%p Personality routine: %8p\n", (void *)addr, (void *)pers);
+      if (access_mem (extbl_data + 4, &data, 0) < 0)
+        return -UNW_EINVAL;
+      n_table_words = data >> 24;
       buf[nbuf++] = data >> 16;
       buf[nbuf++] = data >> 8;
       buf[nbuf++] = data;
+      extbl_data += 8;
     }
-  else
-    {
-      unw_word_t extbl_data;
-      unsigned int n_table_words = 0;
-
-      if (prel31_to_addr (c->as, c->as_arg, entry + 4, &extbl_data) < 0)
-        return -UNW_EINVAL;
-
+    assert (n_table_words <= 5);
+    unsigned j;
+    for (j = 0; j < n_table_words; j++) {
       if (access_mem (extbl_data, &data, 0) < 0)
         return -UNW_EINVAL;
-
-      if (data & ARM_EXIDX_COMPACT)
-        {
-          int pers = (data >> 24) & 0x0f;
-          Debug (2, "%p compact model %d [%8.8x]\n", (void *)addr, pers, data);
-          if (pers == 1 || pers == 2)
-            {
-              n_table_words = (data >> 16) & 0xff;
-              extbl_data += 4;
-            }
-          else
-            buf[nbuf++] = data >> 16;
-          buf[nbuf++] = data >> 8;
-          buf[nbuf++] = data;
-        }
-      else
-        {
-          unw_word_t pers;
-          if (prel31_to_addr (c->as, c->as_arg, extbl_data, &pers) < 0)
-            return -UNW_EINVAL;
-          Debug (2, "%p Personality routine: %8p\n", (void *)addr,
-                 (void *)pers);
-          if (access_mem (extbl_data + 4, &data, 0) < 0)
-            return -UNW_EINVAL;
-          n_table_words = data >> 24;
-          buf[nbuf++] = data >> 16;
-          buf[nbuf++] = data >> 8;
-          buf[nbuf++] = data;
-          extbl_data += 8;
-        }
-      assert (n_table_words <= 5);
-      unsigned j;
-      for (j = 0; j < n_table_words; j++)
-        {
-          if (access_mem (extbl_data, &data, 0) < 0)
-            return -UNW_EINVAL;
-          extbl_data += 4;
-          buf[nbuf++] = data >> 24;
-          buf[nbuf++] = data >> 16;
-          buf[nbuf++] = data >> 8;
-          buf[nbuf++] = data >> 0;
-        }
+      extbl_data += 4;
+      buf[nbuf++] = data >> 24;
+      buf[nbuf++] = data >> 16;
+      buf[nbuf++] = data >> 8;
+      buf[nbuf++] = data >> 0;
     }
+  }
 
   if (nbuf > 0 && buf[nbuf - 1] != ARM_EXTBL_OP_FINISH)
     buf[nbuf++] = ARM_EXTBL_OP_FINISH;
@@ -651,10 +589,8 @@ arm_exidx_extract (struct dwarf_cursor *c, uint8_t *buf)
   return nbuf;
 }
 
-static int
-tdep_search_unwind_table (unw_word_t first, unw_word_t last, unw_word_t ip,
-                          unw_proc_info_t *pi)
-{
+static int tdep_search_unwind_table(
+    unw_word_t first, unw_word_t last, unw_word_t ip, unw_proc_info_t *pi) {
   {
     /* The .ARM.exidx section contains a sorted list of key-value pairs -
        the unwind entries.  The 'key' is a prel31 offset to the start of a
@@ -662,54 +598,44 @@ tdep_search_unwind_table (unw_word_t first, unw_word_t last, unw_word_t ip,
        appropriate unwind entry.  */
     unw_word_t entry, val;
 
-    if (prel31_to_addr (as, arg, first, &val) < 0 || ip < val)
-      {
-        return -UNW_ENOINFO;
+    if (prel31_to_addr (as, arg, first, &val) < 0 || ip < val) {
+      return -UNW_ENOINFO;
+    }
+
+    if (prel31_to_addr (as, arg, last, &val) < 0) {
+      return -UNW_EINVAL;
+    }
+
+    if (ip >= val) {
+      entry = last;
+
+      if (prel31_to_addr (as, arg, last, &pi->start_ip) < 0)
+        return -UNW_EINVAL;
+
+      pi->end_ip = 0xffffffff;
+    } else {
+      while (first < last - 8) {
+        entry = first + (((last - first) / 8 + 1) >> 1) * 8;
+        if (prel31_to_addr (as, arg, entry, &val) < 0)
+          return -UNW_EINVAL;
+
+        if (ip < val)
+          last = entry;
+        else
+          first = entry;
       }
 
-    if (prel31_to_addr (as, arg, last, &val) < 0)
-      {
+      entry = first;
+
+      if (prel31_to_addr (as, arg, entry, &pi->start_ip) < 0) {
         return -UNW_EINVAL;
       }
 
-    if (ip >= val)
-      {
-        entry = last;
-
-        if (prel31_to_addr (as, arg, last, &pi->start_ip) < 0)
-          return -UNW_EINVAL;
-
-        pi->end_ip = 0xffffffff;
+      if (prel31_to_addr (as, arg, entry + 8, &pi->end_ip) < 0) {
+        return -UNW_EINVAL;
       }
-    else
-      {
-        while (first < last - 8)
-          {
-            entry = first + (((last - first) / 8 + 1) >> 1) * 8;
-
-            if (prel31_to_addr (as, arg, entry, &val) < 0)
-              return -UNW_EINVAL;
-
-            if (ip < val)
-              last = entry;
-            else
-              first = entry;
-          }
-
-        entry = first;
-
-        if (prel31_to_addr (as, arg, entry, &pi->start_ip) < 0)
-          {
-            return -UNW_EINVAL;
-          }
-
-        if (prel31_to_addr (as, arg, entry + 8, &pi->end_ip) < 0)
-          {
-            return -UNW_EINVAL;
-          }
-
-        pi->end_ip--;
-      }
+      pi->end_ip--;
+    }
 
     {
       pi->unwind_info_size = 8;
@@ -724,10 +650,7 @@ tdep_search_unwind_table (unw_word_t first, unw_word_t last, unw_word_t ip,
 
 extern unw_word_t dl_unwind_find_exidx(unw_word_t, int*);
 
-HIDDEN int
-tdep_find_proc_info (struct dwarf_cursor *c, unw_word_t ip,
-                     int need_unwind_info)
-{
+HIDDEN int tdep_find_proc_info (struct dwarf_cursor *c, unw_word_t ip, int need_unwind_info) {
   unw_word_t ptr;
   int count;
   unw_proc_info_t *pi;
@@ -742,9 +665,7 @@ tdep_find_proc_info (struct dwarf_cursor *c, unw_word_t ip,
   return tdep_search_unwind_table (ptr, ptr + count * 8 - 8, ip, pi);
 }
 
-static inline int
-arm_exidx_step (struct cursor *c)
-{
+static inline int arm_exidx_step(struct cursor *c) {
   uint8_t buf[32];
   int ret;
 
@@ -775,8 +696,7 @@ arm_exidx_step (struct cursor *c)
 /* On ARM, we define our own unw_tdep_context instead of using ucontext_t.
    This allows us to support systems that don't support getcontext and
    therefore do not define ucontext_t.  */
-typedef struct unw_tdep_context
-{
+typedef struct unw_tdep_context {
   unsigned long regs[16];
 } unw_tdep_context_t;
 
@@ -809,9 +729,7 @@ typedef struct unw_tdep_context
    0)
 #endif
 
-static int
-init_dwarf (struct cursor *c, unw_tdep_context_t *uc, void* uc_mcontext)
-{
+static int init_dwarf (struct cursor *c, unw_tdep_context_t *uc, void* uc_mcontext) {
   int ret, i;
 
   memcpy(uc->regs, &(((mcontext_t*)uc_mcontext)->arm_r0), sizeof(uc->regs));
@@ -845,27 +763,22 @@ init_dwarf (struct cursor *c, unw_tdep_context_t *uc, void* uc_mcontext)
   return ret;
 }
 
-int
-mybacktrace (backtrace_callback callback, void *args, void* uc_mcontext)
-{
+int mybacktrace (backtrace_callback callback, void *args, void* uc_mcontext) {
   struct cursor c;
   unw_tdep_context_t uc;
   int ret;
   memset (&c, 0, sizeof (c));
-  if (init_dwarf (&c, &uc, uc_mcontext) < 0)
-    {
-      return 1;
+  if (init_dwarf (&c, &uc, uc_mcontext) < 0) {
+    return 1;
+  }
+
+  while (1) {
+    if (arm_exidx_step (&c) == 0) {
+      return 0;
     }
-  while (1)
-    {
-      if (arm_exidx_step (&c) == 0)
-        {
-          return 0;
-        }
-      if (BACKTRACE_CONTINUE != callback (c.dwarf.ip, args))
-        {
-          return 0;
-        }
+    if (BACKTRACE_CONTINUE != callback (c.dwarf.ip, args)) {
+      return 0;
     }
+  }
   return 1;
 }

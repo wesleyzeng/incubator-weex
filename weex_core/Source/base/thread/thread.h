@@ -22,6 +22,7 @@
 
 #include <pthread.h>
 #include <memory>
+
 #if OS_ANDROID
 #include "base/thread/thread_impl_android.h"
 #elif OS_IOS
@@ -30,6 +31,7 @@
 
 namespace weex {
 namespace base {
+
 class Thread {
  public:
   Thread(MessageLoop::Type type) : impl_(CreateImpl(ThreadParams(type))) {}
@@ -37,7 +39,6 @@ class Thread {
   ~Thread() {}
 
   inline void Start() { impl_->Start(); }
-
   inline void Stop() { impl_->Stop(); }
 
   inline MessageLoop* message_loop() { return impl_->message_loop(); }
@@ -53,6 +54,7 @@ class Thread {
   std::unique_ptr<ThreadImpl> impl_;
   DISALLOW_COPY_AND_ASSIGN(Thread);
 };
+
 }  // namespace base
 }  // namespace weex
 

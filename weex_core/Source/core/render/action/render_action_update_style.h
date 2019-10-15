@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_STYLE_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_STYLE_H_
 
@@ -46,6 +47,7 @@ class RenderActionUpdateStyle : public RenderAction {
   std::vector<std::pair<std::string, std::string>> *padding_;
   std::vector<std::pair<std::string, std::string>> *border_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_UPDATE_STYLE_H_

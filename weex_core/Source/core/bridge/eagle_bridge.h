@@ -38,7 +38,8 @@ class EagleRenderObject {
   friend class EagleBridge;
 
   EagleRenderObject();
-  explicit EagleRenderObject(RenderObject* render_object);
+  // FIXME: explicit EagleRenderObject(RenderObject* render_object);
+  EagleRenderObject(RenderObject* render_object);
 
   void AddAttr(std::string key, std::string value);
   void AddStyle(std::string key, std::string value);
@@ -200,7 +201,9 @@ class EagleBridge {
   std::unique_ptr<DataRenderHandler> data_render_handler_;
   std::unique_ptr<WeexCoreHandler> weex_core_handler_;
 };
+
 } // namespace WeexCore
 
 #endif // defined(__cplusplus)
+
 #endif // CORE_BRIDGE_EAGLE_BRIDGE_H

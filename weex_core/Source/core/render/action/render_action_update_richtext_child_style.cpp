@@ -16,16 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #include "core/render/action/render_action_update_richtext_child_style.h"
+
 #include "core/manager/weex_core_manager.h"
 #include "core/render/node/render_object.h"
 
 namespace WeexCore {
 
 RenderActionUpdateRichtextChildStyle::RenderActionUpdateRichtextChildStyle(
-    const std::string &page_id, const std::string &ref,
-    std::vector<std::pair<std::string, std::string>> *style,
-   RenderObject *parent, RenderObject *richtext) {
+    const std::string &page_id,
+    const std::string &ref,
+    std::vector<std::pair<std::string, std::string>>* style,
+   RenderObject* parent,
+   RenderObject* richtext) {
   this->page_id_ = page_id;
   this->ref_ = ref;
   this->style_ = style;
@@ -39,4 +43,5 @@ void RenderActionUpdateRichtextChildStyle::ExecuteAction() {
       ->platform_side()
       ->UpdateRichtextStyle(this->page_id_.c_str(), this->ref_.c_str(), this->style_, this->parent_ref_.c_str(), this->richtext_ref_.c_str());
 }
+
 }  // namespace WeexCore

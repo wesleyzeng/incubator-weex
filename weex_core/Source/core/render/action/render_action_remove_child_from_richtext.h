@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef CORE_RENDER_ACTION_RENDER_ACTION_REMOVE_CHILD_FROM_RICHTEXT_H_
 #define CORE_RENDER_ACTION_RENDER_ACTION_REMOVE_CHILD_FROM_RICHTEXT_H_
 
@@ -23,10 +24,15 @@
 #include "core/render/action/render_action_interface.h"
 
 namespace WeexCore {
+
 class RenderObject;
+
 class RenderActionRemoveChildFromRichtext : public RenderAction {
  public:
-  explicit RenderActionRemoveChildFromRichtext(const std::string &page_id, const std::string &ref, const RenderObject* parent, RenderObject* richtext);
+  explicit RenderActionRemoveChildFromRichtext(const std::string &page_id,
+                                               const std::string &ref,
+                                               const RenderObject* parent,
+                                               RenderObject* richtext);
 
   void ExecuteAction();
 
@@ -36,6 +42,7 @@ class RenderActionRemoveChildFromRichtext : public RenderAction {
   std::string parent_ref_;
   std::string richtext_ref_;
 };
+
 }  // namespace WeexCore
 
 #endif  // CORE_RENDER_ACTION_RENDER_ACTION_REMOVE_CHILD_FROM_RICHTEXT_H_

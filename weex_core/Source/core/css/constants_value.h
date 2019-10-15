@@ -24,48 +24,48 @@
 
 namespace WeexCore {
 
-  // direction
-  constexpr char RTL[] = "rtl";
-  constexpr char LTR[] = "ltr";
-  constexpr char INHERIT[] = "inherit";
+// direction
+constexpr char RTL[] = "rtl";
+constexpr char LTR[] = "ltr";
+constexpr char INHERIT[] = "inherit";
 
-  // flex-direction
-  constexpr char ROW[] = "row";
-  constexpr char ROW_REVERSE[] = "row-reverse";
-  constexpr char COLUMN[] = "column";
-  constexpr char COLUMN_REVERSE[] = "column-reverse";
+// flex-direction
+constexpr char ROW[] = "row";
+constexpr char ROW_REVERSE[] = "row-reverse";
+constexpr char COLUMN[] = "column";
+constexpr char COLUMN_REVERSE[] = "column-reverse";
 
-  // flex-wrap
-  constexpr char NOWRAP[] = "nowrap";
-  constexpr char WRAP[] = "wrap";
-  constexpr char WRAP_REVERSE[] = "wrap-reverse";
+// flex-wrap
+constexpr char NOWRAP[] = "nowrap";
+constexpr char WRAP[] = "wrap";
+constexpr char WRAP_REVERSE[] = "wrap-reverse";
 
-  // align
-  constexpr char FLEX_START[] = "flex-start";
-  constexpr char FLEX_END[] = "flex-end";
-  constexpr char CENTER[] = "center";
-  constexpr char SPACE_BETWEEN[] = "space-between";
-  constexpr char SPACE_AROUND[] = "space-around";
-  constexpr char STRETCH[] = "stretch";
-  constexpr char AUTO[] = "auto";
+// align
+constexpr char FLEX_START[] = "flex-start";
+constexpr char FLEX_END[] = "flex-end";
+constexpr char CENTER[] = "center";
+constexpr char SPACE_BETWEEN[] = "space-between";
+constexpr char SPACE_AROUND[] = "space-around";
+constexpr char STRETCH[] = "stretch";
+constexpr char AUTO[] = "auto";
 
-  // position
-  constexpr char RELATIVE[] = "relative";
-  constexpr char ABSOLUTE[] = "absolute";
-  constexpr char FIXED[] = "fixed";
-  constexpr char STICKY[] = "sticky";
+// position
+constexpr char RELATIVE[] = "relative";
+constexpr char ABSOLUTE[] = "absolute";
+constexpr char FIXED[] = "fixed";
+constexpr char STICKY[] = "sticky";
 
-  constexpr char NORMAL[] = "normal";
-  constexpr int COLUMN_COUNT_NORMAL = 1;
-  constexpr float AUTO_VALUE = -1;
-  constexpr float COLUMN_GAP_NORMAL = 32;
+constexpr char NORMAL[] = "normal";
+constexpr int COLUMN_COUNT_NORMAL = 1;
+constexpr float AUTO_VALUE = -1;
+constexpr float COLUMN_GAP_NORMAL = 32;
 
-  constexpr int HORIZONTAL_VALUE = 0;
-  constexpr int VERTICAL_VALUE = 1;
+constexpr int HORIZONTAL_VALUE = 0;
+constexpr int VERTICAL_VALUE = 1;
 
-  constexpr float kDefaultViewPortWidth = 750.0f;
-  constexpr bool kDefaultRoundOffDeviation = true;
+constexpr float kDefaultViewPortWidth = 750.0f;
+constexpr bool kDefaultRoundOffDeviation = true;
 
 } // namespace WeexCore
 
-#endif //WEEXV8_CONSTANTSVALUE_H
+#endif // WEEXV8_CONSTANTSVALUE_H

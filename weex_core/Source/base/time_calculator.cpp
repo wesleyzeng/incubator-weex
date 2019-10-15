@@ -16,10 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #include "time_calculator.h"
+
 #include "log_defines.h"
+
 namespace weex {
 namespace base {
+
 void weex::base::TimeCalculator::taskEnd() {
   if (!turnOn()) {
     return;
@@ -34,12 +38,11 @@ void weex::base::TimeCalculator::taskEnd() {
   this->m_task_end_time_ = getCurrentTime();
   m_task_end_flag_ = true;
 }
-void weex::base::TimeCalculator::taskStart() {
 
+void weex::base::TimeCalculator::taskStart() {
   if (!turnOn()) {
     return;
   }
-
 
   LOG_Performance(m_instance_id_.c_str(),
       "timeline %s taskName is %s : instanceId %s : m_task_id_ %d: taskStart",
@@ -49,6 +52,7 @@ void weex::base::TimeCalculator::taskStart() {
       m_task_id_);
   this->m_task_start_time_ = getCurrentTime();
 }
+
 void weex::base::TimeCalculator::print() {
   if (!turnOn()) {
     return;
@@ -58,12 +62,11 @@ void weex::base::TimeCalculator::print() {
   const long long &taskCost = m_task_end_time_ - m_task_start_time_;
 
   bool showLog = false;
-
   if (!args.empty() || taskWait > 100) {
     showLog = true;
   } else if (taskCost < 5) {
     LOG_Performance(m_instance_id_.c_str(),"timeline %s taskName is %s cost less than 5ms", m_task_platform_.c_str(),
-         m_task_name_.c_str());
+        m_task_name_.c_str());
   } else {
     showLog = true;
     std::string msg = "normal";
@@ -81,6 +84,7 @@ void weex::base::TimeCalculator::print() {
     LOG_Performance(m_instance_id_.c_str(),"timeline taskName: %s, result: %s", m_task_name_.c_str(), formatData().c_str());
   }
 }
+
 void weex::base::TimeCalculator::transform() {
   if (!turnOn()) {
     return;
@@ -111,7 +115,6 @@ std::string weex::base::TimeCalculator::formatData() {
 
   return std::string(buffer);
 }
+
 }  // namespace base
 }  // namespace weex
-
-

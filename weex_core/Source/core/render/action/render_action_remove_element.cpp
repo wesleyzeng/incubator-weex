@@ -18,12 +18,13 @@
  */
 
 #include "core/render/action/render_action_remove_element.h"
+
 #include "core/manager/weex_core_manager.h"
 
 namespace WeexCore {
 
-RenderActionRemoveElement::RenderActionRemoveElement(const std::string &page_id,
-                                                     const std::string &ref) {
+RenderActionRemoveElement::RenderActionRemoveElement(
+    const std::string &page_id, const std::string &ref) {
   this->page_id_ = page_id;
   this->ref_ = ref;
 }
@@ -34,4 +35,5 @@ void RenderActionRemoveElement::ExecuteAction() {
       ->platform_side()
       ->RemoveElement(this->page_id_.c_str(), this->ref_.c_str());
 }
+
 }  // namespace WeexCore

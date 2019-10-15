@@ -37,4 +37,5 @@ class DefaultRequestHandler : public RequestHandler {
 }  // namespace network
 }  // namespace core
 }  // namespace weex
+
 #endif  // CORE_NETWORK_DEFAULT_REQUEST_HANDLER_H

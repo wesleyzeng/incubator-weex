@@ -25,6 +25,7 @@
 
 namespace weex {
 namespace base {
+
 typedef pthread_key_t ThreadLocalKey;
 
 inline ThreadLocalKey ThreadLocalAlloc() {
@@ -58,6 +59,8 @@ class ThreadLocal {
   ThreadLocalKey key_;
   DISALLOW_COPY_AND_ASSIGN(ThreadLocal<Type>);
 };
+
 }  // namespace base
 }  // namespace weex
+
 #endif  // BASE_THREAD_THREAD_LOCAL_H

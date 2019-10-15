@@ -48,4 +48,5 @@ void RenderActionAddElement::ExecuteAction() {
       this->events_, this->margins_, this->paddings_, this->borders_,
       this->will_layout_);
 }
+
 }  // namespace WeexCore

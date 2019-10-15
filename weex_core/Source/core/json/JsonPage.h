@@ -52,4 +52,4 @@ class JsonPage {
 
 } // namespace WeexCore
 
-#endif //WEEX_PROJECT_REPLAYPAGE_H
+#endif // WEEX_PROJECT_REPLAYPAGE_H
