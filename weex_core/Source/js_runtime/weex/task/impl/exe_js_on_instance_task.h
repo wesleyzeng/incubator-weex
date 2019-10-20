@@ -23,19 +23,17 @@
 #ifndef WEEXV8_EXEJSONINSTANCETASK_H
 #define WEEXV8_EXEJSONINSTANCETASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class ExeJsOnInstanceTask: public WeexTask {
-public:
-    explicit ExeJsOnInstanceTask(const std::string &instanceId, const std::string &script);
+ public:
+  explicit ExeJsOnInstanceTask(const std::string &instanceId, const std::string &script);
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return "ExeJsOnInstanceTask"; }
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "ExeJsOnInstanceTask"; }
 
-private:
-    std::string script;
+ private:
+  std::string script;
 };
 
-
-#endif //WEEXV8_EXEJSONINSTANCETASK_H
+#endif // WEEXV8_EXEJSONINSTANCETASK_H

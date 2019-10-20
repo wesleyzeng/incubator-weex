@@ -22,24 +22,20 @@
 
 #include "call_js_on_app_context_task.h"
 
-CallJsOnAppContextTask::CallJsOnAppContextTask(const std::string &instanceId, const std::string &func,
-                                               std::vector<VALUE_WITH_TYPE *> &params) : WeexTask(instanceId) {
-
-    this->func = func;
-
-    exeJsArgs = new ExeJsArgs(params);
-
+CallJsOnAppContextTask::CallJsOnAppContextTask(
+    const std::string &instanceId,
+    const std::string &func,
+    std::vector<VALUE_WITH_TYPE *> &params) : WeexTask(instanceId) {
+  this->func = func;
+  exeJsArgs = new ExeJsArgs(params);
 }
 
 CallJsOnAppContextTask::CallJsOnAppContextTask(const std::string &instanceId, const std::string &func, IPCArguments *arguments,
                                                size_t startCount) : WeexTask(instanceId) {
-
-    this->func = func;
-
-    exeJsArgs = new ExeJsArgs(arguments, startCount);
-
+  this->func = func;
+  exeJsArgs = new ExeJsArgs(arguments, startCount);
 }
 
 void CallJsOnAppContextTask::run(WeexRuntime *runtime) {
-    runtime->callJSOnAppContext(instanceId, func, exeJsArgs->params);
+  runtime->callJSOnAppContext(instanceId, func, exeJsArgs->params);
 }

@@ -25,5 +25,5 @@
 CTimeCallBackTask::CTimeCallBackTask(const std::string &script) : WeexTask("") {}
 
 void CTimeCallBackTask::run(WeexRuntime *runtime) {
-    runtime->exeCTimeCallback(script);
+  runtime->exeCTimeCallback(script);
 }

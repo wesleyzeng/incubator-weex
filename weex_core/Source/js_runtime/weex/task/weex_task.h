@@ -30,56 +30,52 @@
 //#include "android/jsengine/weex_runtime.h"
 
 class WeexTask {
+ public:
+  class Future {
+   public:
+    Future() : has_result_(false) {}
+    ~Future() {}
 
-public:
+    void setResult(std::unique_ptr<WeexJSResult> &result);
+    std::unique_ptr<WeexJSResult> waitResult();
 
-    class Future {
+   private:
+    bool has_result_ = false;
+    std::unique_ptr<WeexJSResult> result_;
+    ThreadLocker thread_locker_;
+  };
 
-    public:
+  std::string instanceId;
+  int taskId;
 
-        Future() : has_result_(false) {}
+  explicit WeexTask(const std::string &instanceId, int taskId) : future_(nullptr) {
+    this->instanceId = instanceId;
+    this->taskId = taskId;
+    this->timeCalculator = new weex::base::TimeCalculator(weex::base::TaskPlatform::JSS_ENGINE, "", this->instanceId);
+  };
 
-        ~Future() {}
+  explicit WeexTask(const std::string &instanceId) : WeexTask(instanceId, genTaskId()) {}
+  virtual ~WeexTask() {
+    if (timeCalculator != nullptr)
+      delete timeCalculator;
+  };
 
-        void setResult(std::unique_ptr<WeexJSResult> &result);
+  virtual void run(WeexRuntime *runtime) = 0;
+  virtual std::string taskName() = 0;
 
-        std::unique_ptr<WeexJSResult> waitResult();
+  inline void set_future(Future* future) {
+    future_ = future;
+  }
 
-    private:
-        bool has_result_ = false;
-        std::unique_ptr<WeexJSResult> result_;
-        ThreadLocker thread_locker_;
-    };
+  inline Future* future() {
+    return future_;
+  }
 
-    std::string instanceId;
-    int taskId;
-    explicit WeexTask(const std::string &instanceId, int taskId) : future_(nullptr) {
-        this->instanceId = instanceId;
-        this->taskId = taskId;
-        this->timeCalculator = new weex::base::TimeCalculator(weex::base::TaskPlatform::JSS_ENGINE, "", this->instanceId);
-    };
+  weex::base::TimeCalculator *timeCalculator;
 
-    explicit WeexTask(const std::string &instanceId) : WeexTask(instanceId, genTaskId()) {};
-
-    virtual ~WeexTask() {if(timeCalculator != nullptr) delete timeCalculator;};
-
-    virtual void run(WeexRuntime *runtime) = 0;
-    virtual std::string taskName() = 0;
-
-    inline void set_future(Future* future) {
-        future_ = future;
-    }
-
-    inline Future* future() {
-        return future_;
-    }
-
-    weex::base::TimeCalculator *timeCalculator;
-
-    bool is_from_instance = true;
-private:
-    Future* future_;
+  bool is_from_instance = true;
+ private:
+   Future* future_;
 };
-
 
 #endif //WEEXV8_WEEXTASK_H

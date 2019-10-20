@@ -27,86 +27,62 @@
 #include "weex_object_holder_v2.h"
 #include "weex_runtime.h"
 
-
 class WeexRuntimeV2 : public WeexRuntime {
+ public:
+  explicit WeexRuntimeV2(TimerQueue *timeQueue, WeexCore::ScriptBridge *script_bridge, bool isMultiProgress);
+  ~WeexRuntimeV2() override {}
 
-public:
+  bool hasInstanceId(std::string &id) override;
 
-    explicit WeexRuntimeV2(TimerQueue *timeQueue, WeexCore::ScriptBridge *script_bridge, bool isMultiProgress);
-
-    ~WeexRuntimeV2() override {}
-
-    bool hasInstanceId(std::string &id) override;
-
-
-    int initFramework(const std::string &script, std::vector<INIT_FRAMEWORK_PARAMS *> &params) override;
-
-    int
-    initAppFramework(const std::string &instanceId, const std::string &appFramework,
-                     std::vector<INIT_FRAMEWORK_PARAMS *> &params) override;
-
-    int createAppContext(const std::string &instanceId, const std::string &jsBundle) override;
-
-    std::unique_ptr<WeexJSResult> exeJSOnAppWithResult(const std::string &instanceId, const std::string &jsBundle) override;
-
-
-    int
-    callJSOnAppContext(const std::string &instanceId, const std::string &func, std::vector<VALUE_WITH_TYPE *> &params) override;
-
-    int destroyAppContext(const std::string &instanceId) override;
-
-    int exeJsService(const std::string &source) override;
-
-    int exeCTimeCallback(const std::string &source) override;
-
-
-    int
-    exeJS(const std::string &instanceId, const std::string &nameSpace, const std::string &func,
-          std::vector<VALUE_WITH_TYPE *> &params) override;
-
-
-    std::unique_ptr<WeexJSResult> exeJSWithResult(const std::string &instanceId, const std::string &nameSpace, const std::string &func,
-                                                  std::vector<VALUE_WITH_TYPE *> &params) override;
-
-    void exeJSWithCallback(const std::string &instanceId, const std::string &nameSpace, const std::string &func,
-                           std::vector<VALUE_WITH_TYPE *> &params, long callback_id) override;
-
-    int createInstance(const std::string &instanceId, const std::string &func, const std::string &script, const std::string &opts,
-                       const std::string &initData, const std::string &extendsApi,
+  int initFramework(const std::string &script, std::vector<INIT_FRAMEWORK_PARAMS *> &params) override;
+  int initAppFramework(const std::string &instanceId, const std::string &appFramework,
                        std::vector<INIT_FRAMEWORK_PARAMS *> &params) override;
 
-    std::unique_ptr<WeexJSResult> exeJSOnInstance(const std::string &instanceId, const std::string &script) override;
+  int createAppContext(const std::string &instanceId, const std::string &jsBundle) override;
 
-    int destroyInstance(const std::string &instanceId) override;
+  std::unique_ptr<WeexJSResult> exeJSOnAppWithResult(const std::string &instanceId, const std::string &jsBundle) override;
 
-    int updateGlobalConfig(const std::string &config) override;
+  int callJSOnAppContext(const std::string &instanceId, const std::string &func, std::vector<VALUE_WITH_TYPE *> &params) override;
+  int destroyAppContext(const std::string &instanceId) override;
 
-    int UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc) override;
+  int exeJsService(const std::string &source) override;
+  int exeCTimeCallback(const std::string &source) override;
+  int exeJS(const std::string &instanceId, const std::string &nameSpace, const std::string &func,
+            std::vector<VALUE_WITH_TYPE *> &params) override;
+  std::unique_ptr<WeexJSResult> exeJSWithResult(const std::string &instanceId, const std::string &nameSpace, const std::string &func,
+                                                std::vector<VALUE_WITH_TYPE *> &params) override;
+  void exeJSWithCallback(const std::string &instanceId, const std::string &nameSpace, const std::string &func,
+                         std::vector<VALUE_WITH_TYPE *> &params, long callback_id) override;
 
-    WeexObjectHolderV2 *getLightAppObjectHolderV2(const std::string &instanceId);
+  int createInstance(const std::string &instanceId, const std::string &func, const std::string &script, const std::string &opts,
+                     const std::string &initData, const std::string &extendsApi,
+                     std::vector<INIT_FRAMEWORK_PARAMS *> &params) override;
+  std::unique_ptr<WeexJSResult> exeJSOnInstance(const std::string &instanceId, const std::string &script) override;
+  int destroyInstance(const std::string &instanceId) override;
 
-    int exeTimerFunctionForRunTimeApi(const std::string &instanceId, uint32_t timerFunction, bool is_from_instance) override;
+  int updateGlobalConfig(const std::string &config) override;
 
-    void removeTimerFunctionForRunTimeApi(const std::string &instanceId,const uint32_t timerFunction, bool is_from_instance) override;
+  int UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc) override;
 
+  WeexObjectHolderV2 *getLightAppObjectHolderV2(const std::string &instanceId);
 
-protected:
-    int _initFrameworkWithScript(const std::string &source);
+  int exeTimerFunctionForRunTimeApi(const std::string &instanceId, uint32_t timerFunction, bool is_from_instance) override;
+  void removeTimerFunctionForRunTimeApi(const std::string &instanceId,const uint32_t timerFunction, bool is_from_instance) override;
 
-    int _initAppFrameworkWithScript(const std::string &instanceId, const std::string &appFramework);
+ protected:
+  int _initFrameworkWithScript(const std::string &source);
+  int _initAppFrameworkWithScript(const std::string &instanceId, const std::string &appFramework);
 
-    void _geJSRuntimeArgsFromWeexParams(unicorn::EngineContext *context, std::vector<unicorn::ScopeValues> *obj,
-                                        std::vector<VALUE_WITH_TYPE *> &params);
+  void _geJSRuntimeArgsFromWeexParams(unicorn::EngineContext *context, std::vector<unicorn::ScopeValues> *obj,
+                                      std::vector<VALUE_WITH_TYPE *> &params);
 
-    WeexGlobalObjectV2* findWeexObj(const std::string &instanceId, bool is_instance);
+  WeexGlobalObjectV2* findWeexObj(const std::string &instanceId, bool is_instance);
 
-
-protected:
-    std::unique_ptr<WeexObjectHolderV2> weex_object_holder_v2_;
-    std::map<std::string, WeexObjectHolderV2 *> app_worker_context_holder_map_v2_;
-    unicorn::RuntimeVM *vm_;
-    bool multi_process_flag_;
+ protected:
+  std::unique_ptr<WeexObjectHolderV2> weex_object_holder_v2_;
+  std::map<std::string, WeexObjectHolderV2 *> app_worker_context_holder_map_v2_;
+  unicorn::RuntimeVM *vm_;
+  bool multi_process_flag_;
 };
-
 
 #endif //PROJECT_WEEX_RUNTIME_V2_H

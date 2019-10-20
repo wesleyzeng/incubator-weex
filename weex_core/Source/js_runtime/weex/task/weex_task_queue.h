@@ -23,43 +23,40 @@
 #ifndef WEEXV8_WEEXTASKQUEUE_H
 #define WEEXV8_WEEXTASKQUEUE_H
 
-
 #include <deque>
 #include "js_runtime/weex/task/weex_task.h"
 
 class WeexTaskQueue {
+ public:
+  ~WeexTaskQueue();
+  explicit WeexTaskQueue(bool isMultiProgress = true);
 
-public:
-    ~WeexTaskQueue();
-    explicit WeexTaskQueue(bool isMultiProgress = true);
-    void run(WeexTask *task);
+  void run(WeexTask* task);
 
-    int addTask(WeexTask *task);
+  int addTask(WeexTask* task);
+  WeexTask* getTask();
+  void removeTimer(int taskId);
+  void removeAllTask(const std::string &id);
+  int addTimerTask(const std::string &id,
+                   uint32_t function,
+                   int taskId,
+                   bool one_shot,
+                   bool is_from_instance);
 
-    WeexTask *getTask();
+  void start();
+  void init();
 
-    void removeTimer(int taskId);
+  bool isInitOk = false;
 
-    void removeAllTask(const std::string &id);
+ public:
+  WeexRuntime* weexRuntime;
+  bool isMultiProgress;
 
-    int addTimerTask(const std::string &id, uint32_t function, int taskId, bool one_shot, bool is_from_instance);
+ private:
+  int _addTask(WeexTask* task, bool front);
 
-    void start();
-
-    void init();
-
-    bool isInitOk = false;
-
-public:
-    WeexRuntime *weexRuntime;
-    bool isMultiProgress;
-
-private:
-    int _addTask(WeexTask *task, bool front);
-
-    std::deque<WeexTask *> taskQueue_;
-    ThreadLocker threadLocker;
+  std::deque<WeexTask*> taskQueue_;
+  ThreadLocker threadLocker;
 };
 
-
-#endif //WEEXV8_WEEXTASKQUEUE_H
+#endif // WEEXV8_WEEXTASKQUEUE_H

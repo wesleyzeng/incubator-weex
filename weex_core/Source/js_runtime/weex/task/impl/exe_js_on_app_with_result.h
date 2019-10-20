@@ -23,21 +23,17 @@
 #ifndef WEEXV8_EXEJSONAPPWITHRESULTTASK_H
 #define WEEXV8_EXEJSONAPPWITHRESULTTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class ExeJsOnAppWithResultTask : public WeexTask {
-public:
-    ExeJsOnAppWithResultTask(const std::string &instanceId, const std::string &script);
+ public:
+  ExeJsOnAppWithResultTask(const std::string &instanceId, const std::string &script);
 
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "ExeJsOnAppWithResultTask"; }
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return "ExeJsOnAppWithResultTask"; }
-
-private:
-    std::string script;
-
+ private:
+  std::string script;
 };
 
-
-#endif //WEEXV8_EXEJSONAPPWITHRESULTTASK_H
+#endif // WEEXV8_EXEJSONAPPWITHRESULTTASK_H

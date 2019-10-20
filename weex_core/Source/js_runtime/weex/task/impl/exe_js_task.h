@@ -23,30 +23,27 @@
 #ifndef WEEXV8_EXEJSTASK_H
 #define WEEXV8_EXEJSTASK_H
 
-#include "js_runtime/weex/task/weex_task.h"
 #include "android/jsengine/object/args/exe_js_args.h"
+#include "js_runtime/weex/task/weex_task.h"
 
 class ExeJsTask : public WeexTask {
-public:
-    ExeJsTask(const std::string  &instanceId, std::vector<VALUE_WITH_TYPE *> &params, bool withResult = false);
-    ExeJsTask(const std::string &instanceId, std::vector<VALUE_WITH_TYPE *> &params, long callback_id);
-    void addExtraArg(std::string arg);
+ public:
+  ExeJsTask(const std::string  &instanceId, std::vector<VALUE_WITH_TYPE *> &params, bool withResult = false);
+  ExeJsTask(const std::string &instanceId, std::vector<VALUE_WITH_TYPE *> &params, long callback_id);
+  ~ExeJsTask() override;
 
+  void addExtraArg(std::string arg);
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return "ExeJsTask"; }
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "ExeJsTask"; }
 
   ExeJsTask * clone();
 
-    ~ExeJsTask() override;
-
-private:
-
-    bool withResult;
-    long callbackId;
-    ExeJsArgs *exeJsArgs;
-    std::vector<std::string> extraArgs;
+ private:
+  bool withResult;
+  long callbackId;
+  ExeJsArgs *exeJsArgs;
+  std::vector<std::string> extraArgs;
 };
 
-
-#endif //WEEXV8_EXEJSTASK_H
+#endif // WEEXV8_EXEJSTASK_H

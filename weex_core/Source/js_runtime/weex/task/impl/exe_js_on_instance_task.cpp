@@ -22,14 +22,16 @@
 
 #include "exe_js_on_instance_task.h"
 
-ExeJsOnInstanceTask::ExeJsOnInstanceTask(const std::string &instanceId, const std::string &script) : WeexTask(
-        instanceId) {
-    this->script = script;
+ExeJsOnInstanceTask::ExeJsOnInstanceTask(
+    const std::string& instanceId,
+    const std::string& script)
+    : WeexTask(instanceId) {
+  this->script = script;
 }
 
 void ExeJsOnInstanceTask::run(WeexRuntime *runtime) {
-    std::unique_ptr<WeexJSResult> ptr = runtime->exeJSOnInstance(instanceId, script);
-    if (future() != nullptr) {
-        future()->setResult(ptr);
-    }
+  std::unique_ptr<WeexJSResult> ptr = runtime->exeJSOnInstance(instanceId, script);
+  if (future() != nullptr) {
+    future()->setResult(ptr);
+  }
 }

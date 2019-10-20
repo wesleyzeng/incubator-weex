@@ -23,31 +23,24 @@
 #ifndef WEEXV8_INITFRAMEWORKTASK_H
 #define WEEXV8_INITFRAMEWORKTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 #include "android/jsengine/object/args/init_framework_args.h"
 
 class InitFrameworkTask : public WeexTask {
-public:
+ public:
+  explicit InitFrameworkTask(const std::string &instanceId, const std::string &script,
+                             std::vector<INIT_FRAMEWORK_PARAMS *> &params);
+  explicit InitFrameworkTask(const std::string &script, std::vector<INIT_FRAMEWORK_PARAMS *> &params);
+  ~InitFrameworkTask();
 
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "InitFrameworkTask"; }
 
-    explicit InitFrameworkTask(const std::string &instanceId, const std::string &script,
-                               std::vector<INIT_FRAMEWORK_PARAMS *> &params);
+  InitFrameworkTask *clone();
 
-    explicit InitFrameworkTask(const std::string &script, std::vector<INIT_FRAMEWORK_PARAMS *> &params);
-
-    void run(WeexRuntime *runtime) override;
-
-    std::string taskName() override { return "InitFrameworkTask"; }
-
-    InitFrameworkTask *clone();
-
-    ~InitFrameworkTask();
-
-private:
-    InitFrameworkArgs *args;
-    std::string script;
+ private:
+  InitFrameworkArgs *args;
+  std::string script;
 };
 
-
-#endif //WEEXV8_INITFRAMEWORKTASK_H
+#endif // WEEXV8_INITFRAMEWORKTASK_H

@@ -24,50 +24,49 @@
 #include "js_runtime/weex/object/weex_runtime.h"
 
 void ExeJsTask::run(WeexRuntime *runtime) {
-    if (extraArgs.size() < 2)
-        return;
+  if (extraArgs.size() < 2)
+    return;
 
-    if (callbackId >= 0) {
-        runtime->exeJSWithCallback(instanceId, extraArgs.at(0), extraArgs.at(1),
-                                 exeJsArgs->params, callbackId);
-    } else if (!withResult) {
-        runtime->exeJS(instanceId, extraArgs.at(0), extraArgs.at(1), exeJsArgs->params);
-    } else {
-        std::unique_ptr<WeexJSResult>  jsResult = runtime->exeJSWithResult(instanceId, extraArgs.at(0), extraArgs.at(1),
-                                                                           exeJsArgs->params);
-
-        if (future() != nullptr) {
-            future()->setResult(jsResult);
-        }
+  if (callbackId >= 0) {
+    runtime->exeJSWithCallback(instanceId, extraArgs.at(0), extraArgs.at(1),
+                             exeJsArgs->params, callbackId);
+  } else if (!withResult) {
+    runtime->exeJS(instanceId, extraArgs.at(0), extraArgs.at(1), exeJsArgs->params);
+  } else {
+    std::unique_ptr<WeexJSResult>  jsResult = runtime->exeJSWithResult(instanceId, extraArgs.at(0), extraArgs.at(1),
+                                                                       exeJsArgs->params);
+    if (future() != nullptr) {
+      future()->setResult(jsResult);
     }
+  }
 }
 
 void ExeJsTask::addExtraArg(std::string arg) {
-    this->extraArgs.push_back(arg);
+  this->extraArgs.push_back(arg);
 }
 
-ExeJsTask::ExeJsTask(const std::string &instanceId, std::vector<VALUE_WITH_TYPE *> &params, bool withResult) : WeexTask(
-        instanceId) {
-    this->withResult = withResult;
-    callbackId = -1;
-    exeJsArgs = new ExeJsArgs(params);
+ExeJsTask::ExeJsTask(const std::string &instanceId,
+                     std::vector<VALUE_WITH_TYPE *> &params, bool withResult) : WeexTask(instanceId) {
+  this->withResult = withResult;
+  callbackId = -1;
+  exeJsArgs = new ExeJsArgs(params);
 }
 
-ExeJsTask::ExeJsTask(const std::string &instanceId, std::vector<VALUE_WITH_TYPE *> &params, long callback_id) : WeexTask(
-        instanceId) {
-    this->withResult = true;
-    callbackId = callback_id;
-    exeJsArgs = new ExeJsArgs(params);
+ExeJsTask::ExeJsTask(const std::string &instanceId,
+                     std::vector<VALUE_WITH_TYPE *> &params, long callback_id) : WeexTask(instanceId) {
+  this->withResult = true;
+  callbackId = callback_id;
+  exeJsArgs = new ExeJsArgs(params);
 }
 
 ExeJsTask::~ExeJsTask() {
-    delete exeJsArgs;
+  delete exeJsArgs;
 }
 
 ExeJsTask *ExeJsTask::clone() {
-    auto *task = new ExeJsTask(instanceId, this->exeJsArgs->params);
-    for (const auto &extraArg : this->extraArgs) {
-        task->addExtraArg(extraArg);
-    }
-    return task;
+  auto *task = new ExeJsTask(instanceId, this->exeJsArgs->params);
+  for (const auto &extraArg : this->extraArgs) {
+    task->addExtraArg(extraArg);
+  }
+  return task;
 }

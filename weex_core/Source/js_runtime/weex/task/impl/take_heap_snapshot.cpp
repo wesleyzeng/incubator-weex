@@ -22,7 +22,9 @@
 
 #include "take_heap_snapshot.h"
 
-TakeHeapSnapShot::TakeHeapSnapShot(const std::string &instanceId) : WeexTask(instanceId) {}
+TakeHeapSnapShot::TakeHeapSnapShot(const std::string& instanceId)
+    : WeexTask(instanceId) {
+}
 
-void TakeHeapSnapShot::run(WeexRuntime *runtime) {
+void TakeHeapSnapShot::run(WeexRuntime* runtime) {
 }

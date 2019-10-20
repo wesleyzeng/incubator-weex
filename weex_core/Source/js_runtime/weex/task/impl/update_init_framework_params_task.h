@@ -25,22 +25,17 @@
 
 #include "js_runtime/weex/task/weex_task.h"
 
-
 class UpdateInitFrameworkParamsTask : public WeexTask {
+ public:
+  UpdateInitFrameworkParamsTask(const std::string& key, const std::string& value, const std::string& desc);
 
-public:
-    UpdateInitFrameworkParamsTask(const std::string& key, const std::string& value, const std::string& desc);
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "UpdateInitFrameworkParamsTask"; }
 
-    void run(WeexRuntime *runtime) override;
-
-    std::string taskName() override { return "UpdateInitFrameworkParamsTask"; }
-
-private:
-    std::string key_;
-    std::string value_;
-    std::string desc_;
-
+ private:
+  std::string key_;
+  std::string value_;
+  std::string desc_;
 };
-
 
 #endif //WEEX_PROJECT_UPDATEINITFRAMEWORKPARAMSTASK_H

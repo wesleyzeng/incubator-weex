@@ -23,20 +23,17 @@
 #ifndef WEEXV8_CTIMECALLBACKTASK_H
 #define WEEXV8_CTIMECALLBACKTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class CTimeCallBackTask :public  WeexTask{
-public:
-    CTimeCallBackTask(const std::string &script);
+ public:
+  CTimeCallBackTask(const std::string &script);
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return "CTimeCallBackTask"; }
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "CTimeCallBackTask"; }
 
-private:
-    std::string script;
-
+ private:
+  std::string script;
 };
 
-
-#endif //WEEXV8_CTIMECALLBACKTASK_H
+#endif // WEEXV8_CTIMECALLBACKTASK_H

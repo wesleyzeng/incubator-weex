@@ -25,33 +25,27 @@
 
 #include <memory>
 #include <map>
+
 #include "js_runtime/weex/task/timer_queue.h"
 #include "weex_global_object_v2.h"
 
-
 class WeexObjectHolderV2 {
-public:
-    std::unique_ptr<WeexGlobalObjectV2> globalObject;
+ public:
+  explicit WeexObjectHolderV2(unicorn::RuntimeVM *vm, TimerQueue *timeQueue, bool isMultiProgress);
 
-    std::map<std::string, WeexGlobalObjectV2*> m_jsInstanceGlobalObjectMap;
+  void initFromParams(std::vector<INIT_FRAMEWORK_PARAMS *> &params, bool forAppContext);
 
-    explicit WeexObjectHolderV2(unicorn::RuntimeVM *vm, TimerQueue *timeQueue, bool isMultiProgress);
+  WeexGlobalObjectV2 *createWeexObject();
+  WeexGlobalObjectV2 *createInstancecObject(const std::string &id, const std::string &name);
+  WeexGlobalObjectV2 *createAppWorkerObject();
 
-    void initFromParams(std::vector<INIT_FRAMEWORK_PARAMS *> &params, bool forAppContext);
+  std::unique_ptr<WeexGlobalObjectV2> globalObject;
+  std::map<std::string, WeexGlobalObjectV2*> m_jsInstanceGlobalObjectMap;
+  TimerQueue *timeQueue;
 
-    WeexGlobalObjectV2 *createWeexObject();
-
-    WeexGlobalObjectV2 *createInstancecObject(const std::string &id, const std::string &name);
-
-    WeexGlobalObjectV2 *createAppWorkerObject();
-
-    TimerQueue *timeQueue;
-
-private:
-    bool isMultiProgress;
-    unicorn::RuntimeVM *vm;
-
+ private:
+  bool isMultiProgress;
+  unicorn::RuntimeVM *vm;
 };
-
 
 #endif //PROJECT_WEEX_OBJECT_HOLDER_V2_H

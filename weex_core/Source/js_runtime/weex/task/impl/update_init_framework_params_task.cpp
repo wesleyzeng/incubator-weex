@@ -22,15 +22,14 @@
 
 #include "update_init_framework_params_task.h"
 
-
 UpdateInitFrameworkParamsTask::UpdateInitFrameworkParamsTask(const std::string &key,
                                                              const std::string &value,
                                                              const std::string &desc):  WeexTask("") {
-    this->key_ = key;
-    this->value_ = value;
-    this->desc_ = desc;
+  this->key_ = key;
+  this->value_ = value;
+  this->desc_ = desc;
 }
 
 void UpdateInitFrameworkParamsTask::run(WeexRuntime *runtime) {
-    runtime->UpdateInitFrameworkParams(key_, value_,  desc_);
+  runtime->UpdateInitFrameworkParams(key_, value_,  desc_);
 }

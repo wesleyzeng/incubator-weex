@@ -27,31 +27,24 @@
 #include "js_runtime/runtime/binding_macro.h"
 
 namespace weex {
-    namespace jsengine {
-        class WeexConsoleBinding : public unicorn::RuntimeObject {
+namespace jsengine {
 
-        public:
-            DECLARE_CLASS_REGISTER_OP(WeexConsoleBinding)
+class WeexConsoleBinding : public unicorn::RuntimeObject {
+ public:
+  DECLARE_CLASS_REGISTER_OP(WeexConsoleBinding)
+  WeexConsoleBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
 
-            WeexConsoleBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+  unicorn::ScopeValues log(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues info(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues debug(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues warn(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues error(std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues log(std::vector<unicorn::ScopeValues> &vars);
+ private:
+  unicorn::ScopeValues printLog(int level, std::vector<unicorn::ScopeValues> &vars);
+};
 
-            unicorn::ScopeValues info(std::vector<unicorn::ScopeValues> &vars);
-
-
-            unicorn::ScopeValues debug(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues warn(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues error(std::vector<unicorn::ScopeValues> &vars);
-
-        private:
-            unicorn::ScopeValues printLog(int level, std::vector<unicorn::ScopeValues> &vars);
-
-        };
-    }
-}
-
+} // namespace jsengine
+} // namespace weex
 
 #endif //PROJECT_WEEX_CONSOLE_BINDING_H

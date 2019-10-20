@@ -23,16 +23,13 @@
 #ifndef WEEXV8_TAKEHEAPSNAPSHOT_H
 #define WEEXV8_TAKEHEAPSNAPSHOT_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class TakeHeapSnapShot : public WeexTask {
-public:
-    TakeHeapSnapShot(const std::string &instanceId);
+ public:
+  TakeHeapSnapShot(const std::string &instanceId);
 
-    void run(WeexRuntime *runtime) override ;
-
+  void run(WeexRuntime *runtime) override ;
 };
-
 
 #endif //WEEXV8_TAKEHEAPSNAPSHOT_H

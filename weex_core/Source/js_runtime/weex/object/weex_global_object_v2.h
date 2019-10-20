@@ -23,7 +23,6 @@
 #ifndef PROJECT_WEEX_GLOBAL_OBJECT_V2_H
 #define PROJECT_WEEX_GLOBAL_OBJECT_V2_H
 
-
 #include "core/bridge/script_bridge.h"
 #include "include/WeexApiHeader.h"
 //#include "task/timer_queue.h"
@@ -31,66 +30,52 @@
 #include "js_runtime/runtime/runtime_context.h"
 #include "js_runtime/runtime/runtime_object.h"
 
-
 enum WeexGlobalObjectType {
-    WeexInstance,
-    WeexGlobal,
-    AppWorker
+  WeexInstance,
+  WeexGlobal,
+  AppWorker
 };
-
 
 class WeexGlobalObjectV2 {
-public:
-    std::vector<INIT_FRAMEWORK_PARAMS *> m_initFrameworkParams;
-    std::string id = "";
-    TimerQueue *timeQueue = nullptr;
-    std::unique_ptr<unicorn::RuntimeContext> context;
-    std::unique_ptr<unicorn::RuntimeObject> global_object_binding;
+ public:
+  std::vector<INIT_FRAMEWORK_PARAMS *> m_initFrameworkParams;
+  std::string id = "";
+  TimerQueue *timeQueue = nullptr;
+  std::unique_ptr<unicorn::RuntimeContext> context;
+  std::unique_ptr<unicorn::RuntimeObject> global_object_binding;
 
-private:
-    WeexCore::ScriptBridge *script_bridge_;
-    WeexGlobalObjectType object_type_;
-    uint32_t function_id_;
-    std::map<uint32_t, unicorn::RuntimeValues *> function_maps_;
+ private:
+  WeexCore::ScriptBridge *script_bridge_;
+  WeexGlobalObjectType object_type_;
+  uint32_t function_id_;
+  std::map<uint32_t, unicorn::RuntimeValues *> function_maps_;
 
+ public:
+  void makeWeexInstanceObject(unicorn::RuntimeVM *vm, const std::string &id, const std::string &name);
+  void makeWeexGlobalObject(unicorn::RuntimeVM *vm);
+  void makeAppWorkerObject(unicorn::RuntimeVM *vm);
 
-public:
+  void addExtraOptions(std::vector<INIT_FRAMEWORK_PARAMS *> &params);
 
-    void makeWeexInstanceObject(unicorn::RuntimeVM *vm, const std::string &id, const std::string &name);
+  void initWxEnvironment(std::vector<INIT_FRAMEWORK_PARAMS *> &params, bool isSave);
+  inline WeexCore::ScriptBridge *js_bridge() { return script_bridge_; }
+  void setScriptBridge(WeexCore::ScriptBridge *script_bridge);
 
-    void makeWeexGlobalObject(unicorn::RuntimeVM *vm);
+  unicorn::RuntimeValues *removeTimer(uint32_t function_id);
 
-    void makeAppWorkerObject(unicorn::RuntimeVM *vm);
+  int setNativeTimeout(unicorn::RuntimeValues *func, int timeOut, bool interval);
+  void clearNativeTimeout(int timer_task_id);
+  unicorn::RuntimeValues *getTimerFunction(uint32_t function_id);
 
+  void updateInitFrameworkParams(const std::string& key, const std::string& value);
 
-    void addExtraOptions(std::vector<INIT_FRAMEWORK_PARAMS *> &params);
+  inline WeexGlobalObjectType getObjectType() {
+    return this->object_type_;
+  }
 
-    void initWxEnvironment(std::vector<INIT_FRAMEWORK_PARAMS *> &params, bool isSave);
-
-    inline WeexCore::ScriptBridge *js_bridge() { return script_bridge_; }
-
-    void setScriptBridge(WeexCore::ScriptBridge *script_bridge);
-
-
-    unicorn::RuntimeValues *removeTimer(uint32_t function_id);
-
-
-    int setNativeTimeout(unicorn::RuntimeValues *func, int timeOut, bool interval);
-    void clearNativeTimeout(int timer_task_id);
-
-    unicorn::RuntimeValues *getTimerFunction(uint32_t function_id);
-
-    void updateInitFrameworkParams(const std::string& key, const std::string& value);
-
-    inline WeexGlobalObjectType getObjectType() {
-        return this->object_type_;
-    }
-
-private:
-    // uint32_t genFunctionID();
-
-    //void addTimer(uint32_t function_id, unicorn::RuntimeValues *func);
+ private:
+  // uint32_t genFunctionID();
+  //void addTimer(uint32_t function_id, unicorn::RuntimeValues *func);
 };
-
 
 #endif //PROJECT_WEEX_GLOBAL_OBJECT_V2_H

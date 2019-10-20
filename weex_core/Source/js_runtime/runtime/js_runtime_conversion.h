@@ -27,16 +27,18 @@
 #include "runtime_values.h"
 
 namespace unicorn {
-    class JSRuntimeConversion {
-    public:
-        static JSRunTimeValue RuntimeValueToJSRuntimeValue(EngineContext* ctx,
-                                                JSRunTimeClass class_ref,
-                                                const RuntimeValues* value);
 
-        static ScopeValues JSRunTimeValueToRuntimeValue(EngineContext* ctx,
+class JSRuntimeConversion {
+ public:
+  static JSRunTimeValue RuntimeValueToJSRuntimeValue(EngineContext* ctx,
+                                                    JSRunTimeClass class_ref,
+                                                    const RuntimeValues* value);
+
+  static ScopeValues JSRunTimeValueToRuntimeValue(EngineContext* ctx,
                                                  JSRunTimeObject thiz,
                                                  JSRunTimeValue value);
-    };
+};
 
-}
+} // namespace unicon
+
 #endif //FLUTTER_UNICORN__JS_RUNTIME_CONVERSION_H

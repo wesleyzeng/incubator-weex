@@ -45,26 +45,23 @@ typedef JSObjectCallAsFunctionCallback FunctionCallback;
 
 __attribute__((unused))
 static JSValueRef MakeClassToFunctionType(
-        JSContextRef ctx,
-        JSObjectRef function,
-        JSObjectRef thiz, size_t argc,
-        const JSValueRef *argv,
-        JSValueRef *exception
-) {
-    auto ret = unicorn::RuntimeValues::MakeUndefined();
-    JSValueRef prop =
-            unicorn::Conversion::RuntimeValueToJSValue(ctx, nullptr, ret.get());
-    return prop;
+    JSContextRef ctx,
+    JSObjectRef function,
+    JSObjectRef thiz, size_t argc,
+    const JSValueRef *argv,
+    JSValueRef *exception) {
+  auto ret = unicorn::RuntimeValues::MakeUndefined();
+  JSValueRef prop = unicorn::Conversion::RuntimeValueToJSValue(ctx, nullptr, ret.get());
+  return prop;
 }
 
 class SetterAndGetterCallback {
 public:
-    SetterAndGetterCallback() : getter_(nullptr), setter_(nullptr) {}
+  SetterAndGetterCallback() : getter_(nullptr), setter_(nullptr) {}
+  ~SetterAndGetterCallback() = default;
 
-    ~SetterAndGetterCallback() = default;
-
-    GetterCallback getter_;
-    SetterCallback setter_;
+  GetterCallback getter_;
+  SetterCallback setter_;
 };
 
 // define class member get and set callback
@@ -138,10 +135,10 @@ static bool SET_CALLBACK_FUNCTION(member_name_)(                           \
 }
 
 #define CLASS_MEMBER_SET_CALLBACK(class_, member_name_)                    \
-MEMBER_SET_CALLBACK_FUNCTION(class_, member_name_)                         \
+    MEMBER_SET_CALLBACK_FUNCTION(class_, member_name_)
 
 #define CLASS_MEMBER_GET_CALLBACK(class_, member_name_)                    \
-MEMBER_GET_CALLBACK_FUNCTION(class_, member_name_)
+    MEMBER_GET_CALLBACK_FUNCTION(class_, member_name_)
 
 
 /* This macro for the binding function without return type */

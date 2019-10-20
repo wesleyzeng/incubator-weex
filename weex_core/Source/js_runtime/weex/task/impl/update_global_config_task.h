@@ -23,21 +23,17 @@
 #ifndef WEEXV8_UPDATEGLOBALCONFIGTASK_H
 #define WEEXV8_UPDATEGLOBALCONFIGTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class UpdateGlobalConfigTask: public WeexTask {
-public:
-    UpdateGlobalConfigTask(const std::string &script);
+ public:
+  UpdateGlobalConfigTask(const std::string &script);
 
-    void run(WeexRuntime *runtime) override;
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "UpdateGlobalConfigTask"; }
 
-    std::string taskName() override { return "UpdateGlobalConfigTask"; }
-
-private:
-    std::string script;
-
+ private:
+  std::string script;
 };
-
 
 #endif //WEEXV8_UPDATEGLOBALCONFIGTASK_H

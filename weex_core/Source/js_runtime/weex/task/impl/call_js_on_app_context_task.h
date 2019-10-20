@@ -23,29 +23,24 @@
 #ifndef WEEXV8_CALLJSONAPPCONTEXTTASK_H
 #define WEEXV8_CALLJSONAPPCONTEXTTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 #include "android/jsengine/object/args/exe_js_args.h"
 
 class CallJsOnAppContextTask : public WeexTask {
+ public:
+  CallJsOnAppContextTask(const std::string &instanceId, const std::string &func, std::vector<VALUE_WITH_TYPE *> &params);
+  CallJsOnAppContextTask(const std::string &instanceId, const std::string &func, IPCArguments *arguments, size_t startCount);
 
-public:
-    CallJsOnAppContextTask(const std::string &instanceId, const std::string &func, std::vector<VALUE_WITH_TYPE *> &params);
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return " CallJsOnAppContextTask "; }
 
-    CallJsOnAppContextTask(const std::string &instanceId, const std::string &func, IPCArguments *arguments, size_t startCount);
+  ~CallJsOnAppContextTask() {
+    delete exeJsArgs;
+  }
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return " CallJsOnAppContextTask "; }
-
-
-    ~CallJsOnAppContextTask() {
-        delete exeJsArgs;
-    }
-
-private:
-    std::string func;
-    ExeJsArgs *exeJsArgs;
+ private:
+  std::string func;
+  ExeJsArgs *exeJsArgs;
 };
-
 
 #endif //WEEXV8_CALLJSONAPPCONTEXTTASK_H

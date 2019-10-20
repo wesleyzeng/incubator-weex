@@ -35,10 +35,12 @@
 #endif
 
 namespace WeexCore {
+
 class WXCoreMargin;
 class WXCorePadding;
 class WXCoreBorderWidth;
 class WXCoreSize;
+
 }  // namespace WeexCore
 
 using namespace WeexCore;
@@ -357,6 +359,6 @@ typedef struct CoreSideFunctionsOfPlatformBridge {
   FuncUpdateGlobalConfig update_global_config;
 } CoreSideFunctionsOfPlatformBridge;
 
-#endif // defined(OS_ANDROID)
+#endif // OS_ANDROID
 
-#endif //WEEXV8_WEEXAPIHEADER_H
+#endif // WEEXV8_WEEXAPIHEADER_H

@@ -24,7 +24,9 @@
 
 #ifndef IPCCHECK_H
 #define IPCCHECK_H
+
 #include <stdlib.h>
+
 #if defined(NDEBUG)
 #define IPC_DCHECK(b)
 #define IPC_UNREACHABLE() abort()
@@ -37,4 +39,5 @@ void reportUnreachable(const char* file, int line);
     }
 #define IPC_UNREACHABLE() reportUnreachable(__FILE__, __LINE__);
 #endif
+
 #endif /* IPCCHECK_H */

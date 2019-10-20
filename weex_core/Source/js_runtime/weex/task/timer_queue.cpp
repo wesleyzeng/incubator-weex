@@ -21,20 +21,20 @@
 //
 
 #include "timer_queue.h"
-//#include "android/jsengine/task/weex_task_queue.h"
-#include "weex_task_queue.h"
+
 #include "android/jsengine/object/weex_env.h"
+//#include "android/jsengine/task/weex_task_queue.h"
 //#include "android/jsengine/weex_runtime.h"
 #include "js_runtime/weex/object/weex_runtime.h"
+#include "weex_task_queue.h"
 
-static void *startThread(void *td) {
+static void* startThread(void *td) {
   auto *self = static_cast<TimerQueue *>(td);
   self->start();
   return NULL;
 }
 
 void TimerQueue::init() {
-
   if (this->isInit)
     return;
 
@@ -67,18 +67,18 @@ void TimerQueue::start() {
         addTimerTask(new TimerTask(pTask));
       }
     }
-    delete (pTask);
+    delete pTask;
     pTask = nullptr;
   }
 }
 
-TimerQueue::TimerQueue(WeexTaskQueue *taskQueue) {
+TimerQueue::TimerQueue(WeexTaskQueue* taskQueue) {
   nextTaskWhen = 0;
   this->weexTaskQueue = taskQueue;
   init();
 }
 
-int TimerQueue::addTimerTask(TimerTask *timerTask) {
+int TimerQueue::addTimerTask(TimerTask* timerTask) {
   threadLocker.lock();
   auto size = timerQueue_.size();
   if (timerQueue_.empty()) {

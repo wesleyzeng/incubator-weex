@@ -39,7 +39,6 @@
 #include "js_runtime/runtime/v8/binding_macro_v8.h"
 #else
 #include "js_runtime/runtime/jsc/binding_macro_jsc.h"
-
-#endif
+#endif // !defined(USE_V8)
 
 #endif  // FLUTTER_UNICORN_RUNTIME_BINDING_MACRO_H_

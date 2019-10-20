@@ -28,6 +28,7 @@
 
 struct IPCString;
 struct IPCByteArray;
+
 class IPCArguments {
 public:
     virtual ~IPCArguments() = default;

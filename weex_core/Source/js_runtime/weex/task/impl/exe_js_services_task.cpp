@@ -23,9 +23,9 @@
 #include "exe_js_services_task.h"
 
 ExeJsServicesTask::ExeJsServicesTask(const std::string &script) : WeexTask("") {
-    this->script = script;
+  this->script = script;
 }
 
 void ExeJsServicesTask::run(WeexRuntime *runtime) {
-    runtime->exeJsService(this->script);
+  runtime->exeJsService(this->script);
 }

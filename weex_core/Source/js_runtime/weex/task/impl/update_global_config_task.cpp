@@ -23,9 +23,9 @@
 #include "update_global_config_task.h"
 
 UpdateGlobalConfigTask::UpdateGlobalConfigTask(const std::string &script) : WeexTask("") {
-    this->script = script;
+  this->script = script;
 }
 
 void UpdateGlobalConfigTask::run(WeexRuntime *runtime) {
-    runtime->updateGlobalConfig(script);
+  runtime->updateGlobalConfig(script);
 }

@@ -22,14 +22,14 @@
 
 #include "exe_js_on_app_with_result.h"
 
-ExeJsOnAppWithResultTask::ExeJsOnAppWithResultTask(const std::string &instanceId, const std::string &script) : WeexTask(
-        instanceId) {
-    this->script = script;
+ExeJsOnAppWithResultTask::ExeJsOnAppWithResultTask(
+    const std::string &instanceId, const std::string &script) : WeexTask(instanceId) {
+  this->script = script;
 }
 
 void ExeJsOnAppWithResultTask::run(WeexRuntime *runtime) {
-    auto ptr = runtime->exeJSOnAppWithResult(instanceId, script);
-    if (future() != nullptr) {
-        future()->setResult(ptr);
-    }
+  auto ptr = runtime->exeJSOnAppWithResult(instanceId, script);
+  if (future() != nullptr) {
+    future()->setResult(ptr);
+  }
 }

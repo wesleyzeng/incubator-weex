@@ -23,19 +23,17 @@
 #ifndef WEEXV8_CREATEAPPCONTEXTTASK_H
 #define WEEXV8_CREATEAPPCONTEXTTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class CreateAppContextTask : public WeexTask {
-public:
-    CreateAppContextTask(const std::string &instanceId, const std::string &script);
+ public:
+  CreateAppContextTask(const std::string &instanceId, const std::string &script);
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return " CreateAppContextTask "; }
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return " CreateAppContextTask "; }
 
-private:
-    std::string script;
+ private:
+  std::string script;
 };
 
-
-#endif //WEEXV8_CREATEAPPCONTEXTTASK_H
+#endif // WEEXV8_CREATEAPPCONTEXTTASK_H

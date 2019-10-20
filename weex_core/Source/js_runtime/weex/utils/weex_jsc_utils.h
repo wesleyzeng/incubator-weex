@@ -37,18 +37,19 @@
 #include <thread>
 #include <type_traits>
 #include <unistd.h>
-#include "include/WeexApiValue.h"
 
+#include "include/WeexApiHeader.h"
+#include "include/WeexApiValue.h"
 #include "base/base64/base64.h"
 #include "base/crash/crash_handler.h"
 #include "base/utils/log_utils.h"
-#include "include/WeexApiHeader.h"
-
+#include "js_runtime/include/ICUCompatible.h"
 #include "js_runtime/weex/object/args.h"
-
 #include "third_party/IPC/Buffering/IPCBuffer.h"
 #include "third_party/IPC/IPCArguments.h"
 #include "third_party/IPC/IPCByteArray.h"
+#include "third_party/IPC/IPCException.h"
+#include "third_party/IPC/IPCFutexPageQueue.h"
 #include "third_party/IPC/IPCHandler.h"
 #include "third_party/IPC/IPCListener.h"
 #include "third_party/IPC/IPCMessageJS.h"
@@ -56,12 +57,9 @@
 #include "third_party/IPC/IPCSender.h"
 #include "third_party/IPC/IPCString.h"
 #include "third_party/IPC/IPCType.h"
-#include "third_party/IPC/IPCFutexPageQueue.h"
-#include "third_party/IPC/IPCException.h"
 #include "third_party/IPC/Serializing/IPCSerializer.h"
 //#include "include/JavaScriptCore/runtime/StructureInlines.h"
 //#include "include/JavaScriptCore/runtime/JSCJSValueInlines.h"
-#include "js_runtime/include/ICUCompatible.h"
 
 #if !defined(PATH_MAX)
 #define PATH_MAX 4096
@@ -76,8 +74,6 @@ using namespace WeexCore;
 extern bool config_use_wson;
 
 std::string jString2String(const uint16_t *str, size_t length);
-
-
 std::string weexString2String(const WeexString *weexString);
 
 std::string char2String(const char* str);
@@ -91,7 +87,6 @@ void freeInitFrameworkParams(std::vector<INIT_FRAMEWORK_PARAMS *> &params);
 void freeParams(std::vector<VALUE_WITH_TYPE *> &params);
 void printLogOnFileWithNameS(const char * name,const char *log);
 
-
 void doUpdateGlobalSwitchConfig(const char *config);
 
 //String exceptionToString(JSGlobalObject *globalObject, JSValue exception);
@@ -101,68 +96,64 @@ int __atomic_inc(volatile int *ptr);
 int genTaskId() ;
 WeexByteArray *IPCByteArrayToWeexByteArray(const IPCByteArray *byteArray);
 
-
 namespace WEEXICU {
 
-    class unique_fd {
-    public:
-        explicit unique_fd(int fd);
+class unique_fd {
+ public:
+  explicit unique_fd(int fd);
+  ~unique_fd();
 
-        ~unique_fd();
+  int get() const;
 
-        int get() const;
+ private:
+  int m_fd;
+}; 
 
-    private:
-        int m_fd;
-    };
+static std::string __attribute__((noinline)) findPath();
 
-    static std::string __attribute__((noinline)) findPath();
-
-    static void findPath(std::string &executablePath, std::string &icuDataPath) {
-        unsigned long target = reinterpret_cast<unsigned long>(__builtin_return_address(0));
-        FILE *f = fopen("/proc/self/maps", "r");
-        if (!f) {
-            return;
-        }
-        char buffer[256];
-        char *line;
-        while ((line = fgets(buffer, 256, f))) {
-            if (icuDataPath.empty() && strstr(line, "icudt")) {
-                icuDataPath.assign(strstr(line, "/"));
-                icuDataPath = icuDataPath.substr(0, icuDataPath.length() - 1);
-                continue;
-            }
-            char *end;
-            unsigned long val;
-            errno = 0;
-            val = strtoul(line, &end, 16);
-            if (errno)
-                continue;
-            if (val > target)
-                continue;
-            end += 1;
-            errno = 0;
-            val = strtoul(end, &end, 16);
-            if (errno)
-                continue;
-            if (val > target) {
-                char *s = strstr(end, "/");
-                if (s != nullptr)
-                    executablePath.assign(s);
-                std::size_t found = executablePath.rfind('/');
-                if (found != std::string::npos) {
-                    executablePath = executablePath.substr(0, found);
-                }
-            }
-            if (!executablePath.empty()
-                && !icuDataPath.empty()) {
-                break;
-            }
-        }
-        fclose(f);
-        return;
+static void findPath(std::string &executablePath, std::string &icuDataPath) {
+  unsigned long target = reinterpret_cast<unsigned long>(__builtin_return_address(0));
+  FILE *f = fopen("/proc/self/maps", "r");
+  if (!f) {
+    return;
+  }
+  char buffer[256];
+  char *line;
+  while ((line = fgets(buffer, 256, f))) {
+    if (icuDataPath.empty() && strstr(line, "icudt")) {
+      icuDataPath.assign(strstr(line, "/"));
+      icuDataPath = icuDataPath.substr(0, icuDataPath.length() - 1);
+      continue;
     }
-
+    char *end;
+    unsigned long val;
+    errno = 0;
+    val = strtoul(line, &end, 16);
+    if (errno)
+        continue;
+    if (val > target)
+        continue;
+    end += 1;
+    errno = 0;
+    val = strtoul(end, &end, 16);
+    if (errno)
+      continue;
+    if (val > target) {
+      char *s = strstr(end, "/");
+      if (s != nullptr)
+        executablePath.assign(s);
+      std::size_t found = executablePath.rfind('/');
+      if (found != std::string::npos) {
+        executablePath = executablePath.substr(0, found);
+      }
+    }
+    if (!executablePath.empty() && !icuDataPath.empty()) {
+      break;
+    }
+  }
+  fclose(f);
+  return;
+}
 
 #define FAIL_WITH_STRERROR(tag) \
     LOGE(" fails: %s.\n", strerror(errno)); \
@@ -208,45 +199,45 @@ namespace WEEXICU {
 //        return true;
 //    }
 
-    static bool initICUEnv(bool multiProcess) {
-        static bool isInit = false;
-        if (isInit)
-            return true;
+static bool initICUEnv(bool multiProcess) {
+  static bool isInit = false;
+  if (isInit)
+      return true;
 
-        char *path;
-        if (!multiProcess) {
-            std::string executablePath;
-            std::string icuDataPath;
-            findPath(executablePath, icuDataPath);
-            path = new char[icuDataPath.length() + 1];
-            std::strcpy(path, icuDataPath.c_str());
-        } else {
-            path = getenv("ICU_DATA_PATH");
-        }
-        LOGE("initICUEnv patch:%s", path);
+  char *path;
+  if (!multiProcess) {
+    std::string executablePath;
+    std::string icuDataPath;
+    findPath(executablePath, icuDataPath);
+    path = new char[icuDataPath.length() + 1];
+    std::strcpy(path, icuDataPath.c_str());
+  } else {
+    path = getenv("ICU_DATA_PATH");
+  }
+  LOGE("initICUEnv patch:%s", path);
 
-        if (!path) {
-            return false;
-        }
-        if (!dlopen("libicuuc.so", RTLD_NOW)) {
-            LOGE("load icuuc so");
-            return false;
-        }
-        if (!dlopen("libicui18n.so", RTLD_NOW)) {
-            LOGE("load icui18n so");
-            return false;
-        }
-        if (!initICU()) {
-            LOGE("initICU failed");
-            return false;
-        }
-        if (strlen(path) > 0) {
-            isInit = true;
-            return true;//mapIcuData(std::string(path));
-        }
-        return false;
-    }
-
+  if (!path) {
+    return false;
+  }
+  if (!dlopen("libicuuc.so", RTLD_NOW)) {
+    LOGE("load icuuc so");
+    return false;
+  }
+  if (!dlopen("libicui18n.so", RTLD_NOW)) {
+    LOGE("load icui18n so");
+    return false;
+  }
+  if (!initICU()) {
+    LOGE("initICU failed");
+    return false;
+  }
+  if (strlen(path) > 0) {
+    isInit = true;
+    return true;//mapIcuData(std::string(path));
+  }
+  return false;
 }
+
+} // namespace WEEXICU 
 
 #endif //WEEXV8_UTILS_H

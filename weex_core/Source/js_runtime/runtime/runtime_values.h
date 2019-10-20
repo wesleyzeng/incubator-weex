@@ -45,7 +45,6 @@
 
 #include "js_runtime/runtime/base.h"
 
-
 namespace unicorn {
 
 class EngineContext;
@@ -61,7 +60,7 @@ class RuntimeClass {
     JSRunTimeClass GetJSClass() const { return clasz_; }
 
  private:
-    JSRunTimeClass clasz_;
+  JSRunTimeClass clasz_;
 };
 
 class BaseObject {
@@ -73,15 +72,13 @@ class BaseObject {
 
 class Object : public BaseObject {
  public:
-  static std::unique_ptr<BaseObject> MakeObject(void* ptr,
-                                     RuntimeClass* clasz) {
-    return std::unique_ptr<BaseObject>(static_cast<BaseObject*>(
-                                                   new Object(ptr, clasz)));
+  static std::unique_ptr<BaseObject> MakeObject(void* ptr, RuntimeClass* clasz) {
+    return std::unique_ptr<BaseObject>(static_cast<BaseObject*>(new Object(ptr, clasz)));
   }
 
   Object(void* ptr, RuntimeClass* clasz)
-        : ptr_(ptr),
-          clasz_(clasz) {
+      : ptr_(ptr),
+      clasz_(clasz) {
   }
 
   // move constructor
@@ -161,7 +158,7 @@ class Array {
  public:
 
  static std::unique_ptr<Array> CreateFromNative(EngineContext* context,
-                                                   ScopeValues thiz);
+                                                ScopeValues thiz);
   Array() = default;
   virtual ~Array();
 
@@ -239,9 +236,9 @@ class RuntimeValues {
     return ScopeValues(new RuntimeValues(in_int));
   }
 
-    static ScopeValues MakeDouble(double in_double) {
-      return ScopeValues(new RuntimeValues(in_double));
-    }
+  static ScopeValues MakeDouble(double in_double) {
+    return ScopeValues(new RuntimeValues(in_double));
+  }
 
 //  static ScopeValues MakeString(const char* in_str) {
 //    std::string tmp(in_str);
@@ -276,7 +273,6 @@ class RuntimeValues {
   static ScopeValues MakeObjectFromJsonStr(const std::string &utf_8_json_str) {
     return ScopeValues(new RuntimeValues(utf_8_json_str,Type::JSONObject));
   }
-
 
   void SetValue(std::unique_ptr<char[]>&& value);
 
@@ -387,4 +383,5 @@ static auto ToRuntimeValues(void* object, std::string name) {
 }
 
 }  // namespace unicorn
+
 #endif  // FLUTTER_UNICORN_RUNTIME_RUNTIME_VALUES_H_

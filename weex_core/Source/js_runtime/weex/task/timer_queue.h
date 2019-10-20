@@ -34,30 +34,25 @@ class TimerTask;
 class WeexTaskQueue;
 
 class TimerQueue {
+ public:
+  explicit TimerQueue(WeexTaskQueue *taskQueue);
 
-public:
-    void init();
+  void init();
+  void destroyPageTimer(std::string instanceId);
 
-    void destroyPageTimer(std::string instanceId);
+  void removeTimer(int timerId);
+  int addTimerTask(TimerTask *timerTask);
+  TimerTask *getTask();
 
-    void removeTimer(int timerId);
+  void start();
 
-    int addTimerTask(TimerTask *timerTask);
-
-    TimerTask *getTask();
-
-    void start();
-
-    bool isInit = false;
-
-    explicit TimerQueue(WeexTaskQueue *taskQueue);
+  bool isInit = false;
 
 private:
-    uint64_t nextTaskWhen;
-    WeexTaskQueue *weexTaskQueue;
-    std::deque<TimerTask *> timerQueue_;
-    ThreadLocker threadLocker;
+  uint64_t nextTaskWhen;
+  WeexTaskQueue *weexTaskQueue;
+  std::deque<TimerTask *> timerQueue_;
+  ThreadLocker threadLocker;
 };
 
-
-#endif //WEEXV8_TIMERQUEUE_H
+#endif // WEEXV8_TIMERQUEUE_H

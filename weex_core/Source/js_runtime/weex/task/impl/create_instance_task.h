@@ -27,19 +27,21 @@
 #include "js_runtime/weex/task/weex_task.h"
 
 class CreateInstanceTask : public WeexTask {
-public:
-    CreateInstanceTask(const std::string &instanceId, const std::string &script, std::vector<INIT_FRAMEWORK_PARAMS*>& params);
+ public:
+  CreateInstanceTask(
+      const std::string &instanceId,
+      const std::string &script,
+      std::vector<INIT_FRAMEWORK_PARAMS*>& params);
 
-    void addExtraArg(std::string arg);
+  void addExtraArg(std::string arg);
 
-    void run(WeexRuntime *runtime) override ;
-    std::string taskName() override { return "CreateInstanceTask"; }
+  void run(WeexRuntime *runtime) override ;
+  std::string taskName() override { return "CreateInstanceTask"; }
 
-private:
-    std::vector<std::string> extraArgs;
-    std::unique_ptr<InitFrameworkArgs> initExtraArgs;
-    std::string script;
+ private:
+  std::vector<std::string> extraArgs;
+  std::unique_ptr<InitFrameworkArgs> initExtraArgs;
+  std::string script;
 };
 
-
-#endif //WEEXV8_CREATEINSTANCETASK_H
+#endif // WEEXV8_CREATEINSTANCETASK_H

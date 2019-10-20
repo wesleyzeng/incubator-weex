@@ -42,6 +42,7 @@
 namespace weex {
 namespace bridge {
 namespace js {
+
 int ScriptSideInQueue::InitFramework(
     const char *script, std::vector<INIT_FRAMEWORK_PARAMS *> &params) {
   LOGD("ScriptSideInQueue::InitFramework");
@@ -75,7 +76,6 @@ int ScriptSideInQueue::InitAppFramework(
   LOGD("ScriptSideInQueue::InitAppFramework");
   weexTaskQueue_->addTask(new InitFrameworkTask(instanceId, appFramework, params));
   return 1;
-
 }
 
 int ScriptSideInQueue::CreateAppContext(const char *instanceId,
@@ -94,12 +94,9 @@ std::unique_ptr<WeexJSResult> ScriptSideInQueue::ExecJSOnAppWithResult(const cha
 
   WeexTask *task = new ExeJsOnAppWithResultTask((instanceId),
                                                 (jsBundle));
-
   auto future = std::unique_ptr<WeexTask::Future>(new WeexTask::Future());
   task->set_future(future.get());
-
   weexTaskQueue_->addTask(task);
-
   return std::move(future->waitResult());
 }
 
@@ -110,7 +107,6 @@ int ScriptSideInQueue::CallJSOnAppContext(
 
   weexTaskQueue_->addTask(new CallJsOnAppContextTask(instanceId,
                                                      func, params));
-
   return 1;
 }
 
@@ -118,7 +114,6 @@ int ScriptSideInQueue::DestroyAppContext(const char *instanceId) {
   LOGE("ScriptSideInQueue::DestroyAppContext");
 
   weexTaskQueue_->addTask(new DestoryAppContextTask(instanceId));
-
   return 1;
 }
 
@@ -134,9 +129,7 @@ int ScriptSideInQueue::ExecJsService(const char *source) {
     } else {
       weexTaskQueue_bk_->addTask(task);
     }
-    
   }
-
   return 1;
 }
 
@@ -357,7 +350,7 @@ WeexTaskQueue *ScriptSideInQueue::taskQueue(const char *id, bool log) {
   }
   return weexTaskQueue_;
 }
+
 }  // namespace js
 }  // namespace bridge
-
 }  // namespace weex

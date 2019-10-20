@@ -56,8 +56,7 @@ bool RuntimeContextIOS::ExecuteJavaScript(const std::string& content) {
 std::unique_ptr<RuntimeValues> RuntimeContextIOS::ExecuteJavaScriptWithResult(
     const std::string& content) {
   // TODO
-  return std::make_unique<RuntimeValues>(
-      new RuntimeValues(nullptr));
+  return std::make_unique<RuntimeValues>(new RuntimeValues(nullptr));
 }
 
 void RuntimeContextIOS::NotifyIdle() {}

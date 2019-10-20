@@ -21,6 +21,7 @@
 //
 
 #include "native_timer_task.h"
+
 #include "android/jsengine/object/weex_env.h"
 #include "js_runtime/weex/object/weex_runtime.h"
 
@@ -37,5 +38,4 @@ void NativeTimerTask::run(WeexRuntime *runtime) {
   runtime->exeTimerFunctionForRunTimeApi(instanceId, timerFunction, is_from_instance);
   if (!repeatTimer)
     runtime->removeTimerFunctionForRunTimeApi(instanceId, timerFunction, is_from_instance);
-
 }

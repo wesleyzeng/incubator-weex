@@ -29,46 +29,34 @@
 class WeexGlobalObjectV2;
 
 namespace weex {
-    namespace jsengine {
-        class AppWorkerBinding : public unicorn::RuntimeObject {
-        public:
-            DECLARE_CLASS_REGISTER_OP(AppWorkerBinding)
+namespace jsengine {
 
-            AppWorkerBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+class AppWorkerBinding : public unicorn::RuntimeObject {
+public:
+  DECLARE_CLASS_REGISTER_OP(AppWorkerBinding)
+  AppWorkerBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+  ~AppWorkerBinding() override;
 
-            ~AppWorkerBinding() override;
+  unicorn::ScopeValues nativeLog(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues nativeLog(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues __dispatch_message__(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues __dispatch_message_sync__(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            __dispatch_message__(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues postMessage(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            __dispatch_message_sync__(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues setNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues setNativeInterval(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues clearNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues clearNativeInterval(std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            postMessage(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues console();
 
-            unicorn::ScopeValues
-            setNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
+public:
+  WeexGlobalObjectV2* nativeObject = nullptr;
+  std::unique_ptr<WeexConsoleBinding> consoleBinding;
+};
 
-            unicorn::ScopeValues
-            setNativeInterval(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            clearNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            clearNativeInterval(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues console();
-
-        public:
-            WeexGlobalObjectV2* nativeObject = nullptr;
-            std::unique_ptr<WeexConsoleBinding> consoleBinding;
-        };
-    }
-}
-
+} // namespace jsengine
+} // namespace weex
 
 #endif //PROJECT_APP_INSTANCE_BINDING_H

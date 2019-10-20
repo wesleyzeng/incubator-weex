@@ -28,19 +28,15 @@
 #include <string.h>
 #include <stdbool.h>
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct wson_buffer{
-    void* data;
-    uint32_t position;
-    uint32_t length;
+  void* data;
+  uint32_t position;
+  uint32_t length;
 } wson_buffer;
-
-
-
 
 /**
  * wson data type
@@ -84,7 +80,7 @@ void wson_push_type_extend(wson_buffer *buffer, const void *src, int32_t length)
 void wson_push_ensure_size(wson_buffer *buffer, uint32_t dataSize);
 void wson_push_type_string_length(wson_buffer *buffer, int32_t length);
 void wson_push_property(wson_buffer *buffer, const void *src, int32_t length);
-    
+
 /**
  * push int, varint uint byte int double bts to buffer, without type signature
  * */
@@ -97,12 +93,10 @@ void wson_push_float(wson_buffer *buffer, float num);
 void wson_push_ulong(wson_buffer *buffer, uint64_t num);
 void wson_push_bytes(wson_buffer *buffer, const void *src, int32_t length);
 
-
 /**
  * free  buffer
  * */
 void wson_buffer_free(wson_buffer *buffer);
-
 
 /**
  * parse buffer, return data from current position not include signature
@@ -117,7 +111,7 @@ int64_t wson_next_long(wson_buffer *buffer);
 uint64_t wson_next_ulong(wson_buffer *buffer);
 uint8_t* wson_next_bts(wson_buffer *buffer, uint32_t length);
 inline bool wson_has_next(wson_buffer *buffer){
-    return buffer->position < buffer->length;
+  return buffer->position < buffer->length;
 }
 
 /** constructor with data */
@@ -127,4 +121,4 @@ wson_buffer* wson_buffer_from(void* data, uint32_t length);
 }
 #endif
 
-#endif //WSON_H
+#endif // WSON_H

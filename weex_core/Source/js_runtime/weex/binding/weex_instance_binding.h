@@ -27,54 +27,39 @@
 #include "js_runtime/runtime/binding_macro.h"
 #include "weex_console_binding.h"
 
-
 class WeexGlobalObjectV2;
 
 namespace weex {
-    namespace jsengine {
+namespace jsengine {
 
+class WeexInstanceBinding : public unicorn::RuntimeObject {
+ public:
+  DECLARE_CLASS_REGISTER_OP(WeexInstanceBinding)
+  WeexInstanceBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+  ~WeexInstanceBinding() override;
 
-        class WeexInstanceBinding : public unicorn::RuntimeObject {
-        public:
-            DECLARE_CLASS_REGISTER_OP(WeexInstanceBinding)
+  unicorn::ScopeValues nativeLog(const std::vector<unicorn::ScopeValues> &vars);
 
-            WeexInstanceBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+  unicorn::ScopeValues atob(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues btoa(const std::vector<unicorn::ScopeValues> &vars);
 
-            ~WeexInstanceBinding() override;
+  unicorn::ScopeValues callGCanvasLinkNative(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callT3DLinkNative(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues nativeLog(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues setNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues setNativeInterval(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues clearNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues clearNativeInterval(std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues atob(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues console();
 
-            unicorn::ScopeValues btoa(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues __updateComponentData(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            callGCanvasLinkNative(const std::vector<unicorn::ScopeValues> &vars);
+  WeexGlobalObjectV2* nativeObject = nullptr;
+  std::unique_ptr<WeexConsoleBinding> consoleBinding;
+};
 
-            unicorn::ScopeValues
-            callT3DLinkNative(const std::vector<unicorn::ScopeValues> &vars);
+} // jsengine
+} // namespace weex
 
-            unicorn::ScopeValues
-            setNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            setNativeInterval(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            clearNativeTimeout(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            clearNativeInterval(std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues console();
-
-            unicorn::ScopeValues
-            __updateComponentData(const std::vector<unicorn::ScopeValues> &vars);
-
-        public:
-            WeexGlobalObjectV2* nativeObject = nullptr;
-            std::unique_ptr<WeexConsoleBinding> consoleBinding;
-        };
-    }
-}
 #endif //PROJECT_WEEX_INSTANCE_OBJECT_H

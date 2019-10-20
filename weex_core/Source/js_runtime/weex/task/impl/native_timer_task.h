@@ -26,18 +26,17 @@
 #include "js_runtime/weex/task/weex_task.h"
 
 class NativeTimerTask : public WeexTask {
-public:
-    explicit NativeTimerTask(const std::string &instanceId, uint32_t function, int taskId, bool one_shot);
-    ~NativeTimerTask() override {}
+ public:
+  explicit NativeTimerTask(const std::string &instanceId, uint32_t function, int taskId, bool one_shot);
+  ~NativeTimerTask() override {}
 
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return "NativeTimerTask"; }
-    uint32_t timerFunctionID() const { return timerFunction; }
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return "NativeTimerTask"; }
+  uint32_t timerFunctionID() const { return timerFunction; }
 
-private:
-    uint32_t timerFunction;
-    bool repeatTimer;
+ private:
+  uint32_t timerFunction;
+  bool repeatTimer;
 };
 
-
-#endif //WEEXV8_TIMERTASK_H
+#endif // WEEXV8_TIMERTASK_H

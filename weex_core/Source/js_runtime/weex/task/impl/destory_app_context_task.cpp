@@ -25,5 +25,5 @@
 DestoryAppContextTask::DestoryAppContextTask(const std::string &instanceId) : WeexTask(instanceId) {}
 
 void DestoryAppContextTask::run(WeexRuntime *runtime) {
-    runtime->destroyAppContext(instanceId);
+  runtime->destroyAppContext(instanceId);
 }

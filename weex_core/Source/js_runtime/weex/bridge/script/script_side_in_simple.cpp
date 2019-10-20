@@ -21,11 +21,13 @@
 //
 
 #include "android/jsengine/bridge/script/script_side_in_simple.h"
+
 #include "js_runtime/weex/object/weex_runtime.h"
 
 namespace weex {
 namespace bridge {
 namespace js {
+
 int ScriptSideInSimple::InitFramework(
     const char *script, std::vector<INIT_FRAMEWORK_PARAMS *> &params) {
   LOGD("ScriptSideInSimple::InitFramework");
@@ -137,7 +139,6 @@ int ScriptSideInSimple::UpdateGlobalConfig(const char *config) {
   return runtime_->updateGlobalConfig(std::string(config));
 }
 
-
 int ScriptSideInSimple::UpdateInitFrameworkParams(const std::string& key, const std::string& value, const std::string& desc){
   LOGD("ScriptSideInSimple::UpdateInitFrameworkParams");
   return runtime_->UpdateInitFrameworkParams(key ,value, desc);
@@ -146,7 +147,6 @@ int ScriptSideInSimple::UpdateInitFrameworkParams(const std::string& key, const 
 void ScriptSideInSimple::SetLogType(const int logLevel, const bool isPerf) {
   //do nothing
 }
-
 
 }  // namespace js
 }  // namespace bridge

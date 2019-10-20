@@ -23,20 +23,17 @@
 #ifndef WEEXV8_EXEJSSERVICESTASK_H
 #define WEEXV8_EXEJSSERVICESTASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class ExeJsServicesTask :public  WeexTask {
-public:
-    explicit ExeJsServicesTask(const std::string &script);
+ public:
+  explicit ExeJsServicesTask(const std::string &script);
 
-     void run(WeexRuntime *runtime) override ;
-     std::string taskName() override { return " ExeJsServicesTask"; }
+  void run(WeexRuntime *runtime) override ;
+  std::string taskName() override { return " ExeJsServicesTask"; }
 
-private:
-    std::string script;
-
+ private:
+  std::string script;
 };
 
-
-#endif //WEEXV8_EXEJSSERVICESTASK_H
+#endif // WEEXV8_EXEJSSERVICESTASK_H

@@ -26,52 +26,37 @@
 #include "include/WeexApiHeader.h"
 #include "js_runtime/runtime/runtime_context.h"
 //#include "js_runtime/dom/impl/weex_element.h"
-#include "third_party/json11/json11.hpp"
 #include "js_runtime/runtime/runtime_values.h"
 #include "js_runtime/weex/object/args.h"
+#include "third_party/json11/json11.hpp"
 
 namespace weex {
-    namespace jsengine {
-        class WeexConversionUtils {
-        public:
-            //  static json11::Json convertElementToJSon(const Element *element);
+namespace jsengine {
 
-            static bool convertKVToJSon(const std::string &name, const ::std::string &value, std::string &result);
+class WeexConversionUtils {
+ public:
+  //  static json11::Json convertElementToJSon(const Element *element);
+  static bool convertKVToJSon(const std::string &name, const ::std::string &value, std::string &result);
 
+  static unicorn::ScopeValues WeexValueToRuntimeValue(unicorn::EngineContext *context, VALUE_WITH_TYPE *weexValue);
+  static void ConvertRunTimeValueToWeexJSResult(unicorn::ScopeValues &value, WeexJSResult *jsResult);
+  static void GetStringFromArgsDefaultEmpty(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                            std::string &result);
+  static void GetStringFromArgsDefaultUndefined(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                                std::string &result);
+  static bool GetCharOrJsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index, std::string &result);
+  static void GetWsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index, Args &args);
 
-            static unicorn::ScopeValues
-            WeexValueToRuntimeValue(unicorn::EngineContext *context, VALUE_WITH_TYPE *weexValue);
+  static void GetJSONArgsFromArgsByWml(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                       std::string &args);
+ private:
 
-            static void ConvertRunTimeValueToWeexJSResult(unicorn::ScopeValues &value, WeexJSResult *jsResult);
+  static void ConvertRunTimeVaueToWson(unicorn::RuntimeValues *value, Args &args);
+  static json11::Json RunTimeValuesOfObjectToJson(unicorn::RuntimeValues *vars);
+  static void convertJSRuntimeValueToStdString(const unicorn::ScopeValues &param, std::string &target);
+};
 
-
-            static void GetStringFromArgsDefaultEmpty(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                      std::string &result);
-
-            static void GetStringFromArgsDefaultUndefined(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                          std::string &result);
-
-            static bool
-            GetCharOrJsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index, std::string &result);
-
-            static void
-            GetWsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index, Args &args);
-
-            static void GetJSONArgsFromArgsByWml(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                 std::string &args);
-
-        private:
-
-            static void ConvertRunTimeVaueToWson(unicorn::RuntimeValues *value, Args &args);
-
-            static json11::Json RunTimeValuesOfObjectToJson(unicorn::RuntimeValues *vars);
-
-            static void convertJSRuntimeValueToStdString(const unicorn::ScopeValues &param, std::string &target);
-
-        };
-
-    }
-}
-
+} // namespace jsengine
+} // namespace weex
 
 #endif //PROJECT_JSON_BINDING_UTILS_H

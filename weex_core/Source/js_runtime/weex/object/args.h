@@ -31,58 +31,62 @@
  * auto conver for json and wson
  */
 namespace WeexCore { 
-    static const int ARGS_TYPE_JSON = 0;
-    static const int ARGS_TYPE_WSON = 1;
-    class Args{
-        public:
-            Args();
-            ~Args();
 
-            int getType(){
-                return type;
-            };
+static const int ARGS_TYPE_JSON = 0;
+static const int ARGS_TYPE_WSON = 1;
 
-            void setString(std::string& string){
-                this->json = string;
-                this->type = ARGS_TYPE_JSON;
-                // if string is not utf8, we convert it
-                utf8.assign(json.c_str());
-            }
-            /**object will auto free when args destructor */
-            void setWson(wson_buffer* buffer){
-                this->wson = buffer;
-                this->type = ARGS_TYPE_WSON;
-            }
+class Args{
+ public:
+  Args();
+  ~Args();
 
-            inline const char* getValue() const {
-                if(type == ARGS_TYPE_WSON){
-                    if(wson){
-                       return (char*)(wson->data);
-                    }
-                    return nullptr;
-                }else{
-                    return utf8.c_str();
-                }
-            }
+  int getType(){
+    return type;
+  };
 
-            inline int getLength() const {
-                if(type == ARGS_TYPE_WSON){
-                    if(wson){
-                       return (wson->position);
-                    }
-                    return 0;
-                }else{
-                    return strlen(json.c_str());
-                }
-            }
+  void setString(std::string& string){
+    this->json = string;
+    this->type = ARGS_TYPE_JSON;
+    // if string is not utf8, we convert it
+    utf8.assign(json.c_str());
+  }
+  /**object will auto free when args destructor */
+  void setWson(wson_buffer* buffer){
+    this->wson = buffer;
+    this->type = ARGS_TYPE_WSON;
+  }
 
-        private:
-            int type; 
-        public:
-      std::string json;
-            std::string utf8;
-            wson_buffer* wson = nullptr;
-     };
+  inline const char* getValue() const {
+    if (type == ARGS_TYPE_WSON){
+      if (wson) {
+         return (char*)(wson->data);
+      }
+      return nullptr;
+    } else {
+      return utf8.c_str();
+    }
+  }
+
+  inline int getLength() const {
+    if (type == ARGS_TYPE_WSON) {
+      if (wson) {
+         return (wson->position);
+      }
+      return 0;
+    } else {
+      return strlen(json.c_str());
+    }
+  }
+
+private:
+  int type; 
+
+public:
+  std::string json;
+  std::string utf8;
+  wson_buffer* wson = nullptr;
 };
 
-#endif
+} // namespace WeexCore
+
+#endif // ARGS_H

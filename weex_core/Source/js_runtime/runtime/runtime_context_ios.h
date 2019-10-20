@@ -58,8 +58,7 @@ class RuntimeContextIOS : public RuntimeContext, EngineContextDelegate {
   std::unique_ptr<RuntimeValues> ExecuteJavaScriptWithResult(
       const std::string& name) override;
 
-  EngineContext* GetEngineContext() const override {
-                                    return engine_context_.get(); }
+  EngineContext* GetEngineContext() const override { return engine_context_.get(); }
 
   void NotifyIdle() override;
   bool Available() override;
@@ -76,4 +75,5 @@ class RuntimeContextIOS : public RuntimeContext, EngineContextDelegate {
 };
 
 }  // namespace unicorn
+
 #endif  // FLUTTER_UNICORN_RUNTIME_RUNTIME_CONTEXT_IOS_H_

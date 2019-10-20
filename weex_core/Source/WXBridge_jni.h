@@ -34,10 +34,12 @@
 
 // Step 1: forward declarations.
 namespace {
+
 const char kWXBridgeClassPath[] = "org/apache/weex/bridge/WXBridge";
 // Leaking this jclass as we cannot use LazyInstance from some threads.
 jclass g_WXBridge_clazz = NULL;
 #define WXBridge_clazz(env) g_WXBridge_clazz
+
 }  // namespace
 
 static jint InitFrameworkEnv(JNIEnv* env, jobject jcaller,

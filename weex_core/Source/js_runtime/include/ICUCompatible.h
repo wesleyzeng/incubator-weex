@@ -16,7 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 #ifndef ICUCOMPATIBLE_H
 #define ICUCOMPATIBLE_H
+
 bool initICU(void);
+
 #endif /* ICUCOMPATIBLE_H */

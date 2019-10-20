@@ -20,15 +20,16 @@
 // Created by chenpeihan on 2019/2/12.
 //
 
-#include <wson/wson_parser.h>
-#include "weex_jsc_utils.h"
 #include "weex_conversion_utils.h"
-#include "js_runtime/utils/log_utils.h"
-#include "wson_for_runtime.h"
+
 #include "android/jsengine/object/weex_env.h"
+#include "js_runtime/utils/log_utils.h"
+#include "weex_jsc_utils.h"
+#include "wson_for_runtime.h"
+#include <wson/wson_parser.h>
 
 namespace weex {
-    namespace jsengine {
+namespace jsengine {
 
 //        json11::Json WeexConversionUtils::convertElementToJSon(const Element *element) {
 //            json11::Json::object styles;
@@ -102,189 +103,184 @@ namespace weex {
 //            return true;
 //        }
 
-        bool
-        WeexConversionUtils::convertKVToJSon(const std::string &name, const ::std::string &value, std::string &result) {
-            json11::Json data = json11::Json::object{
-                    {name, value}
-            };
-            data.dump(result);
-            return true;
-        }
+bool
+WeexConversionUtils::convertKVToJSon(const std::string &name, const ::std::string &value, std::string &result) {
+  json11::Json data = json11::Json::object{
+    {name, value}
+  };
+  data.dump(result);
+  return true;
+}
 
-        json11::Json WeexConversionUtils::RunTimeValuesOfObjectToJson(unicorn::RuntimeValues *vars) {
-            if (nullptr == vars || vars->IsNull() || vars->IsUndefined()) {
-                LOG_CONVERSION("arg is not object, json return null json str");
-                return json11::Json(nullptr);
-            }
+json11::Json WeexConversionUtils::RunTimeValuesOfObjectToJson(unicorn::RuntimeValues *vars) {
+  if (nullptr == vars || vars->IsNull() || vars->IsUndefined()) {
+    LOG_CONVERSION("arg is not object, json return null json str");
+    return json11::Json(nullptr);
+  }
 
-            if (vars->IsInt()) {
-                int value;
-                vars->GetAsInteger(&value);
-                return json11::Json(value);
-            } else if (vars->IsDouble()) {
-                double value;
-                vars->GetAsDouble(&value);
-                return json11::Json(value);
-            } else if (vars->IsBool()) {
-                bool value;
-                vars->GetAsBoolean(&value);
-                return json11::Json(value);
-            } else if (vars->IsString()) {
-                std::string value;
-                vars->GetAsString(&value);
-                return json11::Json(value);
-            } else if (vars->IsMap()) {
-                auto map = vars->GetAsMap()->GetMap();
-                json11::Json::object mapJson;
-                for (auto item : map) {
-                    mapJson.insert({item.first, WeexConversionUtils::RunTimeValuesOfObjectToJson(item.second)});
-                }
-                return mapJson;
-            } else if (vars->IsArray()) {
-                json11::Json::array arrayJson;
-                auto array = vars->GetAsArray()->GetArray();
-                for (auto item: array) {
-                    arrayJson.push_back(WeexConversionUtils::RunTimeValuesOfObjectToJson(item));
-                }
-                return arrayJson;
-            } else {
-                LOGE("unknow parser json type:%d", vars->GetType());
-                return json11::Json(nullptr);
-            }
-        }
+  if (vars->IsInt()) {
+    int value;
+    vars->GetAsInteger(&value);
+    return json11::Json(value);
+  } else if (vars->IsDouble()) {
+    double value;
+    vars->GetAsDouble(&value);
+    return json11::Json(value);
+  } else if (vars->IsBool()) {
+    bool value;
+    vars->GetAsBoolean(&value);
+    return json11::Json(value);
+  } else if (vars->IsString()) {
+    std::string value;
+    vars->GetAsString(&value);
+    return json11::Json(value);
+  } else if (vars->IsMap()) {
+    auto map = vars->GetAsMap()->GetMap();
+    json11::Json::object mapJson;
+    for (auto item : map) {
+      mapJson.insert({item.first, WeexConversionUtils::RunTimeValuesOfObjectToJson(item.second)});
+    }
+    return mapJson;
+  } else if (vars->IsArray()) {
+    json11::Json::array arrayJson;
+    auto array = vars->GetAsArray()->GetArray();
+    for (auto item: array) {
+      arrayJson.push_back(WeexConversionUtils::RunTimeValuesOfObjectToJson(item));
+    }
+    return arrayJson;
+  } else {
+    LOGE("unknow parser json type:%d", vars->GetType());
+    return json11::Json(nullptr);
+  }
+}
 
-        unicorn::ScopeValues
-        WeexConversionUtils::WeexValueToRuntimeValue(unicorn::EngineContext *context, VALUE_WITH_TYPE *paramsObject) {
-            // LOGE("WeexRuntime: WeexValueToRuntimeValue type is %d", paramsObject->type);
-            switch (paramsObject->type) {
-                case ParamsType::DOUBLE: {
-                    LOG_CONVERSION("WeexValueToRuntimeValue double :%d", paramsObject->value.doubleValue);
-                    return unicorn::RuntimeValues::MakeDouble(paramsObject->value.doubleValue);
-                }
-                case ParamsType::STRING: {
-                    WeexString *ipcstr = paramsObject->value.string;
-                   // LOG_CONVERSION("WeexValueToRuntimeValue string :%s", string2String.utf8().data());
-                    return unicorn::RuntimeValues::MakeString(weexString2String(ipcstr));
-                }
-                case ParamsType::JSONSTRING: {
-                    const WeexString *ipcJsonStr = paramsObject->value.string;
-                    auto res = unicorn::RuntimeValues::MakeObjectFromJsonStr(weexString2String(ipcJsonStr));
-                    LOG_CONVERSION("WeexValueToRuntimeValue JSONSTRING succeed");
-                    return res;
-                }
-                case ParamsType::BYTEARRAY: {
-                    //       LOG_TEST("WeexValueToRuntimeValue BYTEARRAY");
-                    //tips: close wson case
-                    //  const WeexByteArray *array = paramsObject->value.byteArray;
-                    //  JSValue o = wson::toJSValue(state, (void *) array->content, array->length);
+unicorn::ScopeValues WeexConversionUtils::WeexValueToRuntimeValue(
+    unicorn::EngineContext* context,
+    VALUE_WITH_TYPE* paramsObject) {
+  // LOGE("WeexRuntime: WeexValueToRuntimeValue type is %d", paramsObject->type);
+  switch (paramsObject->type) {
+    case ParamsType::DOUBLE: {
+      LOG_CONVERSION("WeexValueToRuntimeValue double :%d", paramsObject->value.doubleValue);
+      return unicorn::RuntimeValues::MakeDouble(paramsObject->value.doubleValue);
+    }
+    case ParamsType::STRING: {
+      WeexString *ipcstr = paramsObject->value.string;
+     // LOG_CONVERSION("WeexValueToRuntimeValue string :%s", string2String.utf8().data());
+      return unicorn::RuntimeValues::MakeString(weexString2String(ipcstr));
+    }
+    case ParamsType::JSONSTRING: {
+      const WeexString *ipcJsonStr = paramsObject->value.string;
+      auto res = unicorn::RuntimeValues::MakeObjectFromJsonStr(weexString2String(ipcJsonStr));
+      LOG_CONVERSION("WeexValueToRuntimeValue JSONSTRING succeed");
+      return res;
+    }
+    case ParamsType::BYTEARRAY: {
+      //       LOG_TEST("WeexValueToRuntimeValue BYTEARRAY");
+      //tips: close wson case
+      //  const WeexByteArray *array = paramsObject->value.byteArray;
+      //  JSValue o = wson::toJSValue(state, (void *) array->content, array->length);
 
 //                obj->append(o);
-                    //  obj->push_back(unicorn::RuntimeValues::MakeObjectFromWson(static_cast<void *>(array->content),array->length));
-                    //  LOG_TEST("WeexValueToRuntimeValue wson bbyte array");
-                    LOG_CONVERSION("WeexValueToRuntimeValue wson");
-                    const WeexByteArray *array = paramsObject->value.byteArray;
-                    return wson::toRunTimeValueFromWson(context, (void *) array->content, array->length);
-                }
-                default:
-                    LOGE("WeexValueToRuntimeValue unkonw value type :%d",paramsObject->type);
-                    return unicorn::RuntimeValues::MakeUndefined();
-            }
-        }
+      //  obj->push_back(unicorn::RuntimeValues::MakeObjectFromWson(static_cast<void *>(array->content),array->length));
+      //  LOG_TEST("WeexValueToRuntimeValue wson bbyte array");
+      LOG_CONVERSION("WeexValueToRuntimeValue wson");
+      const WeexByteArray *array = paramsObject->value.byteArray;
+      return wson::toRunTimeValueFromWson(context, (void *) array->content, array->length);
+    }
+    default:
+      LOGE("WeexValueToRuntimeValue unkonw value type :%d",paramsObject->type);
+      return unicorn::RuntimeValues::MakeUndefined();
+  }
+}
 
-        void WeexConversionUtils::ConvertRunTimeVaueToWson(unicorn::RuntimeValues *value, Args &args) {
-            wson_buffer *buffer = wson::runTimeValueToWson(value);
-            args.setWson(buffer);
-        }
+void WeexConversionUtils::ConvertRunTimeVaueToWson(unicorn::RuntimeValues *value, Args &args) {
+  wson_buffer *buffer = wson::runTimeValueToWson(value);
+  args.setWson(buffer);
+}
 
-        void
-        WeexConversionUtils::GetStringFromArgsDefaultUndefined(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                               std::string &result) {
+void WeexConversionUtils::GetStringFromArgsDefaultUndefined(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                                            std::string &result) {
+  if (index >= vars.size()) {
+    result.assign("undefined");
+    return;
+  }
+  convertJSRuntimeValueToStdString(vars[index], result);
+}
 
-            if (index >= vars.size()) {
-                result.assign("undefined");
-                return;
-            }
-            convertJSRuntimeValueToStdString(vars[index], result);
-        }
-
-
-        void
-        WeexConversionUtils::GetStringFromArgsDefaultEmpty(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                           std::string &result) {
-            if (index >= vars.size()) {
-                result.assign("");
-                return;
-            }
-            convertJSRuntimeValueToStdString(vars[index], result);
-        }
-
-        bool WeexConversionUtils::GetCharOrJsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index,
+void WeexConversionUtils::GetStringFromArgsDefaultEmpty(const std::vector<unicorn::ScopeValues> &vars, int index,
                                                         std::string &result) {
-            if (index >= vars.size() || vars[index].get() == nullptr) {
-                return false;
-            }
-            LOG_CONVERSION("GetCharOrJsonFromArgs");
-            if (vars[index]->IsMap() || vars[index]->IsArray()) {
-                WeexConversionUtils::RunTimeValuesOfObjectToJson(vars[index].get()).dump(result);
-            } else {
-                convertJSRuntimeValueToStdString(vars[index], result);
-            }
-            return true;
-        }
+  if (index >= vars.size()) {
+    result.assign("");
+    return;
+  }
+  convertJSRuntimeValueToStdString(vars[index], result);
+}
 
-        void WeexConversionUtils::GetWsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                  Args &args) {
-            if (index >= vars.size()) {
-                args.setWson((wson_buffer *) nullptr);
-                return;
-            }
-            ConvertRunTimeVaueToWson(vars[index].get(), args);
-        }
+bool WeexConversionUtils::GetCharOrJsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                                std::string &result) {
+  if (index >= vars.size() || vars[index].get() == nullptr) {
+    return false;
+  }
+  LOG_CONVERSION("GetCharOrJsonFromArgs");
+  if (vars[index]->IsMap() || vars[index]->IsArray()) {
+    WeexConversionUtils::RunTimeValuesOfObjectToJson(vars[index].get()).dump(result);
+  } else {
+    convertJSRuntimeValueToStdString(vars[index], result);
+  }
+  return true;
+}
 
-        void
-        WeexConversionUtils::ConvertRunTimeValueToWeexJSResult(unicorn::ScopeValues &value, WeexJSResult *jsResult) {
-            if (!value->IsArray() || nullptr == jsResult) {
-                LOGE("!value->IsArray() ");
-                return;
-            }
-            bool isAllNull = true;
-            const unicorn::Array *array = value->GetAsArray();
-            if (nullptr == array) {
-                LOGE("nullptr == array");
-                return;
-            }
-            for (size_t i = 0; i < array->Size(); i++) {
-                auto item = array->atIndex(i);
-                if (nullptr != item && !item->IsUndefined() && !item->IsNull()) {
-                    isAllNull = false;
-                    break;
-                }
-            }
-            if (isAllNull) {
-                LOGE("isAllNull ");
-                return;
-            }
-            char *buf = nullptr;
-            if (WeexEnv::getEnv()->useWson()) {
-                wson_buffer *buffer = wson::runTimeValueToWson(value.get());
-                char *data = (char *) buffer->data;
-                jsResult->length = buffer->position;
-                buf = new char[jsResult->length + 1];
-                memcpy(buf, data, jsResult->length);
-                wson_parser parser((char *) buffer->data);
-                LOGW("[exeJSWithResult] result wson :%s", parser.toStringUTF8().c_str());
-                wson_buffer_free(buffer);
-            } else {
-                std::string json_str;
-                WeexConversionUtils::RunTimeValuesOfObjectToJson(value.get()).dump(json_str);
-                jsResult->length = json_str.length();
-                buf = new char[jsResult->length + 1];
-                memcpy(buf, json_str.c_str(), jsResult->length);
-            }
-            buf[jsResult->length] = '\0';
-            jsResult->data.reset(buf);
-        }
+void WeexConversionUtils::GetWsonFromArgs(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                          Args &args) {
+  if (index >= vars.size()) {
+    args.setWson((wson_buffer *) nullptr);
+    return;
+  }
+  ConvertRunTimeVaueToWson(vars[index].get(), args);
+}
 
+void WeexConversionUtils::ConvertRunTimeValueToWeexJSResult(unicorn::ScopeValues &value, WeexJSResult *jsResult) {
+  if (!value->IsArray() || nullptr == jsResult) {
+    LOGE("!value->IsArray() ");
+    return;
+  }
+  bool isAllNull = true;
+  const unicorn::Array *array = value->GetAsArray();
+  if (nullptr == array) {
+    LOGE("nullptr == array");
+    return;
+  }
+  for (size_t i = 0; i < array->Size(); i++) {
+    auto item = array->atIndex(i);
+    if (nullptr != item && !item->IsUndefined() && !item->IsNull()) {
+      isAllNull = false;
+      break;
+    }
+  }
+  if (isAllNull) {
+    LOGE("isAllNull ");
+    return;
+  }
+  char *buf = nullptr;
+  if (WeexEnv::getEnv()->useWson()) {
+    wson_buffer *buffer = wson::runTimeValueToWson(value.get());
+    char *data = (char *) buffer->data;
+    jsResult->length = buffer->position;
+    buf = new char[jsResult->length + 1];
+    memcpy(buf, data, jsResult->length);
+    wson_parser parser((char *) buffer->data);
+    LOGW("[exeJSWithResult] result wson :%s", parser.toStringUTF8().c_str());
+    wson_buffer_free(buffer);
+  } else {
+    std::string json_str;
+    WeexConversionUtils::RunTimeValuesOfObjectToJson(value.get()).dump(json_str);
+    jsResult->length = json_str.length();
+    buf = new char[jsResult->length + 1];
+    memcpy(buf, json_str.c_str(), jsResult->length);
+  }
+  buf[jsResult->length] = '\0';
+  jsResult->data.reset(buf);
+}
 
 //        JSString* JSValue::toStringSlowCase(ExecState* exec, bool returnEmptyStringOnError) const
 //        {
@@ -329,54 +325,53 @@ namespace weex {
 //        }
 
 
-        /**
-         * impl wtf::string for histroy compatible (getCharOrJSONStringFromState in weexGlobalObject)
-         * const char* const nullString = "null";
-          * const char* const trueString = "true";
-        * const char* const falseString = "false";
-         */
-        void
-        WeexConversionUtils::convertJSRuntimeValueToStdString(const unicorn::ScopeValues &param, std::string &target) {
-            if (param->IsString()) {
-                std::string res;
-                param->GetAsString(&res);
-                target.assign(res);
-            } else if (param->IsUndefined()) {
-                target.assign("undefined");
-            } else if (param->IsNull()) {
-                target.assign("null");
-            } else if (param->IsInt()) {
-                int int_value = 0;
-                param->GetAsInteger(&int_value);
-                target.assign(std::to_string(int_value));
-            } else if (param->IsDouble()) {
-                double double_value = 0;
-                param->GetAsDouble(&double_value);
-                target.assign(std::to_string(double_value));
-            } else if (param->IsBool()) {
-                bool result = false;
-                param->GetAsBoolean(&result);
-                target.assign(result ? "true" : "false");
-            } else {
-                LOGE("JSRuntimeValueToStdString ,not support  type %d:", param->GetType());
-            }
-        }
-
-        void
-        WeexConversionUtils::GetJSONArgsFromArgsByWml(const std::vector<unicorn::ScopeValues> &vars, int index,
-                                                      std::string &args) {
-            if (index >= vars.size()) {
-                args.assign("");
-                return;
-            }
-            if (vars[index]->IsString()) {
-                vars[index]->GetAsString(&args);
-            } else if (vars[index]->IsMap() || vars[index]->IsArray()) {
-                WeexConversionUtils::RunTimeValuesOfObjectToJson(vars[index].get()).dump(args);
-            } else {
-                args.assign("");
-                return;
-            }
-        }
-    }
+/**
+ * impl wtf::string for histroy compatible (getCharOrJSONStringFromState in weexGlobalObject)
+ * const char* const nullString = "null";
+  * const char* const trueString = "true";
+* const char* const falseString = "false";
+ */
+void WeexConversionUtils::convertJSRuntimeValueToStdString(const unicorn::ScopeValues &param, std::string &target) {
+  if (param->IsString()) {
+    std::string res;
+    param->GetAsString(&res);
+    target.assign(res);
+  } else if (param->IsUndefined()) {
+    target.assign("undefined");
+  } else if (param->IsNull()) {
+    target.assign("null");
+  } else if (param->IsInt()) {
+    int int_value = 0;
+    param->GetAsInteger(&int_value);
+    target.assign(std::to_string(int_value));
+  } else if (param->IsDouble()) {
+    double double_value = 0;
+    param->GetAsDouble(&double_value);
+    target.assign(std::to_string(double_value));
+  } else if (param->IsBool()) {
+    bool result = false;
+    param->GetAsBoolean(&result);
+    target.assign(result ? "true" : "false");
+  } else {
+    LOGE("JSRuntimeValueToStdString ,not support  type %d:", param->GetType());
+  }
 }
+
+void WeexConversionUtils::GetJSONArgsFromArgsByWml(const std::vector<unicorn::ScopeValues> &vars, int index,
+                                                   std::string &args) {
+  if (index >= vars.size()) {
+    args.assign("");
+    return;
+  }
+  if (vars[index]->IsString()) {
+    vars[index]->GetAsString(&args);
+  } else if (vars[index]->IsMap() || vars[index]->IsArray()) {
+    WeexConversionUtils::RunTimeValuesOfObjectToJson(vars[index].get()).dump(args);
+  } else {
+    args.assign("");
+    return;
+  }
+}
+
+} // namespace jsengine
+} // namespace weex

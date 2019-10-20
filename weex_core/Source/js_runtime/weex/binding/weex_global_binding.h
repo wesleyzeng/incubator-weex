@@ -31,84 +31,51 @@
 class WeexGlobalObjectV2;
 
 namespace weex {
-    namespace jsengine {
+namespace jsengine {
 
+class WeexGlobalBinding : public unicorn::RuntimeObject {
+ public:
+  DECLARE_CLASS_REGISTER_OP(WeexGlobalBinding)
+  WeexGlobalBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+  ~WeexGlobalBinding() override;
 
-        class WeexGlobalBinding : public unicorn::RuntimeObject {
-        public:
-            DECLARE_CLASS_REGISTER_OP(WeexGlobalBinding)
+  unicorn::ScopeValues callNative(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callNativeModule(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callNativeComponent(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues setTimeoutNative(const std::vector<unicorn::ScopeValues> &vars);
 
-            WeexGlobalBinding(unicorn::EngineContext *context, const OpaqueJSContext *js_ctx);
+  unicorn::ScopeValues nativeLog(const std::vector<unicorn::ScopeValues> &vars);
 
-            ~WeexGlobalBinding() override;
+  unicorn::ScopeValues notifyTrimMemory(const std::vector<unicorn::ScopeValues> &vars);
 
-        public:
-            unicorn::ScopeValues callNative(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues markupState(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            callNativeModule(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues atob(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues btoa(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            callNativeComponent(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callCreateBody(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callUpdateFinish(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callCreateFinish(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callRefreshFinish(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callUpdateAttrs(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callUpdateStyle(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callAddElement(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callRemoveElement(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callMoveElement(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callAddEvent(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callRemoveEvent(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callGCanvasLinkNative(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues setIntervalWeex(const std::vector<unicorn::ScopeValues> &vars);
 
+  unicorn::ScopeValues clearIntervalWeex(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues callT3DLinkNative(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues
-            setTimeoutNative(const std::vector<unicorn::ScopeValues> &vars);
+  unicorn::ScopeValues __updateComponentData(const std::vector<unicorn::ScopeValues> &vars);
 
-            unicorn::ScopeValues nativeLog(const std::vector<unicorn::ScopeValues> &vars);
+  WeexGlobalObjectV2 *nativeObject = nullptr;
+};
 
-            unicorn::ScopeValues
-            notifyTrimMemory(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            markupState(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues atob(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues btoa(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callCreateBody(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callUpdateFinish(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callCreateFinish(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callRefreshFinish(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callUpdateAttrs(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callUpdateStyle(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callAddElement(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callRemoveElement(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callMoveElement(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callAddEvent(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues callRemoveEvent(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            callGCanvasLinkNative(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            setIntervalWeex(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            clearIntervalWeex(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            callT3DLinkNative(const std::vector<unicorn::ScopeValues> &vars);
-
-            unicorn::ScopeValues
-            __updateComponentData(const std::vector<unicorn::ScopeValues> &vars);
-
-        public:
-            WeexGlobalObjectV2 *nativeObject = nullptr;
-
-        };
-    }
-}
+} // namespace jsengine
+} // weex
 
 #endif //PROJECT_WEEX_GLOBAL_OBJECT_H

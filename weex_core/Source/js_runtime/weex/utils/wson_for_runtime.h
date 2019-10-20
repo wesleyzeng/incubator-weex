@@ -23,16 +23,14 @@
 #ifndef PROJECT_WSON_FOR_RUNTIME_H
 #define PROJECT_WSON_FOR_RUNTIME_H
 
-
 #include "js_runtime/runtime/runtime_values.h"
 #include "js_runtime/runtime/runtime_context.h"
 
 namespace wson {
-    unicorn::ScopeValues toRunTimeValueFromWson(unicorn::EngineContext *context, void *data, int length);
 
-    wson_buffer *runTimeValueToWson(unicorn::RuntimeValues *value);
+unicorn::ScopeValues toRunTimeValueFromWson(unicorn::EngineContext *context, void *data, int length);
+wson_buffer *runTimeValueToWson(unicorn::RuntimeValues *value);
 
 }
-
 
 #endif //PROJECT_WSON_FOR_RUNTIME_H

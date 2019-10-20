@@ -23,19 +23,23 @@
 #include "create_instance_task.h"
 
 void CreateInstanceTask::addExtraArg(std::string arg) {
-    extraArgs.push_back(arg);
+  extraArgs.push_back(arg);
 }
 
-CreateInstanceTask::CreateInstanceTask(const std::string &instanceId, const std::string &script, std::vector<INIT_FRAMEWORK_PARAMS*>& params) : WeexTask(instanceId) {
-    this->script = script;
-    initExtraArgs.reset(new InitFrameworkArgs(params));
+CreateInstanceTask::CreateInstanceTask(
+    const std::string& instanceId,
+    const std::string& script,
+    std::vector<INIT_FRAMEWORK_PARAMS*>& params)
+    : WeexTask(instanceId) {
+  this->script = script;
+  initExtraArgs.reset(new InitFrameworkArgs(params));
 }
 
 void CreateInstanceTask::run(WeexRuntime *runtime) {
-    if (extraArgs.size() < 4)
-        return;
+  if (extraArgs.size() < 4)
+    return;
 
-    runtime->createInstance(instanceId, extraArgs.at(0), this->script, extraArgs.at(1), extraArgs.at(2),
-                            extraArgs.at(3), initExtraArgs->params);
+  runtime->createInstance(instanceId, extraArgs.at(0), this->script, extraArgs.at(1), extraArgs.at(2),
+                          extraArgs.at(3), initExtraArgs->params);
 }
 

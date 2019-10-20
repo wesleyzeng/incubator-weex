@@ -23,17 +23,14 @@
 #ifndef WEEXV8_DESTORYINSTANCETASK_H
 #define WEEXV8_DESTORYINSTANCETASK_H
 
-
 #include "js_runtime/weex/task/weex_task.h"
 
 class DestoryInstanceTask :public  WeexTask {
-public:
-    explicit DestoryInstanceTask(const std::string &instanceId);
+ public:
+  explicit DestoryInstanceTask(const std::string &instanceId);
 
-
-    void run(WeexRuntime *runtime) override;
-    std::string taskName() override { return " DestoryInstanceTask "; }
+  void run(WeexRuntime *runtime) override;
+  std::string taskName() override { return " DestoryInstanceTask "; }
 };
-
 
 #endif //WEEXV8_DESTORYINSTANCETASK_H

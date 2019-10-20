@@ -39,6 +39,7 @@
 #include <memory>
 
 namespace unicorn {
+
 class EngineContext;
 class RuntimeContext;
 
@@ -60,7 +61,7 @@ class RuntimeVM {
   bool Shutdown();
 
  private:
-    void* vm_;
+  void* vm_;
 
   void Initialize();
 };

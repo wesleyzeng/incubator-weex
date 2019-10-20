@@ -26,93 +26,78 @@
 
 #include <deque>
 #include <map>
-#include <third_party/IPC/IPCResult.h>
-#include <third_party/IPC/IPCMessageJS.h>
 #include <vector>
+
 #include "base/android/ThreadLocker.h"
 #include "base/closure.h"
+#include <third_party/IPC/IPCResult.h>
+#include <third_party/IPC/IPCMessageJS.h>
 
 class BackToWeexCoreQueue {
+ public:
+  class Future {
+   public:
+    Future() : has_result_(false) {}
+    ~Future() {}
 
-public:
+    void setResult(std::unique_ptr<IPCResult> &result);
+    std::unique_ptr<IPCResult> waitResult();
 
-    class Future {
+   private:
+    bool has_result_ = false;
+    std::unique_ptr<IPCResult> result_;
+    ThreadLocker thread_locker_;
+  };
 
+  class IPCArgs {
+
+   public:
+    explicit IPCArgs(const char *str, size_t len = 0);
+    ~IPCArgs() {
+      if (m_str != nullptr)
+        delete (m_str);
+      m_length = 0;
+    }
+
+   public:
+    char *m_str;
+    size_t m_length;
+  };
+
+  class IPCTask {
     public:
+     std::vector<BackToWeexCoreQueue::IPCArgs *> params;
+     explicit IPCTask(IPCProxyMsg type) : m_type(type),
+                                          m_future(nullptr) {}
+     ~IPCTask();
 
-        Future() : has_result_(false) {}
-
-        ~Future() {}
-
-        void setResult(std::unique_ptr<IPCResult> &result);
-
-        std::unique_ptr<IPCResult> waitResult();
+     void run();
+     void addParams(const char *str, size_t len = 0);
+     void set_future(Future *m_feature);
 
     private:
-        bool has_result_ = false;
-        std::unique_ptr<IPCResult> result_;
-        ThreadLocker thread_locker_;
-    };
+     IPCProxyMsg m_type;
+     Future *m_future;
+   };
 
-    class IPCArgs {
+   explicit BackToWeexCoreQueue() : m_stop(false) {}
 
-    public:
-        explicit IPCArgs(const char *str, size_t len = 0);
+   BackToWeexCoreQueue::IPCTask *getTask();
 
-        ~IPCArgs() {
-            if (m_str != nullptr)
-                delete (m_str);
-            m_length = 0;
-        }
+   void start();
+   void stop();
 
-    public:
-        char *m_str;
-        size_t m_length;
-    };
+   void init();
 
-    class IPCTask {
-    public:
-        std::vector<BackToWeexCoreQueue::IPCArgs *> params;
+   int addTask(BackToWeexCoreQueue::IPCTask *task);
 
-        explicit IPCTask(IPCProxyMsg type) : m_type(type),
-                                             m_future(nullptr) {}
+ private:
+  std::deque<BackToWeexCoreQueue::IPCTask *> taskQueue_;
+  ThreadLocker threadLocker;
+  bool m_stop;
 
-        ~IPCTask();
-
-        void run();
-
-        void addParams(const char *str, size_t len = 0);
-
-        void set_future(Future *m_feature);
-
-    private:
-        IPCProxyMsg m_type;
-        Future *m_future;
-
-    };
-
-    explicit BackToWeexCoreQueue():
-            m_stop(false) {};
-
-    BackToWeexCoreQueue::IPCTask *getTask();
-
-    void start();
-
-    void stop();
-
-    void init();
-
-    int addTask(BackToWeexCoreQueue::IPCTask *task);
-
-
-private:
-    std::deque<BackToWeexCoreQueue::IPCTask *> taskQueue_;
-    ThreadLocker threadLocker;
-    bool m_stop;
-
-public:
-    volatile bool isInitOk = false;
+ public:
+  volatile bool isInitOk = false;
 };
-
 
 #endif //WEEX_PROJECT_BACK_TO_WEEX_CORE_QUEUE_H

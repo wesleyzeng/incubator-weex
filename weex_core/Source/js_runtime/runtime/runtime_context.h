@@ -43,6 +43,7 @@
 #include "js_runtime/runtime/runtime_vm.h"
 
 namespace unicorn {
+
 class EngineContext;
 
 class RuntimeContext {
@@ -55,6 +56,7 @@ class RuntimeContext {
     Running,
     Destroyed,
   };
+
 /**
  *
  * @param vm  runtime vm

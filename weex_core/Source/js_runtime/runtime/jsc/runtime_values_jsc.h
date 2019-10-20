@@ -44,6 +44,7 @@
 #include "JavaScriptCore/JavaScript.h"
 #include "js_runtime/runtime/runtime_values.h"
 #include "JavaScriptCore/JSObjectRef.h"
+
 namespace unicorn {
 
 class JSCFunction : public Function {
@@ -110,4 +111,5 @@ class JSCArray : public Array {
 };
 
 }  // namespace unicorn
+
 #endif  // FLUTTER_UNICORN_RUNTIME_JSC_RUNTIME_VALUES_JSC_H_
