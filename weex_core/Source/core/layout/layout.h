@@ -142,7 +142,7 @@ public:
  * Layout node
  */
 class WXCoreLayoutNode {
-public:
+ public:
   WXCoreLayoutNode()
       : mParent(nullptr),
       dirty(true),
@@ -189,7 +189,7 @@ public:
 
   void removeAllChildren() { mChildList.clear(); }
 
-private:
+ private:
   /**
    * Holds the 'frozen' state of children during measure. If a view is frozen it will no longer
    * expand regardless of mFlexGrow. Items are indexed by the child's
@@ -217,7 +217,7 @@ private:
   void *context = nullptr;
 
   /** ================================ Cache：Last calculate result =================================== **/
-public:
+ public:
 
   /** ================================ Engine Entry Function =================================== **/
   void calculateLayout(const std::pair<float,float>&);
@@ -274,7 +274,7 @@ public:
     this->mNeedsPlatformDependentLayout = v;
   }
     
-private:
+ private:
   /** ================================ measure =================================== **/
   inline void reset() {
     if (isDirty()) {
@@ -619,7 +619,7 @@ private:
   virtual void OnLayoutBefore() {}
   virtual void OnLayoutAfter(float width, float height) {}
 
-public:
+ public:
   virtual void onLayout(float left, float top, float right, float bottom, WXCoreLayoutNode* = nullptr, WXCoreFlexLine *const flexLine = nullptr);
   
   /** ================================ tree =================================== **/
