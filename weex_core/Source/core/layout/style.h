@@ -108,7 +108,7 @@ class WXCoreBorderWidth {
   }
 
   bool setBorderWidth(const WXCoreBorderWidthEdge &edge, float borderWidth);
-  float getBorderWidth(const WXCoreBorderWidthEdge &edge)const;
+  float getBorderWidth(const WXCoreBorderWidthEdge &edge) const;
 };
 
 
